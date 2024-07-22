@@ -106,6 +106,7 @@ class Board:
                 else:
                     print(self.map_data[i][j], end = ' ')
             print('\n')
+            
 class vehicle_base:
     def __init__(self, name, start_y, start_x, fuel):
         self.start_y = start_y
@@ -117,6 +118,7 @@ class vehicle_base:
         self.parrent = []
         self.time = 0
         self.name = name
+        
 class vehicle_lev1(vehicle_base):
     def __init__(self, name, start_y, start_x, fuel):
         super().__init__(name, start_y, start_x, fuel)
@@ -145,13 +147,10 @@ class vehicle_lev1(vehicle_base):
                         frontier.append(board.cells[new_y][new_x])
                         
         return board.tracepath(self.name)
-        
-    
-        
 
 
 def main():
-    n, m, t, f, map_data = read_input_file('Source/input1_level1.txt')
+    n, m, t, f, map_data = read_input_file('input1_level1.txt')
     board = Board(n, m, f, t, map_data, level=1)
     vehicles = board.get_vehicle()
     for vehicle in vehicles:
