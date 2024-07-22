@@ -57,8 +57,8 @@ class Board:
                     break
             
     def get_vehicle(self):
-        return self.vehicle
-    
+        return sorted(self.vehicle, key=lambda vehicle: vehicle.name)
+
     def get_distance(self, x1, y1, x2, y2):
         return abs(x1 - x2) + abs(y1 - y2)
     
@@ -156,7 +156,7 @@ def main():
     vehicles = board.get_vehicle()
     for vehicle in vehicles:
         print(vehicle.name, f'\t\tStart: {vehicle.start_y}, {vehicle.start_x}', f'\t\tGoal: {vehicle.goal_y}, {vehicle.goal_x}')
-    path = vehicles[1].bfs(board)
+    path = vehicles[0].bfs(board)
     board.test_display_path(path)
     # board.test_input()
 
