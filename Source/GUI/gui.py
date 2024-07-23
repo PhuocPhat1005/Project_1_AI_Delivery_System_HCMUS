@@ -2,20 +2,18 @@ import pygame
 
 import pygame, sys
 from pygame.locals import *
+from constants import *
 
 pygame.init()
 
-display_width = 1000
-display_height = 750
-
-screen = pygame.display.set_mode((display_width, display_height))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 title = pygame.display.set_caption('Graph run')
 
 class Board_UI:
     def __init__(self, _n, _m, _f, _t):
         self.cell_side = 40
         self.cell_size = (self.cell_side, self.cell_side)
-        self.empty_cell_img = pygame.image.load('empty_cell.png')
+        self.empty_cell_img = pygame.image.load('assets/empty_cell.png')
         self.empty_cell_img = pygame.transform.scale(self.empty_cell_img, self.cell_size)
         self.n = _n
         self.m = _m
@@ -28,14 +26,14 @@ class Board_UI:
         goals = []
     
     def showCell(self):
-        screen.blit(self.empty_cell_img, (display_width * 0.1, display_height * 0.1))
+        screen.blit(self.empty_cell_img, (WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1))
     
     def showBoard(self):
         i = 0
         j = 0
         for i in range (0, self.n):
             for j in range (0, self.m):
-                screen.blit(self.empty_cell_img, (display_width * 0.1 + i*40, display_height * 0.1 + j*40))
+                screen.blit(self.empty_cell_img, (WINDOW_WIDTH * 0.1 + i*40, WINDOW_HEIGHT * 0.1 + j*40))
 
 
 while True:
