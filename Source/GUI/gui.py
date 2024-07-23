@@ -1,9 +1,11 @@
 import pygame, sys
 import math
 from pygame.locals import *
+from constants import *
 
 pygame.init()
 
+<<<<<<< HEAD
 display_width = 1200
 display_height = 800
 
@@ -18,6 +20,17 @@ title = pygame.display.set_caption('Graph run')
 
 class Board_UI:
     def __init__(self, _n, _m, _f, _t, _level):
+=======
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+title = pygame.display.set_caption('Graph run')
+
+class Board_UI:
+    def __init__(self, _n, _m, _f, _t):
+        self.cell_side = 40
+        self.cell_size = (self.cell_side, self.cell_side)
+        self.empty_cell_img = pygame.image.load('assets/empty_cell.png')
+        self.empty_cell_img = pygame.transform.scale(self.empty_cell_img, self.cell_size)
+>>>>>>> ca7851aa8b9420be30299ca9ca03340f224cc06a
         self.n = _n
         self.m = _m
         self.f = _f
@@ -45,13 +58,14 @@ class Board_UI:
         self.map_data = _map_data
     
     def showCell(self):
-        screen.blit(self.empty_cell_img, (display_width * 0.1, display_height * 0.1))
+        screen.blit(self.empty_cell_img, (WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1))
     
     def showBoard(self):
         i = 0
         j = 0
         for i in range (0, self.n):
             for j in range (0, self.m):
+<<<<<<< HEAD
                 if j < 3:
                     screen.blit(self.empty_cell_img, (display_width * 0.1 + i*self.cell_side, display_height * 0.1 + j*self.cell_side))
                 elif j < 5:
@@ -60,6 +74,9 @@ class Board_UI:
                     screen.blit(self.vehicle_cell_img, (display_width * 0.1 + i*self.cell_side, display_height * 0.1 + j*self.cell_side))
                 else:
                     screen.blit(self.fuel_cell_img, (display_width * 0.1 + i*self.cell_side, display_height * 0.1 + j*self.cell_side))
+=======
+                screen.blit(self.empty_cell_img, (WINDOW_WIDTH * 0.1 + i*40, WINDOW_HEIGHT * 0.1 + j*40))
+>>>>>>> ca7851aa8b9420be30299ca9ca03340f224cc06a
 
 
 def main_test():
