@@ -1,48 +1,77 @@
 import heapq
 
 
-class GreedyBestFirstSearch:
-    def __init__(self, grid, start, goal):
-        self.grid = grid
-        self.start = start
-        self.goal = goal
-        self.n = len(grid)
-        self.m = len(grid[0])
-        self.directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+class GBFSAlgorithm:
+    """
+    Implements the Greedy Best-First Search (GBFS) algorithm for pathfinding.
 
-    def is_valid(self, x, y):
-        return 0 <= x < self.n and 0 <= y < self.m and self.grid[x][y] != -1
+    Attributes:
+        vehicle: The vehicle for which the algorithm is being executed.
+    """
 
-    def heuristic(self, x, y):
-        return abs(x - self.goal[0]) + abs(y - self.goal[1])
+    def __init__(self, vehicle):
+        """
+        Initializes the GBFSAlgorithm with the given vehicle.
 
-    def search(self):
-        pq = [(self.heuristic(*self.start), self.start)]
-        parent = {self.start: None}
-        found = False
+        Args:
+            vehicle: The vehicle object.
+        """
+        self.vehicle = vehicle
 
-        while pq:
-            _, (x, y) = heapq.heappop(pq)
+    def execute(self, board):
+        """
+        Executes the GBFS algorithm on the given board.
 
-            if (x, y) == self.goal:
-                found = True
-                break
+        Args:
+            board: The board object containing the grid and its cells.
 
-            for dx, dy in self.directions:
-                nx, ny = x + dx, y + dy
+        Returns:
+            A list of tuples representing the path found by the GBFS algorithm.
+        """
+        # Initialize board properties for the vehicle
+        board.generate_visited(self.vehicle.name)
+        board.generate_parent(self.vehicle.name)
+        board.generate_heuristic(self.vehicle.name)
 
-                if self.is_valid(nx, ny) and (nx, ny) not in parent:
-                    heapq.heappush(pq, (self.heuristic(nx, ny), (nx, ny)))
-                    parent[(nx, ny)] = (x, y)
+        # Get the starting cell for the vehicle
+        start_cell = board.cells[self.vehicle.start_y][self.vehicle.start_x]
+        start_cell.visited[self.vehicle.name] = (
+            True  # Mark the starting cell as visited
+        )
+        frontier = [
+            (start_cell.heuristic[self.vehicle.name], start_cell)
+        ]  # Initialize the frontier with the starting cell and its heuristic value
 
-        if not found:
-            return None
+        while frontier:
+            current_heuristic, current_cell = heapq.heappop(
+                frontier
+            )  # Get the cell with the lowest heuristic value from the frontier
+            if (
+                current_cell.y == self.vehicle.goal_y
+                and current_cell.x == self.vehicle.goal_x
+            ):
+                break  # Exit if the goal cell is reached
 
-        path = []
-        step = self.goal
-        while step is not None:
-            path.append(step)
-            step = parent.get(step)
+            # Define possible movement directions (right, left, down, up)
+            y = [0, 0, 1, -1]
+            x = [1, -1, 0, 0]
+            for i in range(4):
+                new_y = current_cell.y + y[i]
+                new_x = current_cell.x + x[i]
+                if board.can_visit(self.vehicle.name, new_y, new_x):
+                    # Update cell properties if the new path is better
+                    board.cells[new_y][new_x].current_vehicle = self.vehicle.name
+                    board.cells[new_y][new_x].visited[self.vehicle.name] = True
+                    board.cells[new_y][new_x].parent[self.vehicle.name] = (
+                        current_cell.y,
+                        current_cell.x,
+                    )
+                    heapq.heappush(
+                        frontier,
+                        (
+                            board.cells[new_y][new_x].heuristic[self.vehicle.name],
+                            board.cells[new_y][new_x],
+                        ),
+                    )  # Add the new cell to the frontier with its heuristic value
 
-        path.reverse()
-        return path
+        return board.tracepath(self.vehicle.name)  # Return the path found

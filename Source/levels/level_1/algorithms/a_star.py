@@ -1,56 +1,54 @@
-from queue import PriorityQueue
+import heapq
 
 
-class AStar:
-    def __init__(self, grid, start, goal):
-        self.grid = grid
-        self.start = start
-        self.goal = goal
-        self.rows = len(grid)
-        self.cols = len(grid[0])
+class AStarAlgorithm:
+    def __init__(self, vehicle):
+        self.vehicle = vehicle
 
-    def heuristic(self, a, b):
-        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+    def execute(self, board):
+        board.generate_visited(self.vehicle.name)
+        board.generate_parent(self.vehicle.name)
+        board.generate_cost(self.vehicle.name)
+        board.generate_heuristic(self.vehicle.name)
+        board.generate_fuel(self.vehicle.name)
+        board.generate_time(self.vehicle.name)
 
-    def search(self):
-        open_set = PriorityQueue()
-        open_set.put((0, self.start))
-        came_from = {}
-        g_score = {self.start: 0}
-        f_score = {self.start: self.heuristic(self.start, self.goal)}
+        start_cell = board.cells[self.vehicle.start_y][self.vehicle.start_x]
+        start_cell.visited[self.vehicle.name] = True
+        start_cell.cost[self.vehicle.name] = 0
+        start_cell.current_vehicle = self.vehicle.name
+        frontier = [(start_cell.heuristic[self.vehicle.name], start_cell)]
 
-        while not open_set.empty():
-            _, current = open_set.get()
+        while frontier:
+            _, current_cell = heapq.heappop(frontier)
 
-            if current == self.goal:
-                path = []
-                while current in came_from:
-                    path.append(current)
-                    current = came_from[current]
-                path.append(self.start)
-                path.reverse()
-                return path
+            y = [0, 0, 1, -1]
+            x = [1, -1, 0, 0]
+            for i in range(4):
+                new_y = current_cell.y + y[i]
+                new_x = current_cell.x + x[i]
 
-            neighbors = [
-                (current[0] + 1, current[1]),
-                (current[0] - 1, current[1]),
-                (current[0], current[1] + 1),
-                (current[0], current[1] - 1),
-            ]
-            for neighbor in neighbors:
-                if 0 <= neighbor[0] < self.rows and 0 <= neighbor[1] < self.cols:
-                    if self.grid[neighbor[0]][neighbor[1]] != -1:
-                        tentative_g_score = g_score[current] + 1
+                if board.can_visit(self.vehicle.name, new_y, new_x):
+                    new_cost = current_cell.cost[self.vehicle.name] + 1
+                    if new_cost < board.cells[new_y][new_x].cost[self.vehicle.name]:
+                        board.cells[new_y][new_x].current_vehicle = self.vehicle.name
+                        board.cells[new_y][new_x].visited[self.vehicle.name] = True
+                        board.cells[new_y][new_x].cost[self.vehicle.name] = new_cost
+                        board.cells[new_y][new_x].parent[self.vehicle.name] = (
+                            current_cell.y,
+                            current_cell.x,
+                        )
+                        total_cost = (
+                            new_cost
+                            + board.cells[new_y][new_x].heuristic[self.vehicle.name]
+                        )
+                        heapq.heappush(
+                            frontier, (total_cost, board.cells[new_y][new_x])
+                        )
+            if (
+                current_cell.y == self.vehicle.goal_y
+                and current_cell.x == self.vehicle.goal_x
+            ):
+                break
 
-                        if (
-                            neighbor not in g_score
-                            or tentative_g_score < g_score[neighbor]
-                        ):
-                            came_from[neighbor] = current
-                            g_score[neighbor] = tentative_g_score
-                            f_score[neighbor] = tentative_g_score + self.heuristic(
-                                neighbor, self.goal
-                            )
-                            open_set.put((f_score[neighbor], neighbor))
-
-        return None
+        return board.tracepath(self.vehicle.name)
