@@ -2,6 +2,9 @@ import pygame, sys
 import math
 from pygame.locals import *
 from constants import *
+from text import *
+from menu import *
+from credit import *
 
 pygame.init()
 
@@ -71,6 +74,7 @@ class Board_UI:
                     screen.blit(self.fuel_cell_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
         for i in range (0, self.n):
             for j in range (0, self.m):
+<<<<<<< HEAD
                 if j == 3:
                     screen.blit(self.vehicle_right_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
                 elif j == 4:
@@ -121,3 +125,44 @@ def main_test():
                 sys.exit()
 
 main_test()
+=======
+                screen.blit(self.empty_cell_img, (WINDOW_WIDTH * 0.1 + i*40, WINDOW_HEIGHT * 0.1 + j*40))
+                
+                
+choose_option = None
+menu = Menu(screen)
+credit = Credit(screen)
+
+while True:
+    is_up = False
+    is_down = False
+    
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            #sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_DOWN:
+                is_down = True
+            if event.key == pygame.K_UP:
+                is_up = True
+            if event.key == pygame.K_RETURN: # press Enter to choose an option
+                choose_option = menu.get_choice()
+                
+    # Menu
+    screen.fill((0,0,0))   
+
+    if choose_option is None:
+        menu.display_menu(is_up, is_down)
+    
+    if choose_option is not None:
+        if choose_option == 1:
+            credit.display_credit()
+            choose_option = credit.back_to_menu()
+        if choose_option == 2:
+            pygame.quit()
+        # M1 = Board_UI(10, 10, 0, 0)
+        # M1.showBoard()
+            
+    pygame.display.flip()
+>>>>>>> bbda48d4f7c55d842b4677af1feb9439922a9e58
