@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, 'C:\\Users\\thaih\\Documents\\K22\\Nam_2\\HK3\\CoSoTriTueNhanTao\\Projects\\Project1\\22127174_22127322_22127388_22127441\\Source')
-
 from main import *
 
 class vehicle_level3(vehicle_base):
