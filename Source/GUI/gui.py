@@ -3,8 +3,9 @@ import pygame
 import pygame, sys
 from pygame.locals import *
 from constants import *
-from menu import *
 from text import *
+from menu import *
+from credit import *
 
 pygame.init()
 
@@ -40,6 +41,7 @@ class Board_UI:
                 
 choose_option = None
 menu = Menu(screen)
+credit = Credit(screen)
 
 while True:
     is_up = False
@@ -64,9 +66,12 @@ while True:
         menu.display_menu(is_up, is_down)
     
     if choose_option is not None:
+        if choose_option == 1:
+            credit.display_credit()
+            choose_option = credit.back_to_menu()
         if choose_option == 2:
             pygame.quit()
-        M1 = Board_UI(10, 10, 0, 0)
-        M1.showBoard()
+        # M1 = Board_UI(10, 10, 0, 0)
+        # M1.showBoard()
             
     pygame.display.flip()
