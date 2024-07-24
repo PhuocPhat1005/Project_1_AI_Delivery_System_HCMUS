@@ -144,7 +144,7 @@ class vehicle_level4(vehicle_base):
                     if (
                         new_cost < board.cells[new_y][new_x].cost[self.name]
                         and new_fuel >= 0
-                        and new_t <= board.t
+                        and new_t <= board.t + 1
                     ):
                         # if (new_y, new_x) in self.blocked_temp:
                         #     board.cells[current_cell.y][current_cell.x].time[self.name] += 1

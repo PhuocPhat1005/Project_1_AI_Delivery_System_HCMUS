@@ -7,14 +7,14 @@ from levels.level_4.vehicle_level4 import process_lev4
 
 def main():
     # # Create the output directory if it does not exist
-    # if not os.path.exists("output"):
-    #     os.makedirs("output")
+    if not os.path.exists("output"):
+        os.makedirs("output")
 
     # # Read input data
-    n, m, t, f, map_data = read_input_file("input/input1_level1.txt")
+    n, m, t, f, map_data = read_input_file("input/input1_level2.txt")
 
-    # # # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level=1)
+    # # Initialize the board and vehicles
+    board = Board(n, m, f, t, map_data, level=2)
     vehicles = board.get_vehicle()
     paths = []
 
@@ -29,15 +29,16 @@ def main():
         paths.append(path)
     board.test_display_path(paths)
     # Write paths to the output file
-    write_paths_to_file("output/output1_level1.txt", vehicles)
+    write_paths_to_file("output/output1_level2.txt", vehicles)
 
     # Test level 3
-    # board = Board(n, m, f, t, map_data, level=3)
+    # board = Board(n, m, f, t, map_data, level=4)
     # S_vehicle = board.vehicle[0]
     # paths = []
-    # print(paths)
+    # # print(paths)
+    # paths.append(S_vehicle.process_lev3(board))
     # if paths != []:
-    #     paths.append(S_vehicle.process_lev3(board))
+
     #     board.test_display_path(paths)
     # else:
     #     print("Can't find path, lev 3")
