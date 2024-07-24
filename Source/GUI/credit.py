@@ -23,14 +23,16 @@ class Credit:
     def get_back_to(self):
         if self.is_click_back:
             self.is_click_back = False
-            return self.option_back_to
+            res = self.option_back_to
+            self.option_back_to = None
+            return res
         return 1
             
-    def display_credit(self):
+    def display_credit(self, is_left):
         self.screen.fill(BACKGROUND_COLOR)   
         
         back_button = BackButton(self.screen)
-        back_button_rect = back_button.get_back_button_rect()
+        # back_button_rect = back_button.get_back_button_rect()
         
         text_obj = Text_Display('credit', font_size=FONT_LARGE)
         text_content = text_obj.show_text()
@@ -43,18 +45,10 @@ class Credit:
         self.write_text_content(content='22127388 - To Quoc Thanh', is_center=True, height=900)
         self.write_text_content(content='22127441 - Thai Huyen Tung', is_center=True, height=1100)
         
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if back_button_rect.collidepoint(mouse_pos):
-                    self.is_click_back = True
-                    self.option_back_to = back_button.back_to(self.is_click_back, None, 1)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and self.is_click_back == False:
-                    self.is_click_back = True
-                    self.option_back_to = back_button.back_to(self.is_click_back, None, 0)
+        if is_left:
+            is_left = False
+            self.is_click_back = True
+            self.option_back_to = back_button.back_to(self.is_click_back, None, 1)
                     
                 
         
