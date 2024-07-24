@@ -3,87 +3,90 @@ import heapq
 
 class AStarAlgorithm:
     def __init__(self, vehicle):
+        """
+        Initialize the A* algorithm with the given vehicle.
+
+        Parameters:
+        vehicle (VehicleBase): The vehicle for which the path is to be found.
+        """
         self.vehicle = vehicle
 
-    def heuristic(self, current_y, current_x, goal_y, goal_x):
-        return abs(current_y - goal_y) + abs(current_x - goal_x)
-
     def execute(self, board):
-        board.generate_visited(self.vehicle.name)
-        board.generate_parent(self.vehicle.name)
-        board.generate_cost(self.vehicle.name)
-        board.generate_heuristic(self.vehicle.name)
-        board.generate_fuel(self.vehicle.name)
-        board.generate_time(self.vehicle.name)
+        """
+        Execute the A* algorithm to find the shortest path from the start position to the goal position.
 
+        Parameters:
+        board (Board): The board representing the map.
+
+        Returns:
+        list: The path from the start position to the goal position as a list of coordinates.
+        """
         start_cell = board.cells[self.vehicle.start_y][self.vehicle.start_x]
-        goal_cell = board.cells[self.vehicle.goal_y][self.vehicle.goal_x]
-
-        # Initialize cell properties
-        for row in board.cells:
-            for cell in row:
-                cell.visited = {}
-                cell.parent = {}
-                cell.cost = {}
-                cell.time = {}
-                cell.fuel = {}
-                cell.heuristic = {}
-
-        # Set start cell properties
-        start_cell.visited[self.vehicle.name] = False
+        start_cell.visited[self.vehicle.name] = True
         start_cell.cost[self.vehicle.name] = 0
-        start_cell.time[self.vehicle.name] = self.vehicle.delivery_time
-        start_cell.fuel[self.vehicle.name] = self.vehicle.fuel
-        start_cell.parent[self.vehicle.name] = None
-        start_cell.heuristic[self.vehicle.name] = self.heuristic(
-            self.vehicle.start_y,
-            self.vehicle.start_x,
-            self.vehicle.goal_y,
-            self.vehicle.goal_x,
-        )
+        start_cell.time[self.vehicle.name] = 0
 
-        frontier = [
-            (
-                start_cell.cost[self.vehicle.name]
-                + start_cell.heuristic[self.vehicle.name],
-                start_cell,
-            )
-        ]
+        # Priority queue to store the frontier cells, initialized with the start cell
+        frontier = [(0 + self.heuristic(start_cell), start_cell)]
         heapq.heapify(frontier)
 
         while frontier:
+            # Get the cell with the lowest f-score from the frontier
             current_f, current_cell = heapq.heappop(frontier)
-            current_y, current_x = current_cell.y, current_cell.x
 
-            if current_y == self.vehicle.goal_y and current_x == self.vehicle.goal_x:
+            # If the goal is reached, break out of the loop
+            if (
+                current_cell.y == self.vehicle.goal_y
+                and current_cell.x == self.vehicle.goal_x
+            ):
                 break
 
-            # Explore neighbors
-            for dy, dx in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-                new_y, new_x = current_y + dy, current_x + dx
+            # Check all adjacent cells
+            for dy, dx in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                new_y, new_x = current_cell.y + dy, current_cell.x + dx
 
                 if board.can_visit(self.vehicle.name, new_y, new_x):
-                    neighbor_cell = board.cells[new_y][new_x]
+                    next_cell = board.cells[new_y][new_x]
+                    additional_time = (
+                        next_cell.value if isinstance(next_cell.value, int) else 0
+                    )
                     new_cost = current_cell.cost[self.vehicle.name] + 1
                     new_time = (
-                        current_cell.time[self.vehicle.name] + 1 + neighbor_cell.value
+                        current_cell.time[self.vehicle.name] + 1 + additional_time
                     )
-                    new_fuel = current_cell.fuel[self.vehicle.name] - 1
 
-                    if new_time <= self.vehicle.delivery_time and (
-                        neighbor_cell.visited.get(self.vehicle.name) is False
-                        or new_cost
-                        < neighbor_cell.cost.get(self.vehicle.name, float("inf"))
-                    ):
-                        neighbor_cell.current_vehicle = self.vehicle.name
-                        neighbor_cell.visited[self.vehicle.name] = True
-                        neighbor_cell.cost[self.vehicle.name] = new_cost
-                        neighbor_cell.time[self.vehicle.name] = new_time
-                        neighbor_cell.fuel[self.vehicle.name] = new_fuel
-                        neighbor_cell.parent[self.vehicle.name] = (current_y, current_x)
-                        f = new_cost + self.heuristic(
-                            new_y, new_x, self.vehicle.goal_y, self.vehicle.goal_x
-                        )
-                        heapq.heappush(frontier, (f, neighbor_cell))
+                    # Only consider this path if it doesn't exceed the delivery time
+                    if new_time <= self.vehicle.delivery_time:
+                        if (
+                            new_cost < next_cell.cost[self.vehicle.name]
+                            or not next_cell.visited[self.vehicle.name]
+                        ):
+                            next_cell.current_vehicle = self.vehicle.name
+                            next_cell.cost[self.vehicle.name] = new_cost
+                            next_cell.time[self.vehicle.name] = new_time
+                            next_cell.visited[self.vehicle.name] = True
+                            next_cell.parent[self.vehicle.name] = (
+                                current_cell.y,
+                                current_cell.x,
+                            )
 
+                            # Add the cell to the frontier with its new f-score
+                            heapq.heappush(
+                                frontier,
+                                (new_cost + self.heuristic(next_cell), next_cell),
+                            )
+
+        # Trace and return the path from the start to the goal
         return board.tracepath(self.vehicle.name)
+
+    def heuristic(self, cell):
+        """
+        Calculate the heuristic value for the given cell.
+
+        Parameters:
+        cell (Cell): The cell for which the heuristic is to be calculated.
+
+        Returns:
+        int: The heuristic value (Manhattan distance) for the cell.
+        """
+        return abs(cell.y - self.vehicle.goal_y) + abs(cell.x - self.vehicle.goal_x)

@@ -30,9 +30,9 @@ class Board:
             self.cells.append(list())
             for j in range(m):
                 self.cells[i].append(cell(y=i, x=j, raw_value=map_data[i][j]))
+                print(f"Time: {t}")
                 if "S" in map_data[i][j]:
                     name = map_data[i][j]
-                    print("name vehicle", name)
                     if level == 1:
                         self.vehicle.append(vehicle_level1(name, i, j, t, f))
                     if level == 2:

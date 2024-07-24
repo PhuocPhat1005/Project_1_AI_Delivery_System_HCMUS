@@ -10,10 +10,10 @@ def main():
         os.makedirs("output")
 
     # Read input data
-    n, m, t, f, map_data = read_input_file("input/input1_level1.txt")
+    n, m, t, f, map_data = read_input_file("input/input1_level2.txt")
 
     # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level=1)
+    board = Board(n, m, f, t, map_data, level=2)
     vehicles = board.get_vehicle()
     vehicle_paths = {}
     paths = []
@@ -30,7 +30,7 @@ def main():
     # print(path)
     board.test_display_path(paths)
     # Write paths to the output file
-    write_paths_to_file("output/output1_level1.txt", vehicle_paths)
+    write_paths_to_file("output/output1_level2.txt", vehicle_paths)
     print("Done")
     # board.test_input()
 
