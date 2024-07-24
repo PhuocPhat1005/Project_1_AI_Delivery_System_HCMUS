@@ -3,7 +3,7 @@ WINDOW_HEIGHT = 800
 
 # FONTS
 
-FONT_TYPE = 'fonts/PixelifySans-Medium.ttf'
+FONT_TYPE = 'GUI/fonts/PixelifySans-Medium.ttf'
 FONT_SMALL = 16
 FONT_MEDIUM = 48
 FONT_LARGE = 72
@@ -16,4 +16,7 @@ MENU_PATH = ''
 
 WHITE_COLOR = (255, 255, 255)
 BLACK_COLOR = (0, 0, 0)
+RED_COLOR = (255, 0, 0)
+GREEN_COLOR = (0, 255, 0)
+BLUE_COLOR = (0, 0, 255)
 ACTIVE_CHOICE_COLOR = (210, 4, 45)

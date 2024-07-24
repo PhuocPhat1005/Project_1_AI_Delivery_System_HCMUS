@@ -1,6 +1,6 @@
 import pygame
-from constants import *
-from text import *
+from GUI.constants import *
+from GUI.text import *
 
 class Credit:
     def __init__(self, screen):

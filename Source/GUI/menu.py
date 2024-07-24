@@ -1,11 +1,11 @@
 import pygame
-from constants import *
-from text import *
+from GUI.constants import *
+from GUI.text import *
 
 class Menu:
     def __init__(self, screen):
         self.screen = screen
-        self.background = pygame.image.load('assets/menu_bg.png')
+        self.background = pygame.image.load('GUI/assets/menu_bg.png')
         self.menu_screen_choice = [[True, 'choose level'], [False, 'credit'], [False, 'exit']]
     
     def choose_options(self, is_up, is_down):
@@ -19,7 +19,7 @@ class Menu:
             text_pos = text_obj.center_text(height=WINDOW_HEIGHT + i * 300)
             x_text, y_text = text_pos[0], text_pos[1]
             
-            arrow_img = pygame.image.load('assets/arrow.png')
+            arrow_img = pygame.image.load('GUI/assets/arrow.png')
             img_width = arrow_img.get_width()
             arrow_pos_x = x_text - img_width - 50
             min_arrow_pox_x = min(arrow_pos_x, min_arrow_pox_x)
