@@ -36,9 +36,8 @@ def main():
     # S_vehicle = board.vehicle[0]   
     # paths = []     
     # board.test_display_path(paths)
-    # print (paths)
-    # print(S_vehicle.process_lev3(board))
     # paths.append(S_vehicle.process_lev2(board))
+    # print (paths)
     # if(paths != []):
     #     board.test_display_path(paths)
     # else:
@@ -48,8 +47,8 @@ def main():
     # board = Board(n, m, f, t, map_data, level=4)
     # S_vehicle = board.vehicle[0]
     # paths = []
-    # # print(paths)
     # paths.append(S_vehicle.process_lev3(board))
+    # # print(paths)
     # if paths != []:
     #     board.test_display_path(paths)
     # else:
