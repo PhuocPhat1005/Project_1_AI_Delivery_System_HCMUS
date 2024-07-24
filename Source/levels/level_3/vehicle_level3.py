@@ -155,6 +155,8 @@ class vehicle_level3(vehicle_base):
                 if flag == True:
                     return []
                 self.find_best_goal(board)  # Neu tim k duoc, tim fuel tot nhat
+                if self.tmp_goal_y == -1 and self.tmp_goal_x == -1:
+                    return []
                 flag = True
 
         joined_path = []
