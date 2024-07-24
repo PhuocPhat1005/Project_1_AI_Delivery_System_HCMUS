@@ -254,8 +254,8 @@ class vehicle_level4(vehicle_base):
         # self.current_y = self.start_y
         # self.current_x = self.start_x
 
-        print("TMP START: ", self.tmp_start_y, self.tmp_start_x)
-        print("TMP GOAL: ", self.tmp_goal_y, self.tmp_goal_x)
+        # print("TMP START: ", self.tmp_start_y, self.tmp_start_x)
+        # print("TMP GOAL: ", self.tmp_goal_y, self.tmp_goal_x)
 
         joined_path = []
         for path in paths:
@@ -281,16 +281,19 @@ def process_lev4(board):
     board.cells[S_vehicle.goal_y][S_vehicle.goal_x].visited[S_vehicle.name] = False
     # while S_vehicle.current_y != S_vehicle.goal_y or S_vehicle.current_x != S_vehicle.goal_x:
     # cnt = 0
+    time = 0
     while flag:
-        time = 0
         flag = False
         paths = []
         for vehicle in vehicles:
-
-            path = vehicle.find_best_path(board)
-            if path == [] and vehicle.name == S_vehicle.name:
-                return []
-            vehicle.path = path
+            if (
+                vehicle.current_x == vehicle.start_x
+                and vehicle.current_y == vehicle.start_y
+            ):
+                path = vehicle.find_best_path(board)
+                if path == [] and vehicle.name == S_vehicle.name:
+                    return []
+                vehicle.path = path
             # paths.append(path)
 
         for cells in board.cells:
@@ -305,7 +308,7 @@ def process_lev4(board):
 
                 for i in range(len(vehicle.path) - 1):
                     if vehicle.path[i][2] == time:
-                        print("Time here: ", vehicle.path[i][2])
+                        # print("Time here: ", vehicle.path[i][2])
                         next_y, next_x = vehicle.path[i + 1][0], vehicle.path[i + 1][1]
                         # print("next_y: ", next_y, "next_x: ", next_x, "vehicle: ", board.cells[next_y][next_x].current_vehicle)
                         if (
@@ -342,7 +345,7 @@ def process_lev4(board):
                             board.cells[vehicle.current_y][
                                 vehicle.current_x
                             ].current_vehicle = vehicle.name
-
+            print("Time: ", time)
             for vehicle in vehicles:
                 print("--------------------------------")
                 print("Name: ", vehicle.name)
@@ -350,6 +353,7 @@ def process_lev4(board):
                 print("Goal: ", vehicle.goal_y, vehicle.goal_x)
                 print("Current: ", vehicle.current_y, vehicle.current_x)
                 if vehicle.path == []:
+                    print("Need find best path")
                     vehicle.path = vehicle.find_best_path(board)
                 paths.append(vehicle.path)
 
@@ -358,11 +362,25 @@ def process_lev4(board):
                 if (
                     vehicle.current_y == vehicle.goal_y
                     and vehicle.current_x == vehicle.goal_x
-                ):
-                    print("Time: ", time, " Vehicle: ", vehicle.name)
-                    vehicle.regenerate(board)
+                ) or vehicle.path == []:
+                    print(
+                        "Time: ",
+                        time,
+                        " Vehicle: ",
+                        vehicle.name,
+                        "Start: ",
+                        vehicle.start_y,
+                        vehicle.start_x,
+                        "Goal: ",
+                        vehicle.goal_y,
+                        vehicle.goal_x,
+                        "Current: ",
+                        vehicle.current_y,
+                        vehicle.current_x,
+                    )
                     if vehicle.name == S_vehicle.name:
                         return paths
+                    vehicle.regenerate(board)
             paths = []
 
             time += 1
