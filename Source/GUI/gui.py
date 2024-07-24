@@ -5,6 +5,7 @@ from constants import *
 from text import *
 from menu import *
 from credit import *
+from level_list import *
 
 pygame.init()
 
@@ -114,6 +115,7 @@ def map_show():
 choose_option = None
 menu = Menu(screen)
 credit = Credit(screen)
+level_list = LeveList(screen)
 
 while True:
     is_up = False
@@ -124,11 +126,11 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN and is_down == False and is_up == False:
                 is_down = True
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP and is_up == False and is_down == False:
                 is_up = True
-            if event.key == pygame.K_RETURN: # press Enter to choose an option
+            elif event.key == pygame.K_RETURN: # press Enter to choose an option
                 choose_option = menu.get_choice()
                 
     # Menu
@@ -139,10 +141,13 @@ while True:
     
     if choose_option is not None:
         if choose_option == 0:
-            map_show() #run and show map
+            # Them level list
+            level_list.show_level_list(is_up, is_down)
+            choose_option = level_list.get_back_to()
+            # map_show() #run and show map
         if choose_option == 1:
             credit.display_credit()
-            choose_option = credit.back_to_menu()
+            choose_option = credit.get_back_to()
         if choose_option == 2:
             pygame.quit()
             sys.exit()

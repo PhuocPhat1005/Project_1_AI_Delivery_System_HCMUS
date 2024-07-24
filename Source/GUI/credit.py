@@ -1,29 +1,14 @@
 import pygame
 from constants import *
 from text import *
+from common import BackButton
 
 class Credit:
     def __init__(self, screen):
         self.screen = screen
         self.back_btn_sprite = None
         self.is_click_back = False
-            
-    def back_button(self):
-        text_obj = Text_Display('back')
-        text_content = text_obj.show_text()
-        text_pos = (50, 700)
-        
-        self.back_btn_sprite = text_obj.get_text_position()
-        self.back_btn_sprite.x = 50
-        self.back_btn_sprite.y = 700
-        
-        self.screen.blit(text_content, text_pos)
-            
-    def back_to_menu(self):
-        if self.is_click_back:
-            self.is_click_back = False
-            return None
-        return 1
+        self.option_back_to = None
     
     def write_text_content(self, font_size=FONT_MEDIUM, is_center=False, width=WINDOW_WIDTH, height=WINDOW_HEIGHT, pos_x=0, pos_y=0, content=''):
         text_obj = Text_Display(content, font_size=font_size)
@@ -34,11 +19,18 @@ class Credit:
             text_pos = text_obj.center_text(width, height)
         
         self.screen.blit(text_content, text_pos)
+        
+    def get_back_to(self):
+        if self.is_click_back:
+            self.is_click_back = False
+            return self.option_back_to
+        return 1
             
     def display_credit(self):
-        self.screen.fill((40,40,43))   
+        self.screen.fill(BACKGROUND_COLOR)   
         
-        self.back_button()
+        back_button = BackButton(self.screen)
+        back_button_rect = back_button.get_back_button_rect()
         
         text_obj = Text_Display('credit', font_size=FONT_LARGE)
         text_content = text_obj.show_text()
@@ -54,13 +46,16 @@ class Credit:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.is_click_back = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if self.back_btn_sprite.collidepoint(mouse_pos):
+                if back_button_rect.collidepoint(mouse_pos):
                     self.is_click_back = True
+                    self.option_back_to = back_button.back_to(self.is_click_back, None, 1)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT and self.is_click_back == False:
+                    self.is_click_back = True
+                    self.option_back_to = back_button.back_to(self.is_click_back, None, 0)
+                    
                 
         
     
