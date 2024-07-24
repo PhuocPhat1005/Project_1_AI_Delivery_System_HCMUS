@@ -1,7 +1,7 @@
 from utils.read_input import read_input_file
 from utils.write_output import write_paths_to_file
 from utils.board import Board
-from GUI.gui import UI
+from GUI.gui import *
 from GUI.constants import *
 from GUI.text import *
 from GUI.menu import *
@@ -13,17 +13,19 @@ def main():
     # Create the output directory if it does not exist
     if not os.path.exists("output"):
         os.makedirs("output")
+    
+    #menu_UI: 0->3 | level: 1->4
+    level = menu_UI() + 1
 
     # Read input data
-    n, m, t, f, map_data = read_input_file("input\\input1_level1.txt")
+    n, m, t, f, map_data = read_input_file("input\\input1_level" + str(level) + ".txt")
 
     # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level=1)
+    board = Board(n, m, f, t, map_data, 1)
     vehicles = board.get_vehicle()
     vehicle_paths = {}
     paths = []
-    UI(n, m, t, f, map_data, paths)
-
+    cell_side = map_UI(n, m, t, f, map_data, level)
     for vehicle in vehicles:
         print(
             vehicle.name,
@@ -33,12 +35,13 @@ def main():
         path = vehicle.process(board)
         vehicle_paths[vehicle.name] = path
         paths.append(path)
-    # print(path)
     board.test_display_path(paths)
-    #UI(n, m, t, f, map_data, paths)
+
+
     # Write paths to the output file
     write_paths_to_file("output/output1_level1.txt", vehicle_paths)
     print("Done")
+    path_UI(n, m, paths, cell_side)
     # board.test_input()
 
 

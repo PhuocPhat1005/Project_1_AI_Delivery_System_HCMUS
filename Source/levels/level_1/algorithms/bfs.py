@@ -30,7 +30,6 @@ class BFSAlgorithm:
         """
         # Get the starting cell for the vehicle
         start_cell = board.cells[self.vehicle.start_y][self.vehicle.start_x]
-        print("test", self.vehicle.name)
         start_cell.visited[self.vehicle.name] = (
             True  # Mark the starting cell as visited
         )
