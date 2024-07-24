@@ -16,15 +16,15 @@ class cell:
         self.current_vehicle = None
 
     def __lt__(self, other):
-        if self.cost[self.current_vehicle] == other.cost[other.current_vehicle]:
-            if self.fuel[self.current_vehicle] == other.fuel[other.current_vehicle]:
-                if self.time[self.current_vehicle] == other.time[other.current_vehicle]:
-                    return (
-                        self.heuristic[self.current_vehicle]
-                        < other.heuristic[other.current_vehicle]
-                    )
-                return (
-                    self.time[self.current_vehicle] < other.time[other.current_vehicle]
-                )
-            return self.fuel[self.current_vehicle] < other.fuel[other.current_vehicle]
-        return self.cost[self.current_vehicle] < other.cost[other.current_vehicle]
+        if self.time[self.current_vehicle] < other.time[self.current_vehicle]:
+            return True
+        if self.cost[self.current_vehicle] < other.cost[other.current_vehicle]:
+            return True
+        if (
+            self.heuristic[self.current_vehicle]
+            < other.heuristic[other.current_vehicle]
+        ):
+            return True
+        if self.fuel[self.current_vehicle] > other.fuel[other.current_vehicle]:
+            return True
+        return False

@@ -74,4 +74,6 @@ class UCSAlgorithm:
                             frontier, (new_cost, board.cells[new_y][new_x])
                         )  # Add the new cell to the frontier with its cost
 
-        return board.tracepath(self.vehicle.name)  # Return the path found
+        return board.path_and_time(
+            self.vehicle.name, board.tracepath(self.vehicle.name)
+        )  # Return the path found
