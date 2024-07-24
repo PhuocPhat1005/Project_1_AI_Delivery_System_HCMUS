@@ -1,0 +1,770 @@
+from collections import deque
+from termcolor import colored #chi dung tam de test, sau nay doi thanh UI khac
+import heapq
+import random
+
+def read_input_file(file_path):
+    with open(file_path, 'r') as file:
+        # Read the first line and extract n, m, t, f
+        first_line = file.readline().strip()
+        n, m, t, f = map(int, first_line.split())
+
+        # Read the next n lines to get the map information
+        map_data = []
+        for _ in range(n):
+            line = file.readline().strip()
+            map_data.append(line.split())
+
+    return n, m, t, f, map_data
+
+class cell:
+    def __init__(self, y, x, raw_value):
+        self.y = y
+        self.x = x
+        self.raw_value = raw_value
+        try:
+            self.value = float(raw_value)
+        except:
+            self.value = 0
+        self.visited = {}
+        self.parent = {}
+        self.cost = {}
+        self.heuristic = {}
+        self.fuel = {}
+        self.time = {}
+        self.current_vehicle = None
+        
+    def __lt__(self, other):
+        if self.time[self.current_vehicle] < other.time[self.current_vehicle]:
+            return True
+        if self.cost[self.current_vehicle] < other.cost[other.current_vehicle]:
+            return True
+        if self.heuristic[self.current_vehicle] < other.heuristic[other.current_vehicle]:
+            return True
+        if self.fuel[self.current_vehicle] > other.fuel[other.current_vehicle]:
+            return True
+        return False
+        
+        
+        
+        # if self.cost[self.current_vehicle] == other.cost[other.current_vehicle]:
+        #     if self.fuel[self.current_vehicle] == other.fuel[other.current_vehicle]:
+        #         if self.time[self.current_vehicle] == other.time[other.current_vehicle]:
+        #             return self.heuristic[self.current_vehicle] < other.heuristic[other.current_vehicle]
+        #         return self.time[self.current_vehicle] < other.time[other.current_vehicle]
+        #     return self.fuel[self.current_vehicle] < other.fuel[other.current_vehicle]
+        # return self.cost[self.current_vehicle] < other.cost[other.current_vehicle]
+
+    # def __repr__(self):
+    #     return f"Cell({self.raw_value})"
+
+def fought_cells(y, x, paths):
+    for i, path in enumerate(paths):
+        # Tạo danh sách các tọa độ (x, y) từ mỗi đường dẫn
+        coordinates = [(py, px) for py, px, _ in path]
+        if (y, x) in coordinates:
+            return i
+    return -1
+class Board:
+    def __init__(self, n, m, f, t, map_data, level = 1):
+        self.n = n
+        self.m = m
+        self.f = f
+        self.t = t
+        self.map_data = map_data
+        self.cells = []
+        self.vehicle = []
+        goals = []
+        self.fuel_stations = []
+        
+        for i in range(n):
+            self.cells.append(list())
+            for j in range(m):
+                self.cells[i].append(cell(y = i, x = j, raw_value = map_data[i][j]))
+                if 'S' in map_data[i][j]:
+                    name = map_data[i][j]
+                    if level == 1:
+                        self.vehicle.append(vehicle_lev1(name, i, j, f))
+                    # if level == 2:
+                    #     self.vehicle.append(vehicle_lev2(name, i, j, f))
+                    if level == 3:
+                        self.vehicle.append(vehicle_lev3(name, i, j, f))
+                    if level == 4:
+                        self.vehicle.append(vehicle_lev4(name, i, j, f))
+                if 'G' in map_data[i][j]:
+                    goal = map_data[i][j].replace('G', 'S')
+                    goals.append((goal, i, j))
+                if 'F' in map_data[i][j]:
+                    self.fuel_stations.append((i, j))
+        
+        for goal in goals:
+            for vehicle in self.vehicle:
+                if vehicle.name == goal[0]:
+                    vehicle.goal_y = goal[1]
+                    vehicle.goal_x = goal[2]
+                    vehicle.tmp_goal_y = goal[1]
+                    vehicle.tmp_goal_x = goal[2]
+                    break
+    
+    def generate_visited(self, name):
+        for i in range(self.n):
+            for j in range(self.m):
+                self.cells[i][j].visited[name] = False
+                    
+    def generate_parent(self, name):
+        for i in range(self.n):
+            for j in range(self.m):
+                    self.cells[i][j].parent[name] = (-1, -1)     
+                    
+    def generate_heuristic(self, name):
+        for i in range(self.n):
+            for j in range(self.m):
+                for vehicle in self.vehicle:
+                    if vehicle.name == name:
+                        # self.cells[i][j].heuristic[name] = 0
+                        self.cells[i][j].heuristic[name] = self.get_distance(j, i, vehicle.goal_x, vehicle.goal_y)
+                        if 'F' in self.cells[i][j].raw_value:
+                            # self.cells[i][j].heuristic[name] += self.get_distance(j, i, vehicle.goal_x, vehicle.goal_y) - vehicle.fuel
+                            self.cells[i][j].heuristic[name] += int(self.cells[i][j].raw_value.replace('F', ''))
+                        
+    def generate_cost(self, name):
+        for i in range(self.n):
+            for j in range(self.m):
+                    self.cells[i][j].cost[name] = float('inf')
+    
+    def generate_fuel(self, name):
+        for i in range(self.n):
+            for j in range(self.m):
+                    self.cells[i][j].fuel[name] = float('inf')
+                    
+    def generate_time(self, name):
+        for i in range(self.n):
+            for j in range(self.m):
+                    self.cells[i][j].time[name] = float('inf')
+                    
+    def get_vehicle(self):
+        return sorted(self.vehicle, key=lambda vehicle: vehicle.name)
+
+    def get_distance(self, x1, y1, x2, y2):
+        return abs(x1 - x2) + abs(y1 - y2)
+    
+    def can_visit(self, name, y, x):
+        if x < 0 or y < 0 or x >= self.n or y >= self.m:
+            return False
+        come_cell = self.cells[y][x]
+        if come_cell.visited[name] == True:
+            return False
+        if come_cell.value == -1:
+            return False
+        return True
+
+    def tracepath(self, name):
+        vehicle = None
+        for v in self.vehicle:
+            if v.name == name:
+                vehicle = v
+                break
+        path = []
+        y, x = vehicle.tmp_goal_y, vehicle.tmp_goal_x
+        while y != vehicle.tmp_start_y or x != vehicle.tmp_start_x:
+            # time_leave = self.cells[y][x].time[name] + 1
+            path.append((y, x))
+            # path.append((y, x, time_leave))
+            y, x = self.cells[y][x].parent[name]
+            
+        # path.append((vehicle.current_y, vehicle.current_x, 1))
+        path.append((vehicle.tmp_start_y, vehicle.tmp_start_x))
+        return path[::-1] 
+    
+    def unique_path(self, path):
+        unique_list = []
+        for item in path:
+            if item not in unique_list:
+                unique_list.append(item)
+        return unique_list
+        
+    def path_and_time(self, name, path):
+        unique_list = []
+        for item in path:
+            if item not in unique_list:
+                unique_list.append(item)
+        new_path = []
+        for i in range(len(unique_list)):
+            y, x = unique_list[i]
+            time_leave = self.cells[y][x].time[name]# + 1
+            new_path.append((y, x, time_leave))
+        # print("New path: ", new_path)
+        return new_path
+            
+    def test_input(self):
+        print("Number of rows: ", self.n)
+        print("Number of columns: ", self.m)
+        print("Initial fuel: ", self.f)
+        print("Time limit: ", self.t)
+        print("Map data: ")
+        for i in range(self.n):
+            for j in range(self.m):
+                print(f"{self.cells[i][j].raw_value:5}", end=' ')
+            print('\n')
+            
+    def test_input_2(self, name):
+        print("Number of rows: ", self.n)
+        print("Number of columns: ", self.m)
+        print("Initial fuel: ", self.f)
+        print("Time limit: ", self.t)
+        print("Map data: ")
+        for i in range(self.n):
+            for j in range(self.m):
+                print(f"{self.cells[i][j].heuristic[name]:5}", end=' ')
+            print('\n')
+    
+
+            
+    def test_display_path(self, paths):
+        colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white"]
+        for i in range(self.n):
+            for j in range(self.m):
+                k = fought_cells(i, j, paths)
+                if k != -1:
+                    print(colored(f"{self.cells[i][j].raw_value:5}", colors[k]), end = ' ')
+                else:
+                    print(f"{self.cells[i][j].raw_value:5}", end=' ')
+            print('\n')
+            
+class vehicle_base:
+    def __init__(self, name, start_y, start_x, fuel):
+        self.start_y = start_y
+        self.start_x = start_x
+        self.fuel = fuel
+        self.current_fuel = fuel
+        self.goal_x = -1
+        self.goal_y = -1
+        self.time = 0
+        self.name = name
+        self.current_x = start_x
+        self.current_y = start_y
+        self.tmp_start = start_x
+        self.tmp_start = start_y
+        self.tmp_goal_x = self.goal_x
+        self.tmp_goal_y = self.goal_y
+        self.path = []
+        self.blocked_opposite = [] #blocked cells of opposite vehicle
+        self.blocked_temp = [] #blocked temporary, need to wait 1 min to verhicle in that cell move
+        
+class vehicle_lev1(vehicle_base):
+    def __init__(self, name, start_y, start_x, fuel):
+        super().__init__(name, start_y, start_x, fuel)
+        
+    def bfs(self, board):
+        start_cell = board.cells[self.start_y][self.start_x]
+        start_cell.visited[self.name] = True
+        frontier = deque([start_cell]) #y, x start
+        
+
+        while frontier:
+            # print(frontier)
+            current_cell = frontier.popleft()
+            if current_cell.y == self.goal_y and current_cell.x == self.goal_x:
+                break
+            
+            y = [0, 0, 1, -1]
+            x = [1, -1, 0, 0]
+            for i in range(4):
+                    new_y = current_cell.y + y[i]
+                    new_x = current_cell.x + x[i]
+                    if board.can_visit(self.name, new_y, new_x) == True:
+                        board.cells[new_y][new_x].visited[self.name] = True
+                        board.cells[new_y][new_x].parent[self.name] = (current_cell.y, current_cell.x)
+                        frontier.append(board.cells[new_y][new_x])
+                        
+        return board.tracepath(self.name)
+
+class vehicle_lev3(vehicle_base):
+    def __init__(self, name, start_y, start_x, fuel):
+        super().__init__(name, start_y, start_x, fuel)
+        
+    def a_star(self, board):
+        print("a_star")
+        print("Start: ", self.tmp_start_y, self.tmp_start_x)
+        print("Goal: ", self.tmp_goal_y, self.tmp_goal_x)
+        board.generate_visited(self.name)
+        board.generate_parent(self.name)
+        board.generate_cost(self.name)
+        board.generate_heuristic(self.name)
+        board.generate_fuel(self.name)
+        
+        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            board.generate_time(self.name)
+            
+        self.current_fuel = self.fuel
+        
+        start_cell = board.cells[self.tmp_start_y][self.tmp_start_x]
+        start_cell.visited[self.name] = True
+        start_cell.cost[self.name] = 0
+        start_cell.fuel[self.name] = self.fuel
+        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            start_cell.time[self.name] = 1
+        else:
+            start_cell.time[self.name] = start_cell.time[self.name]
+            
+        start_cell.current_vehicle = self.name
+        
+        start_cell.visited[self.name] = True
+        frontier = [(start_cell)]
+
+        while frontier:
+            current_cell = heapq.heappop(frontier)
+            y = [0, 0, 1, -1]
+            x = [1, -1, 0, 0]
+            for i in range(4):
+                new_y = current_cell.y + y[i]
+                new_x = current_cell.x + x[i]
+                
+                if board.can_visit(self.name, new_y, new_x) == True:
+                    new_cost = board.cells[current_cell.y][current_cell.x].cost[self.name] + 1
+                    new_t = board.cells[current_cell.y][current_cell.x].time[self.name] + 1 + board.cells[new_y][new_x].value
+                    if 'F' in board.cells[new_y][new_x].raw_value:
+                        new_t += float(board.cells[new_y][new_x].raw_value.replace('F', ''))
+
+                    new_fuel = board.cells[current_cell.y][current_cell.x].fuel[self.name] - 1
+                    if new_cost < board.cells[new_y][new_x].cost[self.name] and new_fuel >= 0 and new_t <= board.t + 1:
+                        board.cells[new_y][new_x].current_vehicle = self.name
+                        board.cells[new_y][new_x].visited[self.name] = True
+                        board.cells[new_y][new_x].cost[self.name] = new_cost
+                        board.cells[new_y][new_x].time[self.name] = new_t
+                        board.cells[new_y][new_x].fuel[self.name] = new_fuel
+                        board.cells[new_y][new_x].parent[self.name] = (current_cell.y, current_cell.x)
+                        heapq.heappush(frontier, (board.cells[new_y][new_x]))
+                        
+            if current_cell.y == self.tmp_goal_y and current_cell.x == self.tmp_goal_x:
+                board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] = True
+                break
+        
+        path = []
+        if board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] == True:
+            path = board.tracepath(self.name)
+            
+        if path == [] or self.tmp_goal_x != self.goal_x and self.goal_y != self.tmp_goal_y:
+            board.cells[self.goal_y][self.goal_x].visited[self.name] = False
+        return path
+
+    def find_best_goal(self, board):
+        
+        best_heuristic = float('inf')
+        for fuel_station in board.fuel_stations:
+            if self.tmp_goal_x == fuel_station[1] and self.tmp_goal_y == fuel_station[0]:
+                continue
+            if board.cells[fuel_station[0]][fuel_station[1]].heuristic[self.name] < best_heuristic:
+                best_heuristic = board.cells[fuel_station[0]][fuel_station[1]].heuristic[self.name]
+                new_y = fuel_station[0]
+                new_x = fuel_station[1]
+        if self.tmp_goal_x == self.goal_x and self.tmp_goal_y == self.goal_y and self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            self.tmp_goal_y = new_y
+            self.tmp_goal_x = new_x
+        else:
+            self.tmp_start_y = self.tmp_goal_y
+            self.tmp_start_x = self.tmp_goal_x
+            self.tmp_goal_y = new_y
+            self.tmp_goal_x = new_x
+
+    def process_lev3(self, board):
+
+        board.cells[self.goal_y][self.goal_x].visited[self.name] = False
+        
+        self.tmp_start_y = self.current_y
+        self.tmp_start_x = self.current_x
+        self.tmp_goal_y = self.goal_y  
+        self.tmp_goal_x = self.goal_x
+        
+
+        
+        paths = []
+        flag = False
+        while self.current_y != self.goal_y or self.current_x != self.goal_x:
+            print("Current: ", self.current_y, self.current_x)
+            path = self.a_star(board)
+            print(path)
+            if path != []:
+                flag = False
+                path = board.path_and_time(self.name, path)
+                paths.append(path)
+                self.tmp_start_y = self.tmp_goal_y
+                self.tmp_start_x = self.tmp_goal_x
+                self.tmp_goal_y = self.goal_y #Neu tim thay path, tim tiep tuc tu vi tri hien tai den goal
+                self.tmp_goal_x = self.goal_x
+                
+            else:
+                if flag == True:
+                    print("asdgjgs")
+                    return []
+                self.find_best_goal(board)#Neu tim k duoc, tim fuel tot nhat
+                print("Start: ", self.tmp_start_y, self.tmp_start_x)
+                print("Best new goal: ", self.tmp_goal_y, self.tmp_goal_x)
+                flag = True
+            self.current_y = self.tmp_start_y
+            self.current_x = self.tmp_start_x
+        
+        joined_path = []
+        for path in paths:
+            joined_path.extend(path)
+        joined_path = board.unique_path(joined_path)
+        return joined_path
+    
+class vehicle_lev4(vehicle_base):
+    def __init__(self, name, start_y, start_x, fuel):
+        super().__init__(name, start_y, start_x, fuel)
+    
+    def regenerate(self, board):
+        board.cells[self.start_y][self.start_x].raw_value = '0'
+        
+        board.cells[self.goal_y][self.goal_x].raw_value = self.name
+        try:
+            board.cells[self.goal_y][self.goal_x].value = float(board.cells[self.goal_y][self.goal_x].raw_value)
+        except:
+            self.value = 0
+            
+        self.start_y = self.current_y
+        self.start_x = self.current_x
+        self.goal_y = random.randint(0, board.n - 1)
+        self.goal_x = random.randint(0, board.m - 1)
+        while board.get_distance(self.start_x, self.start_y, self.goal_x, self.goal_y) > 5 or board.cells[self.goal_y][self.goal_x].raw_value != '0':
+            self.goal_y = random.randint(0, board.n - 1)
+            self.goal_x = random.randint(0, board.m - 1)
+        self.path = []
+        
+        # while(self.path == [] or board.cells[self.goal_x][self.goal_y].raw_value == '0'):
+            # self.path = self.process_lev3(board)
+        
+        board.cells[self.goal_y][self.goal_x].raw_value = self.name.replace('S', 'G')
+        board.generate_heuristic(self.name)
+        board.generate_time(self.name)
+        board.generate_cost(self.name)
+        board.generate_fuel(self.name)
+        board.generate_visited(self.name)
+        board.generate_parent(self.name)
+        self.tmp_start_x = self.start_x
+        self.tmp_start_y = self.start_y
+        self.tmp_goal_x = self.goal_x
+        self.tmp_goal_y = self.goal_y
+        
+        self.blocked_opposite = []
+        self.blocked_temp = []
+        
+    def a_star(self, board):
+        # board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] = False
+        # while board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] == False:
+        
+        # print("A star")
+        # print("Name: ", self.name)
+        # print("OP Cells: ", self.blocked_opposite)
+        # print("Temp Cells: ", self.blocked_temp)
+        
+        board.generate_visited(self.name)
+        board.generate_parent(self.name)
+        board.generate_cost(self.name)
+        board.generate_heuristic(self.name)
+        board.generate_fuel(self.name)
+        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            board.generate_time(self.name)
+        
+        for cell in self.blocked_opposite:
+            board.cells[cell[0]][cell[1]].visited[self.name] = True
+        # for i in range(1, len(self.blocked_temp)):
+        #     board.cells[self.blocked_temp[i-1][0]][self.blocked_temp[i-1][1]].time[self.name] += 1    
+        #     print("Cell: ", self.blocked_temp[i-1][0], self.blocked_temp[i-1][1], "Time: ", board.cells[self.blocked_temp[i-1][0]][self.blocked_temp[i-1][1]].time[self.name])            
+                
+        # for i in range(board.n):
+        #     for j in range(board.m):
+        #         print(board.cells[i][j].raw_value, end = ' ')
+        #     print()
+            
+        self.current_fuel = self.fuel
+        
+        start_cell = board.cells[self.tmp_start_y][self.tmp_start_x]
+        start_cell.visited[self.name] = True
+        start_cell.cost[self.name] = 0
+        start_cell.fuel[self.name] = self.fuel
+        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            start_cell.time[self.name] = 1
+        else:
+            start_cell.time[self.name] = start_cell.time[self.name]
+            
+        start_cell.current_vehicle = self.name
+        
+        # current_f = start_cell.cost[self.name] + start_cell.heuristic[self.name]
+        start_cell.visited[self.name] = True
+        # start_cell.compare_value = current_f
+        # frontier = [(current_f, start_cell)]
+        frontier = [(start_cell)]
+
+        # while frontier and self.current_fuel > 0:
+        while frontier:
+            # self.current_fuel -= 1 #chi di nhanh tot nhat nen tru fuel o day, tru xong moi di chuyen
+            # for cell in frontier:
+            #     print(cell[1].y, cell[1].x, cell[1].compare_value, end = ' ')
+            # print()
+            # current_f, current_cell = heapq.heappop(frontier)
+            current_cell = heapq.heappop(frontier)
+            # board.cells[current_cell.y][current_cell.x].current_vehicle = None
+            y = [0, 0, 1, -1]
+            x = [1, -1, 0, 0]
+            for i in range(4):
+                new_y = current_cell.y + y[i]
+                new_x = current_cell.x + x[i]
+                
+                # in_block = False
+                if board.can_visit(self.name, new_y, new_x) == True:
+                    for cell in self.blocked_temp:
+                        if new_y == cell[0] and new_x == cell[1]:
+                            board.cells[current_cell.y][current_cell.x].time[self.name] += 1
+                            # print("Current cell: ", current_cell.y, current_cell.x, "Time: ", board.cells[current_cell.y][current_cell.x].time[self.name])
+                            # print(board.cells[current_cell.y][current_cell.x].time[self.name] + 1 + board.cells[new_y][new_x].value)
+                            
+                    new_cost = board.cells[current_cell.y][current_cell.x].cost[self.name] + 1
+                    new_t = board.cells[current_cell.y][current_cell.x].time[self.name] + 1 + board.cells[new_y][new_x].value
+                    if 'F' in board.cells[new_y][new_x].raw_value:
+                        new_t += float(board.cells[new_y][new_x].raw_value.replace('F', ''))
+
+                    new_fuel = board.cells[current_cell.y][current_cell.x].fuel[self.name] - 1
+                    # for cell in self.blocked_opposite:
+                    #     if new_y == cell[0] and new_x == cell[1]:
+                    #         in_block = True
+                    #         break
+
+                    if new_cost < board.cells[new_y][new_x].cost[self.name] and new_fuel >= 0 and new_t <= board.t + 1:
+                        # if (new_y, new_x) in self.blocked_temp:
+                        #     board.cells[current_cell.y][current_cell.x].time[self.name] += 1
+                        board.cells[new_y][new_x].current_vehicle = self.name
+                        board.cells[new_y][new_x].visited[self.name] = True
+                        board.cells[new_y][new_x].cost[self.name] = new_cost
+                        board.cells[new_y][new_x].time[self.name] = new_t
+                        board.cells[new_y][new_x].fuel[self.name] = new_fuel
+                        board.cells[new_y][new_x].parent[self.name] = (current_cell.y, current_cell.x)
+                        # f = new_cost + board.cells[new_y][new_x].heuristic[self.name]
+                        # board.cells[new_y][new_x].compare_value = f
+                        # heapq.heappush(frontier, (f, board.cells[new_y][new_x]))
+                        heapq.heappush(frontier, (board.cells[new_y][new_x]))
+                        
+            if current_cell.y == self.tmp_goal_y and current_cell.x == self.tmp_goal_x:
+                board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] = True
+                break
+        
+        path = []
+        if board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] == True:
+            # tmp_path = board.tracepath(self.name)
+            # if len(tmp_path) <= self.fuel:
+            #     path = tmp_path
+            path = board.tracepath(self.name)
+            
+        if path == [] or self.tmp_goal_x != self.goal_x and self.goal_y != self.tmp_goal_y:
+            board.cells[self.goal_y][self.goal_x].visited[self.name] = False
+        return path
+
+    def find_best_goal(self, board):
+        
+        best_heuristic = float('inf')
+        for fuel_station in board.fuel_stations:
+            if self.tmp_goal_x == fuel_station[1] and self.tmp_goal_y == fuel_station[0]:
+                continue
+            # print ("fuel_station: ", fuel_station[0], fuel_station[1])
+            # print (board.cells[fuel_station[0]][fuel_station[1]].heuristic[self.name])
+            # print (board.cells[fuel_station[0]][fuel_station[1]].visited[self.name])
+            if board.cells[fuel_station[0]][fuel_station[1]].heuristic[self.name] < best_heuristic:
+                best_heuristic = board.cells[fuel_station[0]][fuel_station[1]].heuristic[self.name]
+                new_y = fuel_station[0]
+                new_x = fuel_station[1]
+        if self.tmp_goal_x == self.goal_x and self.tmp_goal_y == self.goal_y and self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            self.tmp_goal_y = new_y
+            self.tmp_goal_x = new_x
+        else:
+            self.tmp_start_y = self.tmp_goal_y
+            self.tmp_start_x = self.tmp_goal_x
+            self.tmp_goal_y = new_y
+            self.tmp_goal_x = new_x
+
+
+    def find_best_path(self, board):
+
+        board.cells[self.goal_y][self.goal_x].visited[self.name] = False
+        
+        self.tmp_start_y = self.current_y
+        self.tmp_start_x = self.current_x
+        self.tmp_goal_y = self.goal_y  
+        self.tmp_goal_x = self.goal_x
+        
+
+        
+        paths = []
+        flag = False
+        while board.cells[self.goal_y][self.goal_x].visited[self.name] == False:
+            path = self.a_star(board)
+            
+            # print("Start: ", self.current_y, self.current_x)
+            # print("Tmp goal: ", self.tmp_goal_y, self.tmp_goal_x)
+            
+            # print(path)
+            if path != []:
+                path = board.path_and_time(self.name, path)
+                paths.append(path)
+                self.tmp_start_y = self.tmp_goal_y
+                self.tmp_start_x = self.tmp_goal_x
+                
+                self.tmp_goal_y = self.goal_y#Neu tim thay path, tim tiep tuc tu vi tri hien tai den goal
+                self.tmp_goal_x = self.goal_x
+                
+                # print("Path: ", path)
+            else:
+                if flag == True:
+                    return []
+                self.find_best_goal(board)#Neu tim k duoc, tim fuel tot nhat
+                flag = True
+        # self.current_y = self.start_y
+        # self.current_x = self.start_x
+        
+        # print("TMP START: ", self.tmp_start_y, self.tmp_start_x)
+        # print("TMP GOAL: ", self.tmp_goal_y, self.tmp_goal_x)
+        
+        joined_path = []
+        for path in paths:
+            joined_path.extend(path)
+        joined_path = board.unique_path(joined_path)
+        # print("Joined path: ", joined_path)
+        return joined_path
+
+def process_lev4(board):
+    
+    vehicles = board.get_vehicle()
+    S_vehicle =vehicles[0]
+    
+    # paths = []
+    # for vehicle in vehicles:
+    #     path = vehicle.find_best_path(board)
+    #     paths.append(path)
+    # board.test_display_path(paths)
+    # return
+
+    flag = True
+    board.cells[S_vehicle.goal_y][S_vehicle.goal_x].visited[S_vehicle.name] = False
+    # while S_vehicle.current_y != S_vehicle.goal_y or S_vehicle.current_x != S_vehicle.goal_x:
+    # cnt = 0
+    time = 0
+    while flag:
+        flag = False
+        paths = []
+        for vehicle in vehicles:
+            if vehicle.current_x == vehicle.start_x and vehicle.current_y == vehicle.start_y:
+                path = vehicle.find_best_path(board)
+                if path == [] and vehicle.name == S_vehicle.name:
+                    return []
+                vehicle.path = path
+            # paths.append(path)
+        
+        for cells in board.cells:
+            for cell in cells:
+                cell.current_vehicle = None
+        
+        while time <= board.t:
+            if flag == True:
+                break
+            for vehicle in vehicles:
+                # print("Vehicle name: ", vehicle.name, "current_y: ", vehicle.current_y, "current_x: ", vehicle.current_x)
+
+                for i in range(len(vehicle.path) - 1):
+                    if vehicle.path[i][2] == time:
+                        # print("Time here: ", vehicle.path[i][2])
+                        next_y, next_x = vehicle.path[i+1][0], vehicle.path[i+1][1]
+                        # print("next_y: ", next_y, "next_x: ", next_x, "vehicle: ", board.cells[next_y][next_x].current_vehicle)
+                        if board.cells[next_y][next_x].current_vehicle != None and vehicle.name != S_vehicle.name:
+                            flag = True
+                            name = board.cells[next_y][next_x].current_vehicle
+                            for v in vehicles:
+                                if v.name == name:
+                                    try:
+                                        next_next_y = v.path[i+2][0]
+                                        next_next_x = v.path[i+2][1]
+                                    except:
+                                        next_next_y = v.goal_y
+                                        next_next_x = v.goal_x
+                                        # next_next_x = v.current_x
+                                        # next_next_y = v.current_y
+                                    break
+                            if vehicle.current_x == next_next_x or vehicle.current_y == next_next_y:
+                                vehicle.blocked_opposite.append(vehicle.path[i+1])
+                                # print ("Blocked cell OP: ", vehicle.path[i+1], "by ", name, "current: ", vehicle.name)
+                            else:
+                                vehicle.blocked_temp.append(vehicle.path[i+1])
+                                # print ("Blocked cell Temp: ", vehicle.path[i+1], "by ", name, "current: ", vehicle.name)
+                        else:
+                            board.cells[vehicle.current_y][vehicle.current_x].current_vehicle = None
+                            vehicle.current_y, vehicle.current_x = next_y, next_x
+                            board.cells[vehicle.current_y][vehicle.current_x].current_vehicle = vehicle.name
+            print("Time: ", time)
+            for vehicle in vehicles:
+                print("--------------------------------")
+                print("Name: ", vehicle.name)
+                print("Start: ", vehicle.start_y, vehicle.start_x)
+                print("Goal: ", vehicle.goal_y, vehicle.goal_x)
+                print("Current: ", vehicle.current_y, vehicle.current_x)
+                if vehicle.path == []:
+                    print("Need find best path")
+                    vehicle.path = vehicle.find_best_path(board)
+                paths.append(vehicle.path)
+            
+            board.test_display_path(paths)
+            for vehicle in vehicles:
+                if (vehicle.current_y == vehicle.goal_y and vehicle.current_x == vehicle.goal_x) or vehicle.path == []:
+                    print("Time: ", time, " Vehicle: ", vehicle.name, "Start: ", vehicle.start_y, vehicle.start_x, "Goal: ", vehicle.goal_y, vehicle.goal_x, "Current: ", vehicle.current_y, vehicle.current_x)
+                    if vehicle.name == S_vehicle.name:
+                        return paths
+                    vehicle.regenerate(board)
+            paths = []
+                    
+                
+            time += 1
+            # cnt += 1
+            # if cnt == 10:
+            #     break
+
+
+
+
+def main():
+    n, m, t, f, map_data = read_input_file('Source//input1_level1.txt')
+    
+    # Test level 4 75%
+    board = Board(n, m, f, t, map_data, level=4)
+    paths = process_lev4(board)
+    print(paths)
+    if(paths != []):
+        print("THE FINAL STATE: ")
+        board.test_display_path(paths)
+    else:
+        print("Can't find path, lev 4")
+    
+    
+    #Test level 3
+    # board = Board(n, m, f, t, map_data, level=3)
+    # S_vehicle = board.vehicle[0]   
+    # paths = []     
+    # # board.test_display_path(paths)
+    # # print (paths)
+    # # print(S_vehicle.process_lev3(board))
+    # paths.append(S_vehicle.process_lev3(board))
+    # if(paths != []):
+    #     board.test_display_path(paths)
+    # else:
+    #     print("Can't find path, lev 3")
+    
+    
+    print("Done")
+    
+    # board.test_input_2("S3")
+    # board.test_input()
+    
+if __name__ == "__main__":
+    main()
+
+#Dear PhatLe
+#Class cell, board, base_vehicle đều có cập nhật
+#Cập nhật fought_cell
+#Path được trả về với dạng (y, x, time_leave)
