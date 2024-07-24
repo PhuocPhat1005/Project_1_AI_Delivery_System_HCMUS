@@ -52,11 +52,11 @@ while True:
             pygame.quit()
             #sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN and is_down == False and is_up == False:
                 is_down = True
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP and is_up == False and is_down == False:
                 is_up = True
-            if event.key == pygame.K_RETURN: # press Enter to choose an option
+            elif event.key == pygame.K_RETURN: # press Enter to choose an option
                 choose_option = menu.get_choice()
                 
     # Menu
