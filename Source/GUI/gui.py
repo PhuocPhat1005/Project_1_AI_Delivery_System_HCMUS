@@ -64,25 +64,6 @@ class Board_UI:
     def showBoard(self):
         i = 0
         j = 0
-        '''for i in range (0, self.n):
-            for j in range (0, self.m):
-                if j < 3:
-                    screen.blit(self.wall_cell_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
-                elif j < 8:
-                    screen.blit(self.empty_cell_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
-                else:
-                    screen.blit(self.fuel_cell_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
-        for i in range (0, self.n):
-            for j in range (0, self.m):
-<<<<<<< HEAD
-                if j == 3:
-                    screen.blit(self.vehicle_right_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
-                elif j == 4:
-                    screen.blit(self.vehicle_up_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
-                elif j == 5:
-                    screen.blit(self.vehicle_left_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
-                elif j == 6:
-                    screen.blit(self.vehicle_down_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))'''
         for i in range (0, self.n):
             for j in range (0, self.m):
                 if self.map_data[i][j] == '-1':
@@ -98,7 +79,7 @@ class Board_UI:
                         screen.blit(self.vehicle_num_right_img, (WINDOW_WIDTH * 0.1 + i*self.cell_side, WINDOW_HEIGHT * 0.1 + j*self.cell_side))
 
 
-def main_test():
+def map_show():
     level = 1
     with open('input1_level4.txt', 'r') as file:
         # Read the first line and extract n, m, t, f
@@ -110,8 +91,12 @@ def main_test():
         for _ in range(n):
             line = file.readline().strip()
             map_data.append(line.split())
-    print(map_data)
-    while True:
+    #print(map_data)
+    screen.fill(black)
+    M1 = Board_UI(n, m, t, f, level)
+    M1.readMapData(map_data)
+    M1.showBoard()
+    '''while True:
         screen.fill(black)
 
         #M1 = Board_UI(10, 10, 0, 0, 1)
@@ -122,11 +107,8 @@ def main_test():
             pygame.display.flip()
             if event.type == QUIT:
                 pygame.quit()
-                sys.exit()
+                sys.exit()'''
 
-main_test()
-=======
-                screen.blit(self.empty_cell_img, (WINDOW_WIDTH * 0.1 + i*40, WINDOW_HEIGHT * 0.1 + j*40))
                 
                 
 choose_option = None
@@ -140,7 +122,7 @@ while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
-            #sys.exit()
+            sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
                 is_down = True
@@ -156,13 +138,13 @@ while True:
         menu.display_menu(is_up, is_down)
     
     if choose_option is not None:
+        if choose_option == 0:
+            map_show() #run and show map
         if choose_option == 1:
             credit.display_credit()
             choose_option = credit.back_to_menu()
         if choose_option == 2:
             pygame.quit()
-        # M1 = Board_UI(10, 10, 0, 0)
-        # M1.showBoard()
+            sys.exit()
             
     pygame.display.flip()
->>>>>>> bbda48d4f7c55d842b4677af1feb9439922a9e58
