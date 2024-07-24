@@ -92,7 +92,10 @@ class vehicle_level3(vehicle_base):
         return path
 
     def find_best_goal(self, board):
-
+        if board.fuel_stations == []:
+            self.tmp_goal_y = -1
+            self.tmp_goal_x = -1
+            return
         best_heuristic = float("inf")
         for fuel_station in board.fuel_stations:
             if (
