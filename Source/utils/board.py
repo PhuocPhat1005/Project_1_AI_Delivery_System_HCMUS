@@ -3,12 +3,15 @@ from utils.cells import cell
 
 from levels.level_1.vehicle_level1 import vehicle_level1
 from levels.level_2.vehicle_level2 import vehicle_level2
+from levels.level_3.vehicle_level3 import vehicle_level3
 from levels.level_4.vehicle_level4 import vehicle_level4
 
 
-def fought_cells(x, y, paths):
+def fought_cells(y, x, paths):
     for i, path in enumerate(paths):
-        if (x, y) in path:
+        # Tạo danh sách các tọa độ (x, y) từ mỗi đường dẫn
+        coordinates = [(py, px) for py, px, _ in path]
+        if (y, x) in coordinates:
             return i
     return -1
 
@@ -21,7 +24,6 @@ class Board:
         self.t = t
         self.map_data = map_data
         self.cells = []
-        self.time = 0
         self.vehicle = []
         goals = []
         self.fuel_stations = []
@@ -30,15 +32,14 @@ class Board:
             self.cells.append(list())
             for j in range(m):
                 self.cells[i].append(cell(y=i, x=j, raw_value=map_data[i][j]))
-                print(f"Time: {t}")
                 if "S" in map_data[i][j]:
                     name = map_data[i][j]
                     if level == 1:
                         self.vehicle.append(vehicle_level1(name, i, j, t, f))
                     if level == 2:
                         self.vehicle.append(vehicle_level2(name, i, j, t, f))
-                    # if level == 3:
-                    #     self.vehicle.append(vehicle_lev3(name, i, j, f))
+                    if level == 3:
+                        self.vehicle.append(vehicle_level3(name, i, j, t, f))
                     if level == 4:
                         self.vehicle.append(vehicle_level4(name, i, j, t, f))
                 if "G" in map_data[i][j]:
@@ -119,11 +120,6 @@ class Board:
             return False
         return True
 
-    # def can_visit(self, vehicle_name, y, x):
-    #     if 0 <= y < len(self.cells) and 0 <= x < len(self.cells[0]):
-    #         return not self.cells[y][x].visited[vehicle_name]
-    #     return False
-
     def tracepath(self, name):
         vehicle = None
         for v in self.vehicle:
@@ -133,10 +129,34 @@ class Board:
         path = []
         y, x = vehicle.tmp_goal_y, vehicle.tmp_goal_x
         while y != vehicle.tmp_start_y or x != vehicle.tmp_start_x:
+            # time_leave = self.cells[y][x].time[name] + 1
             path.append((y, x))
+            # path.append((y, x, time_leave))
             y, x = self.cells[y][x].parent[name]
+
+        # path.append((vehicle.current_y, vehicle.current_x, 1))
         path.append((vehicle.tmp_start_y, vehicle.tmp_start_x))
         return path[::-1]
+
+    def unique_path(self, path):
+        unique_list = []
+        for item in path:
+            if item not in unique_list:
+                unique_list.append(item)
+        return unique_list
+
+    def path_and_time(self, name, path):
+        unique_list = []
+        for item in path:
+            if item not in unique_list:
+                unique_list.append(item)
+        new_path = []
+        for i in range(len(unique_list)):
+            y, x = unique_list[i]
+            time_leave = self.cells[y][x].time[name]  # + 1
+            new_path.append((y, x, time_leave))
+        # print("New path: ", new_path)
+        return new_path
 
     def test_input(self):
         print("Number of rows: ", self.n)
@@ -147,6 +167,17 @@ class Board:
         for i in range(self.n):
             for j in range(self.m):
                 print(f"{self.cells[i][j].raw_value:5}", end=" ")
+            print("\n")
+
+    def test_input_2(self, name):
+        print("Number of rows: ", self.n)
+        print("Number of columns: ", self.m)
+        print("Initial fuel: ", self.f)
+        print("Time limit: ", self.t)
+        print("Map data: ")
+        for i in range(self.n):
+            for j in range(self.m):
+                print(f"{self.cells[i][j].heuristic[name]:5}", end=" ")
             print("\n")
 
     def test_display_path(self, paths):
