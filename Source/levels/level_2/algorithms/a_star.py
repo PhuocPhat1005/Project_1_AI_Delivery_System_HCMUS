@@ -141,4 +141,4 @@ class AStarAlgorithm:
         self.vehicle.tmp_goal_y = self.vehicle.goal_y
         self.vehicle.tmp_goal_x = self.vehicle.goal_x
         path = self.a_star_execution(board)
-        return board.path_and_time(self.vehicle.name, path)
+        return board.path_time_fuel(self.vehicle.name, path)
