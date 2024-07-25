@@ -1,13 +1,17 @@
 import heapq
 import random
 from utils.vehicle_base import vehicle_base
+from GUI.gui import *
 
 
 class vehicle_level4(vehicle_base):
     def __init__(self, name, start_y, start_x, time, fuel):
         super().__init__(name, start_y, start_x, time, fuel)
-
+        self.is_regenerated = False
+        self.final_path = []
+        
     def regenerate(self, board):
+        self.is_regenerated = True
         board.cells[self.start_y][self.start_x].raw_value = "0"
 
         board.cells[self.goal_y][self.goal_x].raw_value = self.name
@@ -76,12 +80,15 @@ class vehicle_level4(vehicle_base):
         #         print(board.cells[i][j].raw_value, end = ' ')
         #     print()
 
-        self.current_fuel = self.fuel
+        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:   
+            pass
+        else: 
+            self.current_fuel = self.fuel
 
         start_cell = board.cells[self.tmp_start_y][self.tmp_start_x]
         start_cell.visited[self.name] = True
         start_cell.cost[self.name] = 0
-        start_cell.fuel[self.name] = self.fuel
+        start_cell.fuel[self.name] = self.current_fuel
         if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
             start_cell.time[self.name] = 1
         else:
@@ -103,6 +110,7 @@ class vehicle_level4(vehicle_base):
             # print()
             # current_f, current_cell = heapq.heappop(frontier)
             current_cell = heapq.heappop(frontier)
+            self.current_fuel = board.cells[current_cell.y][current_cell.x].fuel[self.name]
             # board.cells[current_cell.y][current_cell.x].current_vehicle = None
             y = [0, 0, 1, -1]
             x = [1, -1, 0, 0]
@@ -239,7 +247,7 @@ class vehicle_level4(vehicle_base):
             # print(path)
             if path != []:
                 flag = False
-                path = board.path_and_time(self.name, path)
+                path = board.path_time_fuel(self.name, path)
                 paths.append(path)
                 self.tmp_start_y = self.tmp_goal_y
                 self.tmp_start_x = self.tmp_goal_x
@@ -271,7 +279,7 @@ class vehicle_level4(vehicle_base):
         return joined_path
 
 
-def process_lev4(board):
+def process_lev4(board, n, m, t, f, map_data, cell_side):
 
     vehicles = board.get_vehicle()
     S_vehicle = vehicles[0]
@@ -365,8 +373,12 @@ def process_lev4(board):
                         print("Need find best path")
                         vehicle.path = vehicle.find_best_path(board)
                     paths.append(vehicle.path)
-    
+                    vehicle.final_path.append(vehicle.path)
+
+                
                 board.test_display_path(paths)
+                path_UI(n, m, t, f, board.map_data, paths, cell_side)
+                map_UI(n, m, t, f, board.map_data, 4, "")
                 for vehicle in vehicles:
                     if (
                         vehicle.current_y == vehicle.goal_y
