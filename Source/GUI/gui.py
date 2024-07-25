@@ -134,8 +134,9 @@ class Board_UI(Image_UI):
                     self.showGasStation(j, i)
                 #show goal
                 elif 'G' in self.map_data[j][i]:
-                    if len(self.map_data[j][i]) == 1:
-                        self.showGoal(j, i)
+                    self.showGoal(j, i)
+                    #if len(self.map_data[j][i]) == 1:
+                        #self.showGoal(j, i)
                 #show toll booths
                 elif self.map_data[j][i].isdigit() and int(self.map_data[j][i]) > 0:
                     self.showTollBooths(j, i)
@@ -143,7 +144,7 @@ class Board_UI(Image_UI):
                 else:
                     self.showEmpty(j, i)
                 if 'S' in self.map_data[j][i]:
-                    screen.blit(self.start_cell_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+                    self.showStart(j, i)
                     if len(self.map_data[j][i]) == 1:
                         screen.blit(self.vehicle_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
                     else:
@@ -206,7 +207,7 @@ def path_UI(n, m, map_data, paths, cell_side):
                                 return
                     
                     #if len_of_n_veh[count_veh] >= count:
-                    if count < len(paths[0]):
+                    if count < min_len_of_n_veh and count > 0:
                         i, j, k = paths[count_veh][count]
                         if (i, j, k) in paths[count_veh]:
                             if count_veh == 0:

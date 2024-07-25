@@ -45,6 +45,7 @@ def main():
             path = vehicle.process(board)
             vehicle.path = path
             paths.append(path)
+        path_UI(n, m, map_data, paths, cell_side)
     else:
         paths = process_lev4(
             board
@@ -63,8 +64,6 @@ def main():
     write_paths_to_file(output_filename, vehicles, level)
     print(paths)
     #hien path, hien line
-    path_UI(n, m, map_data, paths, cell_side)
-
 if __name__ == "__main__":
     while True:
         main()
