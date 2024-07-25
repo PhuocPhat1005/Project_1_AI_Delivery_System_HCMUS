@@ -7,7 +7,9 @@ from GUI.gui import *
 class vehicle_level4(vehicle_base):
     def __init__(self, name, start_y, start_x, time, fuel):
         super().__init__(name, start_y, start_x, time, fuel)
-
+        self.is_regenerated = False
+        self.final_path = []
+        
     def regenerate(self, board):
         board.cells[self.start_y][self.start_x].raw_value = "0"
 
