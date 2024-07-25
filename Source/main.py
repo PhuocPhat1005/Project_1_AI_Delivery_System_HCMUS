@@ -47,9 +47,22 @@ def main():
             paths.append(path)
         path_UI(n, m, t, f, map_data, paths, cell_side)
     else:
-        paths = process_lev4(
-            board, n, m, t, f, map_data, cell_side
-        )
+        paths = process_lev4(board)
+        vehicles = board.get_vehicle()
+        for vehicle in vehicles:
+            vehicle.path = []
+            prev_value = 0
+            vehicle.final_path = board.unique_path(vehicle.final_path)
+            for path in vehicle.final_path:
+                if path[-1][2] <= board.t + 1 - prev_value:
+                    for i in range (0, len(path)):
+                        path[i] = (path[i][0], path[i][1], path[i][2] + prev_value, path[i][3])
+                    prev_value = path[-1][2] - 1
+                    vehicle.path.extend(path)
+                else:
+                    vehicle.path = board.unique_path(vehicle.path)
+                    break
+        print('FINAL STATE: ')
     board.test_display_path(paths)
 
 
