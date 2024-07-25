@@ -6,6 +6,7 @@ from text import *
 from menu import *
 from credit import *
 from level_list import *
+from ui_level_1 import *
 
 pygame.init()
 
@@ -117,36 +118,97 @@ menu = Menu(screen)
 credit = Credit(screen)
 level_list = LeveList(screen)
 
+
+choose_level_result = None
+ui_lv_1 = UI_Level_1(screen)
+
+# while True:
+#     is_up = False
+#     is_down = False
+    
+#     for event in pygame.event.get():
+#         if event.type == QUIT:
+#             pygame.quit()
+#             sys.exit()
+#         if event.type == pygame.KEYDOWN:
+#             if event.key == pygame.K_DOWN and is_down == False and is_up == False:
+#                 is_down = True
+#             elif event.key == pygame.K_UP and is_up == False and is_down == False:
+#                 is_up = True
+#             elif event.key == pygame.K_RETURN: # press Enter to choose an option
+#                 choose_option = menu.get_choice()
+                
+#     # Menu
+#     screen.fill((0,0,0))   
+
+#     if choose_option is None:
+#         menu.display_menu(is_up, is_down)
+    
+#     else:
+#         if choose_option == 0:
+#             # Them level list
+#             if choose_level_result is None:
+#                 level_list.show_level_list(is_up, is_down)
+#                 choose_level_result = level_list.get_option_result()
+            
+#             elif choose_level_result == 0:
+#                 ui_lv_1.show_level_list(is_up, is_down)
+#                 choose_level_result = ui_lv_1.get_back_to()
+            
+#             choose_option = level_list.get_back_to()
+            
+#             # map_show() #run and show map
+#         if choose_option == 1:
+#             credit.display_credit()
+#             choose_option = credit.get_back_to()
+#         if choose_option == 2:
+#             pygame.quit()
+#             sys.exit()
+            
+#     pygame.display.flip()
+
 while True:
     is_up = False
     is_down = False
+    is_left = False
+    is_enter = False
     
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN and is_down == False and is_up == False:
+            if event.key == pygame.K_DOWN and is_down == False and is_up == False and is_left == False and is_enter == False:
                 is_down = True
-            if event.key == pygame.K_UP and is_up == False and is_down == False:
+            elif event.key == pygame.K_UP and is_down == False and is_up == False and is_left == False and is_enter == False:
                 is_up = True
-            elif event.key == pygame.K_RETURN: # press Enter to choose an option
-                choose_option = menu.get_choice()
+            elif event.key == pygame.K_LEFT and is_down == False and is_up == False and is_left == False and is_enter == False:
+                is_left = True
+            elif event.key == pygame.K_RETURN and is_down == False and is_up == False and is_left == False and is_enter == False:
+                is_enter = True
                 
     # Menu
     screen.fill((0,0,0))   
-
-    if choose_option is None:
-        menu.display_menu(is_up, is_down)
     
-    if choose_option is not None:
+    if choose_option is None:
+        menu.display_menu(is_up, is_down, is_enter)
+        choose_option = menu.get_choose_option()
+    else:
         if choose_option == 0:
             # Them level list
-            level_list.show_level_list(is_up, is_down)
+            if choose_level_result is None:
+                level_list.show_level_list(is_up, is_down, is_left, is_enter)
+                choose_level_result = level_list.get_option_result()
+            
+            elif choose_level_result == 0:
+                ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
+                choose_level_result = ui_lv_1.get_back_to()
+            
             choose_option = level_list.get_back_to()
+            
             # map_show() #run and show map
         if choose_option == 1:
-            credit.display_credit()
+            credit.display_credit(is_left)
             choose_option = credit.get_back_to()
         if choose_option == 2:
             pygame.quit()
