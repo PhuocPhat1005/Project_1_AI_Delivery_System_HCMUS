@@ -30,8 +30,10 @@ def main():
     paths = []
 
     #vua hien UI map, vua tim canh cell
-    #cell_side = map_UI(n, m, t, f, map_data, level)
+    cell_side = map_UI(n, m, t, f, map_data, level)
     for vehicle in vehicles:
+        #if level == 1:
+            #vehicle.get_algorithm(algo)
         print(
             vehicle.name,
             f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
@@ -47,7 +49,7 @@ def main():
     write_paths_to_file("output/output1_level1.txt", vehicles)
     print(paths)
     #hien path, hien line
-    #path_UI(n, m, map_data, paths, cell_side)
+    path_UI(n, m, map_data, paths, cell_side)
 
 
 if __name__ == "__main__":
