@@ -45,10 +45,10 @@ def main():
             path = vehicle.process(board)
             vehicle.path = path
             paths.append(path)
-        path_UI(n, m, map_data, paths, cell_side)
+        path_UI(n, m, t, f, map_data, paths, cell_side)
     else:
         paths = process_lev4(
-            board
+            board, n, m, t, f, map_data, cell_side
         )
     board.test_display_path(paths)
 

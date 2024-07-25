@@ -10,7 +10,7 @@ class UI_Level_1:
         self.option_back_to = None
         self.option_result = None
         self.level_list = [[True, 'BFS'], [False, 'DFS'], [False, 'UCS'], [False, 'GBFS'], [False, 'A*']]
-        
+    
     def get_choice(self):
         for i, element in enumerate(self.level_list):
             if element[0]:
@@ -42,7 +42,7 @@ class UI_Level_1:
     
     def draw_ui(self, pos_x, pos_y, content=''):
         self.write_text_content(pos_x=pos_x, pos_y=pos_y, content=content)
-        back_button = BackButton(self.screen)
+        BackButton(self.screen)
         
     def show_level_list(self, is_up, is_down, is_left, is_enter):
         self.screen.fill(BACKGROUND_COLOR)
@@ -66,4 +66,3 @@ class UI_Level_1:
             
         choice_list = ChoiceList(self.screen)
         choice_list.choose_options(self.level_list, is_up, is_down, 300)
-                

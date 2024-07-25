@@ -42,26 +42,33 @@ class Image_UI:
         self.line_h_img = pygame.image.load(f'GUI\\assets\\line_3.png')
         self.line_h_img = pygame.transform.scale(self.line_h_img, self.cell_size)
         self.line_v_img = pygame.transform.rotate(self.line_h_img, 90)
-        
         self.left_down_img = pygame.image.load(f'GUI\\assets\\L_3_left_down.png')
         self.left_down_img = pygame.transform.scale(self.left_down_img, self.cell_size)
-        
         self.left_up_img = pygame.image.load(f'GUI\\assets\\L_3_left_up.png')
         self.left_up_img = pygame.transform.scale(self.left_up_img, self.cell_size)
-
         self.right_down_img = pygame.image.load(f'GUI\\assets\\L_3_right_down.png')
         self.right_down_img = pygame.transform.scale(self.right_down_img, self.cell_size)
-        
         self.right_up_img = pygame.image.load(f'GUI\\assets\\L_3_right_up.png')
         self.right_up_img = pygame.transform.scale(self.right_up_img, self.cell_size)
         
-
         self.vehicle_right_img = pygame.image.load(f'GUI\\assets\\vehicle_3.png')
         self.vehicle_right_img = pygame.transform.scale(self.vehicle_right_img, self.cell_size)
         self.vehicle_up_img = pygame.transform.rotate(self.vehicle_right_img, 90)
         self.vehicle_left_img = pygame.transform.rotate(self.vehicle_up_img, 90)
         self.vehicle_down_img = pygame.transform.rotate(self.vehicle_left_img, 90)
         
+        self.line_h_num_img = pygame.image.load(f'GUI\\assets\\line_2.png')
+        self.line_h_num_img = pygame.transform.scale(self.line_h_num_img, self.cell_size)
+        self.line_v_num_img = pygame.transform.rotate(self.line_h_num_img, 90)
+        self.left_down_num_img = pygame.image.load(f'GUI\\assets\\L_2_left_down.png')
+        self.left_down_num_img = pygame.transform.scale(self.left_down_num_img, self.cell_size)
+        self.left_up_num_img = pygame.image.load(f'GUI\\assets\\L_2_left_up.png')
+        self.left_up_num_img = pygame.transform.scale(self.left_up_num_img, self.cell_size)
+        self.right_down_num_img = pygame.image.load(f'GUI\\assets\\L_2_right_down.png')
+        self.right_down_num_img = pygame.transform.scale(self.right_down_num_img, self.cell_size)
+        self.right_up_num_img = pygame.image.load(f'GUI\\assets\\L_2_right_up.png')
+        self.right_up_num_img = pygame.transform.scale(self.right_up_num_img, self.cell_size)
+
         self.vehicle_num_right_img = pygame.image.load(f'GUI\\assets\\vehicle_2.png')
         self.vehicle_num_right_img = pygame.transform.scale(self.vehicle_num_right_img, self.cell_size)
         self.vehicle_num_up_img = pygame.transform.rotate(self.vehicle_num_right_img, 90)
@@ -80,22 +87,59 @@ class Image_UI:
         screen.blit(self.time_cell_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
     def showGasStation(self, j, i):
         screen.blit(self.fuel_cell_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-    def showVehicle(self, j, i):
-        screen.blit(self.vehicle_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
     
-    def drawLeftDown(self, j, i):
-        screen.blit(self.left_down_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-    def drawRightDown(self, j, i):
-        screen.blit(self.right_down_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-    def drawRightUp(self, j, i):
-        screen.blit(self.right_up_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-    def drawLeftUp(self, j, i):
-        screen.blit(self.left_up_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    
+    def showVehicle(self, j, i, jP, iP, count_veh):
+        if count_veh == 0:
+            vehicle_img = self.vehicle_right_img
+            if i == iP-1:
+                vehicle_img = self.vehicle_left_img
+            elif j == jP+1:
+                vehicle_img = self.vehicle_down_img
+            elif j == jP-1:
+                vehicle_img = self.vehicle_up_img
+            screen.blit(vehicle_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        else:
+            vehicle_img = self.vehicle_num_right_img
+            if i == iP-1:
+                vehicle_img = self.vehicle_num_left_img
+            elif j == jP+1:
+                vehicle_img = self.vehicle_num_down_img
+            elif j == jP-1:
+                vehicle_img = self.vehicle_num_up_img
+            screen.blit(vehicle_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    
+    def drawLeftDown(self, j, i, count_veh):
+        if count_veh == 0:
+            screen.blit(self.left_down_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        else:
+            screen.blit(self.left_down_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    def drawRightDown(self, j, i, count_veh):
+        if count_veh == 0:
+            screen.blit(self.right_down_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        else:
+            screen.blit(self.right_down_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    def drawRightUp(self, j, i, count_veh):
+        if count_veh == 0:
+            screen.blit(self.right_up_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        else:
+            screen.blit(self.right_up_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    def drawLeftUp(self, j, i, count_veh):
+        if count_veh == 0:
+            screen.blit(self.left_up_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        else:
+            screen.blit(self.left_up_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
 
-    def drawLineHorizontal(self, j, i):
-        screen.blit(self.line_h_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-    def drawLineVertical(self, j, i):
-        screen.blit(self.line_v_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    def drawLineHorizontal(self, j, i, count_veh):
+        if count_veh == 0:
+            screen.blit(self.line_h_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        else:
+            screen.blit(self.line_h_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    def drawLineVertical(self, j, i, count_veh):
+        if count_veh == 0:
+            screen.blit(self.line_v_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        else:
+            screen.blit(self.line_v_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
 
 class Board_UI(Image_UI):
     def __init__(self, _n, _m, _t, _f, _level):
@@ -159,13 +203,19 @@ def map_UI(n, m, t, f, map_data, level, algo):
     M1.showBoard()
     
     if level == 1:
-        sa = Text_Display("Search algorithm:\n")
-        satext_content = sa.show_text()
-        text_pos = (750, 100)        
-        screen.blit(satext_content, text_pos)
-        write_line(750, 100, 'search algorithm:')
-        write_line(900, 200, algo)
-        #ui_lv_1.draw_ui(900, 200, algo)
+        ui_lv_1 = UI_Level_1(screen)
+        ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+        ui_lv_1.draw_ui(900, 200, algo)
+    elif level == 2:
+        ui_lv_1 = UI_Level_1(screen)
+        ui_lv_1.draw_ui(750, 100, 'Time:')
+        ui_lv_1.draw_ui(950, 100, str(t) + 's')
+    elif level == 3:
+        ui_lv_1 = UI_Level_1(screen)
+        ui_lv_1.draw_ui(750, 100, 'Time:')
+        ui_lv_1.draw_ui(950, 100, str(t) + 's')
+        ui_lv_1.draw_ui(750, 200, 'Fuel:')
+        ui_lv_1.draw_ui(950, 200, str(f))
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -176,7 +226,8 @@ def map_UI(n, m, t, f, map_data, level, algo):
                     return M1.returnCellSide()
         pygame.display.flip()
 
-def path_UI(n, m, map_data, paths, cell_side):
+def path_UI(n, m, t, f, map_data, paths, cell_side):
+    print('Time:', t)
     I1 = Image_UI(cell_side)
     i = 0
     j = 0
@@ -194,6 +245,11 @@ def path_UI(n, m, map_data, paths, cell_side):
     if len(paths) != 0:
         max_len_of_n_veh = max(len_of_n_veh)
         min_len_of_n_veh = min(len_of_n_veh)
+        
+    ui_lv_1 = UI_Level_1(screen)
+    prev_time = 0
+
+    line_pass = [[[-2,-2] for _ in range(1)] for _ in range(len(paths))]
     while True:
         if is_go_path:
             for count in range (0, max_len_of_n_veh):
@@ -207,16 +263,20 @@ def path_UI(n, m, map_data, paths, cell_side):
                                 return
                     
                     #if len_of_n_veh[count_veh] >= count:
-                    if count < min_len_of_n_veh and count > 0:
+                    if count < len(paths[count_veh]) and count > 0:
                         i, j, k = paths[count_veh][count]
-                        if (i, j, k) in paths[count_veh]:
-                            if count_veh == 0:
-                                I1.showVehicle(i, j)
-                            else:
-                                I1.showVehicle(i, j)
+                        
+                        if t and k != float('inf'):
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 100, 50))
+                            ui_lv_1.draw_ui(950, 100, str(int(t - prev_time)) + 's')
+                            prev_time = k
                         #P: past | PP: past past
                         if count>0:
                             iP, jP, kP = paths[count_veh][count-1]
+                        
+                            if (i, j, k) in paths[count_veh]:
+                                I1.showVehicle(i, j, iP, jP, count_veh)
+                            
                             if 'S' in map_data[jP][iP]:
                                 I1.showStart(iP, jP)
                             else:
@@ -229,17 +289,17 @@ def path_UI(n, m, map_data, paths, cell_side):
                                 if count>1:
                                     iPP, jPP, kPP = paths[count_veh][count-2]
                                     if (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
-                                        I1.drawLeftDown(iP, jP)
+                                        I1.drawLeftDown(iP, jP, count_veh)
                                     elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
-                                        I1.drawLeftUp(iP, jP)
+                                        I1.drawLeftUp(iP, jP, count_veh)
                                     elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
-                                        I1.drawRightDown(iP, jP)
+                                        I1.drawRightDown(iP, jP, count_veh)
                                     elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
-                                        I1.drawRightUp(iP, jP)
+                                        I1.drawRightUp(iP, jP, count_veh)
                                     elif i == iP:# and iP == iPP:
-                                        I1.drawLineHorizontal(iP, jP)
+                                        I1.drawLineHorizontal(iP, jP, count_veh)
                                     elif j == jP:# and jP == jPP:
-                                        I1.drawLineVertical(iP, jP)
+                                        I1.drawLineVertical(iP, jP, count_veh)
                         
                 pygame.time.wait(200)
                 pygame.display.flip()
@@ -307,37 +367,37 @@ def menu_UI():
                         algo = 'BFS'
                         return choose_level_result, algo
                         #run and show map
-                        ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        ui_lv_1.draw_ui(900, 200, 'BFS')
-                        option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=0, is_force_left=is_left)
+                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                        # ui_lv_1.draw_ui(900, 200, 'BFS')
+                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=0, is_force_left=is_left)
                     elif option_result_in_lv_1 == 1: # option DFS cua level 1
                         algo = 'DFS'
                         return choose_level_result, algo
                         #run and show map
-                        ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        ui_lv_1.draw_ui(900, 200, 'DFS')
-                        option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=1, is_force_left=is_left)
+                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                        # ui_lv_1.draw_ui(900, 200, 'DFS')
+                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=1, is_force_left=is_left)
                     elif option_result_in_lv_1 == 2: # option UCS cua level 1
                         algo = 'UCS'
                         return choose_level_result, algo
                         #run and show map
-                        ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        ui_lv_1.draw_ui(900, 200, 'UCS')
-                        option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=2, is_force_left=is_left)
+                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                        # ui_lv_1.draw_ui(900, 200, 'UCS')
+                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=2, is_force_left=is_left)
                     elif option_result_in_lv_1 == 3: # option GBFS cua level 1
                         algo = 'GBFS'
                         return choose_level_result, algo
                         #run and show map
-                        ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        ui_lv_1.draw_ui(900, 200, 'GBFS')
-                        option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=3, is_force_left=is_left)
+                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                        # ui_lv_1.draw_ui(900, 200, 'GBFS')
+                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=3, is_force_left=is_left)
                     elif option_result_in_lv_1 == 4: # option A* cua level 1
                         algo = 'A*'
                         return choose_level_result, algo
                         #run and show map
-                        ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        ui_lv_1.draw_ui(900, 200, 'A*')
-                        option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=4, is_force_left=is_left)
+                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                        # ui_lv_1.draw_ui(900, 200, 'A*')
+                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=4, is_force_left=is_left)
                         
                     choose_level_result = ui_lv_1.get_back_to()
                 elif choose_level_result >= 1: # option level 2->4
