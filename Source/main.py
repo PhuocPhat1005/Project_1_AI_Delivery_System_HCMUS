@@ -2,19 +2,19 @@ from utils.read_input import read_input_file
 from utils.write_output import write_paths_to_file
 from utils.board import Board
 import os
-from levels.level_4.vehicle_level4 import process_lev4
 
 
-def main():
-    # # Create the output directory if it does not exist
-    if not os.path.exists("output"):
-        os.makedirs("output")
+def play_level(level, map_order):
+    # Read input data
+    input_filename = f"input/level{level}/input{map_order}_level{level}.txt"
+    if not os.path.exists(input_filename):
+        print(f"File {input_filename} does not exist. Please enter the details again.")
+        return
 
-    # # Read input data
-    n, m, t, f, map_data = read_input_file("input/level2/input1_level2.txt")
+    n, m, t, f, map_data = read_input_file(input_filename)
 
-    # # # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level=2)
+    # Initialize the board and vehicles
+    board = Board(n, m, f, t, map_data, level=level)
     vehicles = board.get_vehicle()
     paths = []
 
@@ -28,41 +28,52 @@ def main():
         vehicle.path = path
         paths.append(path)
     board.test_display_path(paths)
+
+    # Determine output filename based on the input filename
+    output_filename = f"output/level{level}/output_{os.path.basename(input_filename).split('.')[0]}_level{level}.txt"
+
+    # Create the output directory for the level if it does not exist
+    if not os.path.exists(f"output/level{level}"):
+        os.makedirs(f"output/level{level}")
+
     # Write paths to the output file
-    write_paths_to_file("output/output1_level2.txt", vehicles)
+    write_paths_to_file(output_filename, vehicles)
 
-    # Test level 2
-    # board = Board(n, m, f, t, map_data, level=2)
-    # S_vehicle = board.vehicle[0]
-    # paths = []
-    # board.test_display_path(paths)
-    # paths.append(S_vehicle.process_lev2(board))
-    # print (paths)
-    # if(paths != []):
-    #     board.test_display_path(paths)
-    # else:
-    #     print("Can't find path, lev 2")
 
-    # Test level 3
-    # board = Board(n, m, f, t, map_data, level=4)
-    # S_vehicle = board.vehicle[0]
-    # paths = []
-    # paths.append(S_vehicle.process_lev3(board))
-    # # print(paths)
-    # if paths != []:
-    #     board.test_display_path(paths)
-    # else:
-    #     print("Can't find path, lev 3")
+def main():
+    while True:
+        while True:
+            try:
+                level = int(input("Enter your level (e.g., 1, 2, 3, 4): "))
+                if 1 <= level <= 4:
+                    break
+                else:
+                    print("The level is invalid. Please choose level from 1 to 4 !!!")
+            except ValueError:
+                print("Please choose a valid level (integer) !!!")
 
-    # Test level 4
-    # board = Board(n, m, f, t, map_data, level=4)
-    # paths = process_lev4(board)
-    # print(paths)
-    # if paths != []:
-    #     print("THE FINAL STATE: ")
-    #     board.test_display_path(paths)
-    # else:
-    #     print("Can't find path, lev 4")
+        while True:
+            try:
+                map_order = int(
+                    input("Enter your map in your level (e.g., 1, 2, 3, 4, 5): ")
+                )
+                if 1 <= map_order <= 5:
+                    break
+                else:
+                    print(
+                        "The map is invalid. Please choose the suitable map in your level (1 to 5) !!!"
+                    )
+            except ValueError:
+                print("Please choose a valid map (integer) !!!")
+
+        play_level(level, map_order)
+
+        play_again = (
+            input("Do you want to play another level? (yes/no): ").strip().lower()
+        )
+        if play_again != "yes":
+            print("Thank you for playing")
+            break
 
 
 if __name__ == "__main__":

@@ -9,4 +9,4 @@ class vehicle_level2(vehicle_base):
         self.algorithm = AStarAlgorithm(self)
 
     def process(self, board):
-        return self.algorithm.execute(board)
+        return self.algorithm.processs_lev2(board)

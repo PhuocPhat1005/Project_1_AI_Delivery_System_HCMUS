@@ -11,7 +11,7 @@ class AStarAlgorithm:
         """
         self.vehicle = vehicle
 
-    def execute(self, board):
+    def a_star_execution(self, board):
         """
         Execute the A* algorithm to find the shortest path from the start position to the goal position.
 
@@ -121,7 +121,7 @@ class AStarAlgorithm:
                 self.vehicle.name
             ] = False
 
-        return board.path_and_time(self.vehicle.name, path)
+        return path
 
     def heuristic(self, cell):
         """
@@ -134,3 +134,11 @@ class AStarAlgorithm:
         int: The heuristic value (Manhattan distance) for the cell.
         """
         return abs(cell.y - self.vehicle.goal_y) + abs(cell.x - self.vehicle.goal_x)
+
+    def processs_lev2(self, board):
+        self.vehicle.tmp_start_y = self.vehicle.current_y
+        self.vehicle.tmp_start_x = self.vehicle.current_x
+        self.vehicle.tmp_goal_y = self.vehicle.goal_y
+        self.vehicle.tmp_goal_x = self.vehicle.goal_x
+        path = self.a_star_execution(board)
+        return board.path_and_time(self.vehicle.name, path)
