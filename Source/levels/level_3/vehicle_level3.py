@@ -76,7 +76,7 @@ class vehicle_level3(vehicle_base):
                         heapq.heappush(frontier, (board.cells[new_y][new_x]))
 
             if current_cell.y == self.tmp_goal_y and current_cell.x == self.tmp_goal_x:
-                board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] = True
+                # board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] = True
                 break
 
         path = []
