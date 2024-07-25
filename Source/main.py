@@ -1,12 +1,8 @@
 from utils.read_input import read_input_file
 from utils.write_output import write_paths_to_file
 from utils.board import Board
-from GUI.gui import *
-from GUI.constants import *
-from GUI.text import *
-from GUI.menu import *
-from GUI.credit import *
 import os
+from levels.level_4.vehicle_level4 import process_lev4
 
 
 def play_level(level, map_order):
@@ -23,12 +19,11 @@ def play_level(level, map_order):
     vehicles = board.get_vehicle()
     paths = []
 
-    # vua hien UI map, vua tim canh cell
-    cell_side = map_UI(n, m, t, f, map_data, level)
+    # # vua hien UI map, vua tim canh cell
+    # cell_side = map_UI(n, m, t, f, map_data, level)
     if level != 4:
         for vehicle in vehicles:
-            # if level == 1:
-            # vehicle.get_algorithm(algo)
+
             print(
                 vehicle.name,
                 f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
@@ -37,8 +32,10 @@ def play_level(level, map_order):
             path = vehicle.process(board)
             vehicle.path = path
             paths.append(path)
-    else 
-        paths = process_lev4(board) #Level thuc thi tren n vehicle, ta khong the goi trong 1 vehicle duoc
+    else:
+        paths = process_lev4(
+            board
+        )  # Level thuc thi tren n vehicle, ta khong the goi trong 1 vehicle duoc
     board.test_display_path(paths)
 
     # Determine output filename based on the input filename
@@ -49,7 +46,7 @@ def play_level(level, map_order):
         os.makedirs(f"output/level{level}")
 
     # Write paths to the output file
-    write_paths_to_file(output_filename, vehicles)
+    write_paths_to_file(output_filename, vehicles, level)
 
 
 def main():
