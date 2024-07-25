@@ -11,9 +11,9 @@ def main():
         os.makedirs("output")
 
     # # Read input data
-    n, m, t, f, map_data = read_input_file("input/input1_level2.txt")
+    n, m, t, f, map_data = read_input_file("input/level2/input1_level2.txt")
 
-    # # Initialize the board and vehicles
+    # # # Initialize the board and vehicles
     board = Board(n, m, f, t, map_data, level=2)
     vehicles = board.get_vehicle()
     paths = []
@@ -31,10 +31,10 @@ def main():
     # Write paths to the output file
     write_paths_to_file("output/output1_level2.txt", vehicles)
 
-    #Test level 2
+    # Test level 2
     # board = Board(n, m, f, t, map_data, level=2)
-    # S_vehicle = board.vehicle[0]   
-    # paths = []     
+    # S_vehicle = board.vehicle[0]
+    # paths = []
     # board.test_display_path(paths)
     # paths.append(S_vehicle.process_lev2(board))
     # print (paths)
@@ -54,7 +54,7 @@ def main():
     # else:
     #     print("Can't find path, lev 3")
 
-    #Test level 4
+    # Test level 4
     # board = Board(n, m, f, t, map_data, level=4)
     # paths = process_lev4(board)
     # print(paths)
