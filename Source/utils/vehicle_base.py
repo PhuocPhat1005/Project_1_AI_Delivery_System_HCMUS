@@ -1,5 +1,5 @@
 class vehicle_base:
-    def __init__(self, name, start_y, start_x, delivery_time, fuel):
+    def __init__(self, name, start_y, start_x, delivery_time, fuel, algo = "algo"):
         self.start_y = start_y
         self.start_x = start_x
         self.fuel = fuel

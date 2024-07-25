@@ -17,7 +17,7 @@ def fought_cells(y, x, paths):
 
 
 class Board:
-    def __init__(self, n, m, f, t, map_data, level=1):
+    def __init__(self, n, m, f, t, map_data, level=1, algo="algo"):
         self.n = n
         self.m = m
         self.f = f
@@ -27,6 +27,7 @@ class Board:
         self.vehicle = []
         goals = []
         self.fuel_stations = []
+        self.algo = algo #dung cho level1
 
         for i in range(n):
             self.cells.append(list())
@@ -35,7 +36,7 @@ class Board:
                 if "S" in map_data[i][j]:
                     name = map_data[i][j]
                     if level == 1:
-                        self.vehicle.append(vehicle_level1(name, i, j, t, f))
+                        self.vehicle.append(vehicle_level1(name, i, j, t, f, algo))
                     if level == 2:
                         self.vehicle.append(vehicle_level2(name, i, j, t, f))
                     if level == 3:
