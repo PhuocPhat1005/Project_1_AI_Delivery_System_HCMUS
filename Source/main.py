@@ -15,6 +15,7 @@ def main():
     if not os.path.exists("output"):
         os.makedirs("output")
     
+    #khi chay backend thi comment het nhung dong co _UI
     #menu_UI: 0->3 | level: 1->4
     #level = menu_UI() + 1
     level = 1
