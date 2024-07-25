@@ -1,5 +1,5 @@
 import pygame
-from constants import *
+from GUI.constants import *
 
 # https://www.geeksforgeeks.org/python-display-text-to-pygame-window/
 

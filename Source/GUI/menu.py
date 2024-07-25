@@ -1,13 +1,13 @@
 import pygame
-from constants import *
-from text import *
-from common import ChoiceList
+from GUI.constants import *
+from GUI.text import *
+from GUI.common import ChoiceList
 
 class Menu:
     def __init__(self, screen):
         self.screen = screen
         self.option_result = None
-        self.background = pygame.image.load('assets/menu_bg.png')
+        self.background = pygame.image.load('GUI/assets/menu_bg.png')
         self.menu_screen_choice = [[True, 'choose level'], [False, 'credit'], [False, 'exit']]
     
     def get_choice(self):

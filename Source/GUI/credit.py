@@ -1,7 +1,7 @@
 import pygame
-from constants import *
-from text import *
-from common import BackButton
+from GUI.constants import *
+from GUI.text import *
+from GUI.common import BackButton
 
 class Credit:
     def __init__(self, screen):

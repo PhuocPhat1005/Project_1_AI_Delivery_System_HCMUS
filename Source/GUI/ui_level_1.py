@@ -1,7 +1,7 @@
 import pygame
-from constants import *
-from text import *
-from common import *
+from GUI.constants import *
+from GUI.text import *
+from GUI.common import *
 
 class UI_Level_1:
     def __init__(self, screen):

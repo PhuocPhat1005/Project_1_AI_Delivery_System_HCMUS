@@ -1,6 +1,11 @@
 from utils.read_input import read_input_file
 from utils.write_output import write_paths_to_file
 from utils.board import Board
+from GUI.gui import *
+from GUI.constants import *
+from GUI.text import *
+from GUI.menu import *
+from GUI.credit import *
 import os
 from levels.level_4.vehicle_level4 import process_lev4
 
@@ -9,15 +14,21 @@ def main():
     # # Create the output directory if it does not exist
     if not os.path.exists("output"):
         os.makedirs("output")
+    
+    #khi chay backend thi comment het nhung dong co _UI
+    #menu_UI: 0->3 | level: 1->4
+    #level = menu_UI() + 1
+    level = 1
+    # Read input data
+    n, m, t, f, map_data = read_input_file("input\\level" + str(level) + "\\input1_level" + str(level) + ".txt")
 
-    # # Read input data
-    n, m, t, f, map_data = read_input_file("input/level2/input1_level2.txt")
-
-    # # # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level=2)
+    # Initialize the board and vehicles
+    board = Board(n, m, t, f, map_data, level)
     vehicles = board.get_vehicle()
     paths = []
 
+    #vua hien UI map, vua tim canh cell
+    #cell_side = map_UI(n, m, t, f, map_data, level)
     for vehicle in vehicles:
         print(
             vehicle.name,
@@ -28,41 +39,13 @@ def main():
         vehicle.path = path
         paths.append(path)
     board.test_display_path(paths)
+
+
     # Write paths to the output file
-    write_paths_to_file("output/output1_level2.txt", vehicles)
-
-    # Test level 2
-    # board = Board(n, m, f, t, map_data, level=2)
-    # S_vehicle = board.vehicle[0]
-    # paths = []
-    # board.test_display_path(paths)
-    # paths.append(S_vehicle.process_lev2(board))
-    # print (paths)
-    # if(paths != []):
-    #     board.test_display_path(paths)
-    # else:
-    #     print("Can't find path, lev 2")
-
-    # Test level 3
-    # board = Board(n, m, f, t, map_data, level=4)
-    # S_vehicle = board.vehicle[0]
-    # paths = []
-    # paths.append(S_vehicle.process_lev3(board))
-    # # print(paths)
-    # if paths != []:
-    #     board.test_display_path(paths)
-    # else:
-    #     print("Can't find path, lev 3")
-
-    # Test level 4
-    # board = Board(n, m, f, t, map_data, level=4)
-    # paths = process_lev4(board)
-    # print(paths)
-    # if paths != []:
-    #     print("THE FINAL STATE: ")
-    #     board.test_display_path(paths)
-    # else:
-    #     print("Can't find path, lev 4")
+    write_paths_to_file("output/output1_level1.txt", vehicles)
+    print(paths)
+    #hien path, hien line
+    #path_UI(n, m, map_data, paths, cell_side)
 
 
 if __name__ == "__main__":

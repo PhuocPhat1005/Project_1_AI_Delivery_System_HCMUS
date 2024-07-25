@@ -141,6 +141,7 @@ class vehicle_level3(vehicle_base):
             path = self.a_star(board)
 
             if path != []:
+                flag = False 
                 path = board.path_and_time(self.name, path)
                 paths.append(path)
                 self.tmp_start_y = self.tmp_goal_y
