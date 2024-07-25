@@ -21,9 +21,9 @@ class AStarAlgorithm:
         Returns:
         list: The path from the start position to the goal position as a list of coordinates.
         """
-        print("a_star")
-        print("Start: ", self.vehicle.tmp_start_y, self.vehicle.tmp_start_x)
-        print("Goal: ", self.vehicle.tmp_goal_y, self.vehicle.tmp_goal_x)
+        # print("a_star")
+        # print("Start: ", self.vehicle.tmp_start_y, self.vehicle.tmp_start_x)
+        # print("Goal: ", self.vehicle.tmp_goal_y, self.vehicle.tmp_goal_x)
         board.generate_visited(self.vehicle.name)
         board.generate_parent(self.vehicle.name)
         board.generate_cost(self.vehicle.name)
