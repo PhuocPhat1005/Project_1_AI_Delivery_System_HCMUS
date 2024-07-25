@@ -17,8 +17,10 @@ def main():
     
     #khi chay backend thi comment het nhung dong co _UI
     #menu_UI: 0->3 | level: 1->4
-    #level = menu_UI() + 1
     level = 1
+    algo = 'algo'
+    level, algo = menu_UI()
+    level += 1
     # Read input data
     n, m, t, f, map_data = read_input_file("input\\level" + str(level) + "\\input1_level" + str(level) + ".txt")
 

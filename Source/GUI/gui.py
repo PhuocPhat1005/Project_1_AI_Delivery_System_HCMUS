@@ -155,6 +155,10 @@ def map_UI(n, m, t, f, map_data, level):
     #print(map_data)
     M1.readMapData(map_data)
     M1.showBoard()
+    
+    ui_lv_1 = UI_Level_1(screen)
+    ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+    ui_lv_1.draw_ui(900, 200, 'BFS')
     while True:
         #M1.showBoard()
         for event in pygame.event.get():
@@ -279,7 +283,7 @@ def menu_UI():
                 elif event.key == pygame.K_RETURN and is_down == False and is_up == False and is_left == False and is_enter == False:
                     is_enter = True
                     
-        # Menu
+        '''# Menu
         screen.fill((0,0,0))   
         
         if choose_option is None:
@@ -295,8 +299,8 @@ def menu_UI():
                 elif choose_level_result == 0:
                     ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
                     choose_level_result = ui_lv_1.get_back_to()
-                    level_option = choose_level_result
-                    return level_option
+                    #level_option = choose_level_result
+                    #return level_option
                 
                 choose_option = level_list.get_back_to()
                 
@@ -308,7 +312,7 @@ def menu_UI():
                 pygame.quit()
                 sys.exit()
                 
-        pygame.display.flip()
+        pygame.display.flip()'''
         # Menu
         screen.fill((0,0,0))   
         
@@ -327,26 +331,36 @@ def menu_UI():
                         ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
                         option_result_in_lv_1 = ui_lv_1.get_option_result()
                     elif option_result_in_lv_1 == 0: # option BFS cua level 1
+                        algo = 'BFS'
+                        return choose_level_result, algo
                         #run and show map
                         ui_lv_1.draw_ui(750, 100, 'search algorithm:')
                         ui_lv_1.draw_ui(900, 200, 'BFS')
                         option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=0, is_force_left=is_left)
                     elif option_result_in_lv_1 == 1: # option DFS cua level 1
+                        algo = 'DFS'
+                        return choose_level_result, algo
                         #run and show map
                         ui_lv_1.draw_ui(750, 100, 'search algorithm:')
                         ui_lv_1.draw_ui(900, 200, 'DFS')
                         option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=1, is_force_left=is_left)
                     elif option_result_in_lv_1 == 2: # option UCS cua level 1
+                        algo = 'UCS'
+                        return choose_level_result, algo
                         #run and show map
                         ui_lv_1.draw_ui(750, 100, 'search algorithm:')
                         ui_lv_1.draw_ui(900, 200, 'UCS')
                         option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=2, is_force_left=is_left)
                     elif option_result_in_lv_1 == 3: # option GBFS cua level 1
+                        algo = 'GBFS'
+                        return choose_level_result, algo
                         #run and show map
                         ui_lv_1.draw_ui(750, 100, 'search algorithm:')
                         ui_lv_1.draw_ui(900, 200, 'GBFS')
                         option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=3, is_force_left=is_left)
                     elif option_result_in_lv_1 == 4: # option A* cua level 1
+                        algo = 'A*'
+                        return choose_level_result, algo
                         #run and show map
                         ui_lv_1.draw_ui(750, 100, 'search algorithm:')
                         ui_lv_1.draw_ui(900, 200, 'A*')
