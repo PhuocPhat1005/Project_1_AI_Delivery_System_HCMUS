@@ -7,9 +7,12 @@ The most crucial strategy for logistics providers to compete effectively is to d
 The city map has been modeled in 2D with n rows and m columns. The map consists of polygons to depict structures such as buildings, walls, etc., and these objects are unchanged on the map. 
 **Figure 1** is an example of a city map modeled in the 2D world.
 
-![Figure 1. 2D City Map](https://hackmd.io/_uploads/BJwq5_kYR.png "Figure 1. 2D City map")
+<center>
+    <img src = "https://github.com/user-attachments/assets/8047a113-207d-4e7a-b76a-50a1bedce361" width="250" alt="Figure 1: 2D City map."/>
+    <div style="text-align: center;"><b>Figure 1</b>: 2D City map.</div>
+</center>
 
-The map is technically represented as a 2D array, each cell contains a value encoding some meaning. At a basic level, some values are predefined as follows:
+The map is technically represented as a **2D array**, each cell contains a value encoding some meaning. At a basic level, some values are predefined as follows:
 * `0`: Space that the delivery vehicle can be moved into.
 * `-1`: Impassable space, representing buildings, walls, and objects in the city.
 * `S`: The **Starting location** of the delivery vehicle.
@@ -18,7 +21,10 @@ The map is technically represented as a 2D array, each cell contains a value enc
 The delivery vehicle can move in four directions: **Up**, **Down**, **Left**, and **Right**, and no diagonally.
 **Figure 2** describes the move directions of the delivery vehicle
 
-![dir](https://hackmd.io/_uploads/r1_sQYJYA.png "Figure 2: Move directions of the delivery vehicle.")
+<center>
+    <img src = "https://github.com/user-attachments/assets/2b62332b-2f68-49e6-884c-102e4aadd380" width="250" alt="Figure 2: Move directions of the delivery vehicle."/>
+    <div style="text-align: center;"><b>Figure 2</b>: Move directions of the delivery vehicle.</div>
+</center>
 
 ### 2. Specifications
 The project is divided into different levels, each of which offers increasing levels of difficulty to suit the diverse expectations of student groups. Detailed information will be provided below.
@@ -45,7 +51,15 @@ Note that **(at least) an algorithm** is required to be implemented at this leve
 #### 2.3 Level 3 (Fuel limitation)
 Any vehicle has a fuel tank capacity limit, and the company’s delivery vehicle is no different, with a capacity of f liters (provided in input). Each move to an adjacent cell consumes 1 liter of fuel. When the vehicle runs out of fuel, the delivery will be stopped. Therefore, gas stations are added to the map (illustrated by yellow squares in **==Figure 4==**) so that the delivery vehicle can refuel.
 ![lev3](https://hackmd.io/_uploads/SkrgO9ktA.png)
+As illustrated in Figure 4, with f = 10, it can be seen that:
+* The <font style='color:green'>**green path**</font> is the shortest path (passing through 13 cells, with 17 minutes of delivery), but it is not feasible because there is not enough gasoline right after leaving the toll booth.
+* The <font style='color:yellow'>**yellow path**</font> is longer (passing through 15 cells, with 20 minutes of delivery), but it is feasible because the vehicle has refueled at the fuel station F (included 1 minute to refill).
 
+++Note that:++
+* Initially the delivery vehicle was always full of fuel.
+* When passing through the fuel station, the delivery vehicle will be refueled to full capacity.
+* When stationary at toll booths, the vehicle does not consume fuel.
+* An algorithm is required to be implemented at this level.
 #### 2.4 Level 4 (Multiple agents)
 
 ---
