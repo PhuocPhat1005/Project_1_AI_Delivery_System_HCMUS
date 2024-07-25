@@ -1,0 +1,68 @@
+class vehicle_lev2(vehicle_base):
+    def __init__(self, name, start_y, start_x, fuel):
+        super().__init__(name, start_y, start_x, fuel)
+        
+    def a_star(self, board):
+        print("a_star")
+        print("Start: ", self.tmp_start_y, self.tmp_start_x)
+        print("Goal: ", self.tmp_goal_y, self.tmp_goal_x)
+        board.generate_visited(self.name)
+        board.generate_parent(self.name)
+        board.generate_cost(self.name)
+        board.generate_heuristic(self.name)
+        
+        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            board.generate_time(self.name)
+            
+        
+        start_cell = board.cells[self.tmp_start_y][self.tmp_start_x]
+        start_cell.visited[self.name] = True
+        start_cell.cost[self.name] = 0
+        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
+            start_cell.time[self.name] = 1
+        else:
+            start_cell.time[self.name] = start_cell.time[self.name]
+            
+        start_cell.current_vehicle = self.name
+        
+        start_cell.visited[self.name] = True
+        frontier = [(start_cell)]
+
+        while frontier:
+            current_cell = heapq.heappop(frontier)
+            y = [0, 0, 1, -1]
+            x = [1, -1, 0, 0]
+            for i in range(4):
+                new_y = current_cell.y + y[i]
+                new_x = current_cell.x + x[i]
+                
+                if board.can_visit(self.name, new_y, new_x) == True:
+                    new_cost = board.cells[current_cell.y][current_cell.x].cost[self.name] + 1
+                    new_t = board.cells[current_cell.y][current_cell.x].time[self.name] + 1 + board.cells[new_y][new_x].value
+
+                    if new_cost < board.cells[new_y][new_x].cost[self.name] and new_t <= board.t + 1:
+                        board.cells[new_y][new_x].current_vehicle = self.name
+                        board.cells[new_y][new_x].visited[self.name] = True
+                        board.cells[new_y][new_x].cost[self.name] = new_cost
+                        board.cells[new_y][new_x].time[self.name] = new_t
+                        board.cells[new_y][new_x].parent[self.name] = (current_cell.y, current_cell.x)
+                        heapq.heappush(frontier, (board.cells[new_y][new_x]))
+                        
+            if current_cell.y == self.tmp_goal_y and current_cell.x == self.tmp_goal_x:
+                board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] = True
+                break
+        
+        path = []
+        if board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] == True:
+            path = board.tracepath(self.name)
+            
+        if path == [] or self.tmp_goal_x != self.goal_x and self.goal_y != self.tmp_goal_y:
+            board.cells[self.goal_y][self.goal_x].visited[self.name] = False
+        return path
+    def process_lev2(self, board):
+        self.tmp_start_y = self.current_y
+        self.tmp_start_x = self.current_x
+        self.tmp_goal_y = self.goal_y
+        self.tmp_goal_x = self.goal_x
+        path = self.a_star(board)
+        return board.path_and_time(self.name, path)
