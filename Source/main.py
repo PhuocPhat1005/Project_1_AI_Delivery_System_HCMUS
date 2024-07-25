@@ -9,7 +9,7 @@ from GUI.credit import *
 import os
 from levels.level_4.vehicle_level4 import process_lev4
 
-
+#main chay frontend
 def main():
     #khi chay backend thi comment het nhung dong co _UI
     #menu_UI: 0->3 | level: 1->4
@@ -31,21 +31,24 @@ def main():
     cell_side = map_UI(n, m, t, f, map_data, level, algo)
 
     # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level)
+    board = Board(n, m, f, t, map_data, level, algo)
     vehicles = board.get_vehicle()
     paths = []
 
-    for vehicle in vehicles:
-        #if level == 1:
-            #vehicle.get_algorithm(algo)
-        print(
-            vehicle.name,
-            f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
-            f"\t\tGoal: {vehicle.goal_y}, {vehicle.goal_x}",
+    if level != 4:
+        for vehicle in vehicles:
+            print(
+                vehicle.name,
+                f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
+                f"\t\tGoal: {vehicle.goal_y}, {vehicle.goal_x}",
+            )
+            path = vehicle.process(board)
+            vehicle.path = path
+            paths.append(path)
+    else:
+        paths = process_lev4(
+            board
         )
-        path = vehicle.process(board)
-        vehicle.path = path
-        paths.append(path)
     board.test_display_path(paths)
 
 
@@ -57,15 +60,17 @@ def main():
         os.makedirs(f"output/level{level}")
 
     # Write paths to the output file
-    write_paths_to_file(output_filename, vehicles)
+    write_paths_to_file(output_filename, vehicles, level)
     print(paths)
     #hien path, hien line
     path_UI(n, m, t, f, map_data, paths, cell_side)
 
-
 if __name__ == "__main__":
-    main()
+    while True:
+        main()
 
+
+#main chay backend
 '''
 def play_level(level, map_order):
     # Read input data
@@ -81,19 +86,23 @@ def play_level(level, map_order):
     vehicles = board.get_vehicle()
     paths = []
 
-    # vua hien UI map, vua tim canh cell
-    cell_side = map_UI(n, m, t, f, map_data, level)
-    for vehicle in vehicles:
-        # if level == 1:
-        # vehicle.get_algorithm(algo)
-        print(
-            vehicle.name,
-            f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
-            f"\t\tGoal: {vehicle.goal_y}, {vehicle.goal_x}",
-        )
-        path = vehicle.process(board)
-        vehicle.path = path
-        paths.append(path)
+    # # vua hien UI map, vua tim canh cell
+    # cell_side = map_UI(n, m, t, f, map_data, level)
+    if level != 4:
+        for vehicle in vehicles:
+
+            print(
+                vehicle.name,
+                f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
+                f"\t\tGoal: {vehicle.goal_y}, {vehicle.goal_x}",
+            )
+            path = vehicle.process(board)
+            vehicle.path = path
+            paths.append(path)
+    else:
+        paths = process_lev4(
+            board
+        )  # Level thuc thi tren n vehicle, ta khong the goi trong 1 vehicle duoc
     board.test_display_path(paths)
 
     # Determine output filename based on the input filename
@@ -104,7 +113,7 @@ def play_level(level, map_order):
         os.makedirs(f"output/level{level}")
 
     # Write paths to the output file
-    write_paths_to_file(output_filename, vehicles)
+    write_paths_to_file(output_filename, vehicles, level)
 
 
 def main():
@@ -144,5 +153,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-'''
+    main()'''

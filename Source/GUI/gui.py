@@ -13,6 +13,14 @@ screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 title = pygame.display.set_caption('Graph run')
 BOARD_APPEEAR_WIDTH = WINDOW_WIDTH* 0.08
 BOARD_APPEEAR_HEIGHT = WINDOW_HEIGHT* 0.08
+
+def write_line(pos_x=0, pos_y=0, content='', font_size=FONT_MEDIUM, is_center=False, width=WINDOW_WIDTH, height=WINDOW_HEIGHT):
+    text_obj = Text_Display(content, font_size=font_size)
+    text_content = text_obj.show_text()
+    text_pos = (pos_x, pos_y)
+    if is_center:
+        text_pos = text_obj.center_text(width, height)
+
 class Image_UI:
     def __init__(self, _cell_side=60):
         self.background = pygame.image.load('GUI/assets/menu_bg.png')
@@ -141,10 +149,6 @@ class Board_UI(Image_UI):
                     else:
                         screen.blit(self.vehicle_num_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
         
-    #def vehicle(self, x, y):
-        #screen.blit(self.vehicle_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-
-
 def map_UI(n, m, t, f, map_data, level, algo):
     background = pygame.image.load('GUI/assets/menu_bg.png')
     screen.blit(background, (0, 0))
@@ -183,18 +187,6 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     i = 0
     j = 0
     cell_size = (cell_side, cell_side)
-    print(cell_side)
-    vehicle_right_img = pygame.image.load(f'GUI\\assets\\vehicle_3.png')
-    vehicle_right_img = pygame.transform.scale(vehicle_right_img, cell_size)
-    vehicle_up_img = pygame.transform.rotate(vehicle_right_img, 90)
-    vehicle_left_img = pygame.transform.rotate(vehicle_up_img, 90)
-    vehicle_down_img = pygame.transform.rotate(vehicle_left_img, 90)
-    
-    vehicle_num_right_img = pygame.image.load(f'GUI\\assets\\vehicle_2.png')
-    vehicle_num_right_img = pygame.transform.scale(vehicle_num_right_img, cell_size)
-    vehicle_num_up_img = pygame.transform.rotate(vehicle_num_right_img, 90)
-    vehicle_num_left_img = pygame.transform.rotate(vehicle_num_up_img, 90)
-    vehicle_num_down_img = pygame.transform.rotate(vehicle_num_left_img, 90)
 
     is_go_path = True
     count = 0
@@ -203,8 +195,11 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     for count_veh in range (0, len(paths)):
         len_of_n_veh.append( len(paths[count_veh]) )
     count_veh = 0
+    max_len_of_n_veh = 0
+    min_len_of_n_veh = 0
     if len(paths) != 0:
         max_len_of_n_veh = max(len_of_n_veh)
+        min_len_of_n_veh = min(len_of_n_veh)
         
     ui_lv_1 = UI_Level_1(screen)
     prev_time = 0
@@ -221,7 +216,8 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                             if event.key == pygame.K_RETURN:
                                 return
                     
-                    if len_of_n_veh[count_veh] >= count:
+                    #if len_of_n_veh[count_veh] >= count:
+                    if count < len(paths[0]):
                         i, j, k = paths[count_veh][count]
                         
                         if t and k != float('inf'):
@@ -240,11 +236,11 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                             if 'S' in map_data[jP][iP]:
                                 I1.showStart(iP, jP)
                             else:
-                                if 'F' in map_data[jP][iP]:
+                                if 'F' in map_data[iP][jP]:
                                     I1.showGasStation(iP, jP)
-                                elif map_data[jP][iP] == '0':
+                                elif map_data[iP][jP] == '0':
                                     I1.showEmpty(iP, jP)
-                                elif map_data[jP][iP].isdigit() and int(map_data[jP][iP]) > 0:
+                                elif map_data[iP][jP].isdigit() and int(map_data[iP][jP]) > 0:
                                     I1.showTollBooths(iP, jP)
                                 if count>1:
                                     iPP, jPP, kPP = paths[count_veh][count-2]
@@ -261,7 +257,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                                     elif j == jP:# and jP == jPP:
                                         I1.drawLineVertical(iP, jP)
                         
-                pygame.time.wait(500)
+                pygame.time.wait(200)
                 pygame.display.flip()
             is_go_path = False
         
