@@ -51,6 +51,6 @@ class AStarAlgorithm:
             ):
                 break
 
-        return board.path_and_time(
+        return board.path_time_fuel(
             self.vehicle.name, board.tracepath(self.vehicle.name)
         )

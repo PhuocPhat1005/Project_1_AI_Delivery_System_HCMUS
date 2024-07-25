@@ -370,8 +370,8 @@ def process_lev4(board, n, m, t, f, map_data, cell_side):
                     paths.append(vehicle.path)
                 
                 board.test_display_path(paths)
+                map_UI(n, m, t, f, board.map_data, 4, "", len(vehicles))
                 path_UI(n, m, t, f, board.map_data, paths, cell_side)
-                map_UI(n, m, t, f, board.map_data, 4, "")
                 for vehicle in vehicles:
                     if (
                         vehicle.current_y == vehicle.goal_y
