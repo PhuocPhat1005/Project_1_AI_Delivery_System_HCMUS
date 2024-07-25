@@ -15,7 +15,7 @@ def play_level(level, map_order):
     n, m, t, f, map_data = read_input_file(input_filename)
 
     # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level=level, algo="DFS")
+    board = Board(n, m, f, t, map_data, level=level, algo="A*")
     vehicles = board.get_vehicle()
     paths = []
 
@@ -37,7 +37,7 @@ def play_level(level, map_order):
     board.test_display_path(paths)
 
     # Determine output filename based on the input filename
-    output_filename = f"output/level{level}/output_{os.path.basename(input_filename).split('.')[0]}_level{level}.txt"
+    output_filename = f"output/level{level}/output{map_order}_level{level}.txt"
 
     # Create the output directory for the level if it does not exist
     if not os.path.exists(f"output/level{level}"):
