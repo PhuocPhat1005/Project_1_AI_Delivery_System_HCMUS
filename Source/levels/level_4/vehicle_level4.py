@@ -182,7 +182,10 @@ class vehicle_level4(vehicle_base):
         return path
 
     def find_best_goal(self, board):
-
+        if board.fuel_stations == []:
+            self.tmp_goal_y = -1
+            self.tmp_goal_x = -1
+            return
         best_heuristic = float("inf")
         for fuel_station in board.fuel_stations:
             if (
@@ -250,6 +253,8 @@ class vehicle_level4(vehicle_base):
                 if flag == True:
                     return []
                 self.find_best_goal(board)  # Neu tim k duoc, tim fuel tot nhat
+                if self.tmp_goal_y == -1 and self.tmp_goal_x == -1:
+                    return []
                 flag = True
         # self.current_y = self.start_y
         # self.current_x = self.start_x
