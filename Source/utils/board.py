@@ -10,7 +10,7 @@ from levels.level_4.vehicle_level4 import vehicle_level4
 def fought_cells(y, x, paths):
     for i, path in enumerate(paths):
         # Tạo danh sách các tọa độ (x, y) từ mỗi đường dẫn
-        coordinates = [(py, px) for py, px, _ in path]
+        coordinates = [(py, px) for py, px, _, _ in path]
         if (y, x) in coordinates:
             return i
     return -1
@@ -146,7 +146,7 @@ class Board:
                 unique_list.append(item)
         return unique_list
 
-    def path_and_time(self, name, path):
+    def path_time_fuel(self, name, path):
         unique_list = []
         for item in path:
             if item not in unique_list:
@@ -155,7 +155,8 @@ class Board:
         for i in range(len(unique_list)):
             y, x = unique_list[i]
             time_leave = self.cells[y][x].time[name]  # + 1
-            new_path.append((y, x, time_leave))
+            fuel = self.cells[y][x].fuel[name]
+            new_path.append((y, x, time_leave, fuel))
         # print("New path: ", new_path)
         return new_path
 
