@@ -25,17 +25,20 @@ def play_level(level, map_order):
 
     # vua hien UI map, vua tim canh cell
     cell_side = map_UI(n, m, t, f, map_data, level)
-    for vehicle in vehicles:
-        # if level == 1:
-        # vehicle.get_algorithm(algo)
-        print(
-            vehicle.name,
-            f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
-            f"\t\tGoal: {vehicle.goal_y}, {vehicle.goal_x}",
-        )
-        path = vehicle.process(board)
-        vehicle.path = path
-        paths.append(path)
+    if level != 4:
+        for vehicle in vehicles:
+            # if level == 1:
+            # vehicle.get_algorithm(algo)
+            print(
+                vehicle.name,
+                f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
+                f"\t\tGoal: {vehicle.goal_y}, {vehicle.goal_x}",
+            )
+            path = vehicle.process(board)
+            vehicle.path = path
+            paths.append(path)
+    else 
+        paths = process_lev4(board) #Level thuc thi tren n vehicle, ta khong the goi trong 1 vehicle duoc
     board.test_display_path(paths)
 
     # Determine output filename based on the input filename
