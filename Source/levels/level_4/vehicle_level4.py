@@ -239,7 +239,7 @@ class vehicle_level4(vehicle_base):
             # print(path)
             if path != []:
                 flag = False
-                path = board.path_and_time(self.name, path)
+                path = board.path_time_fuel(self.name, path)
                 paths.append(path)
                 self.tmp_start_y = self.tmp_goal_y
                 self.tmp_start_x = self.tmp_goal_x
