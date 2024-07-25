@@ -94,7 +94,7 @@ def map_show():
             line = file.readline().strip()
             map_data.append(line.split())
     #print(map_data)
-    screen.fill(black)
+    screen.fill(BACKGROUND_COLOR)
     M1 = Board_UI(n, m, t, f, level)
     M1.readMapData(map_data)
     M1.showBoard()
@@ -121,6 +121,7 @@ level_list = LeveList(screen)
 
 choose_level_result = None
 ui_lv_1 = UI_Level_1(screen)
+option_result_in_lv_1 = None
 
 # while True:
 #     is_up = False
@@ -199,14 +200,41 @@ while True:
             if choose_level_result is None:
                 level_list.show_level_list(is_up, is_down, is_left, is_enter)
                 choose_level_result = level_list.get_option_result()
-            
-            elif choose_level_result == 0:
-                ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
+            elif choose_level_result == 0: # hien ra cac option cua level 1
+                
+                if option_result_in_lv_1 is None:
+                    ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
+                    option_result_in_lv_1 = ui_lv_1.get_option_result()
+                elif option_result_in_lv_1 == 0: # option BFS cua level 1
+                    map_show() #run and show map
+                    ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                    ui_lv_1.draw_ui(900, 200, 'BFS')
+                    option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=0, is_force_left=is_left)
+                elif option_result_in_lv_1 == 1: # option DFS cua level 1
+                    map_show() #run and show map
+                    ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                    ui_lv_1.draw_ui(900, 200, 'DFS')
+                    option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=1, is_force_left=is_left)
+                elif option_result_in_lv_1 == 2: # option UCS cua level 1
+                    map_show() #run and show map
+                    ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                    ui_lv_1.draw_ui(900, 200, 'UCS')
+                    option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=2, is_force_left=is_left)
+                elif option_result_in_lv_1 == 3: # option GBFS cua level 1
+                    map_show() #run and show map
+                    ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                    ui_lv_1.draw_ui(900, 200, 'GBFS')
+                    option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=3, is_force_left=is_left)
+                elif option_result_in_lv_1 == 4: # option A* cua level 1
+                    map_show() #run and show map
+                    ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+                    ui_lv_1.draw_ui(900, 200, 'A*')
+                    option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=4, is_force_left=is_left)
+                    
                 choose_level_result = ui_lv_1.get_back_to()
             
             choose_option = level_list.get_back_to()
             
-            # map_show() #run and show map
         if choose_option == 1:
             credit.display_credit(is_left)
             choose_option = credit.get_back_to()
