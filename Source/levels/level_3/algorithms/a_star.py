@@ -174,7 +174,7 @@ class AStarAlgorithm:
             path = self.a_star(board)
 
             if path != []:
-                path = board.path_and_time(self.vehicle.name, path)
+                path = board.path_time_fuel(self.vehicle.name, path)
                 paths.append(path)
                 self.vehicle.tmp_start_y = self.vehicle.tmp_goal_y
                 self.vehicle.tmp_start_x = self.vehicle.tmp_goal_x
