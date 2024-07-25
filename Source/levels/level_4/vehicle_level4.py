@@ -305,7 +305,10 @@ def process_lev4(board):
         for cells in board.cells:
             for cell in cells:
                 cell.current_vehicle = None
-
+                
+        for vehicle in vehicles:
+            board.cells[vehicle.current_y][vehicle.current_x].current_vehicle = vehicle.name
+            
         while time <= board.t:
             if flag == True:
                 break
