@@ -1,12 +1,15 @@
 import heapq
 import random
 from utils.vehicle_base import vehicle_base
+from GUI.gui import *
 
 
 class vehicle_level4(vehicle_base):
     def __init__(self, name, start_y, start_x, time, fuel):
         super().__init__(name, start_y, start_x, time, fuel)
-
+        self.is_regenerated = False
+        self.final_path = []
+        
     def regenerate(self, board):
         board.cells[self.start_y][self.start_x].raw_value = "0"
 
@@ -271,7 +274,7 @@ class vehicle_level4(vehicle_base):
         return joined_path
 
 
-def process_lev4(board):
+def process_lev4(board, n, m, t, f, map_data, cell_side):
 
     vehicles = board.get_vehicle()
     S_vehicle = vehicles[0]
@@ -365,8 +368,10 @@ def process_lev4(board):
                         print("Need find best path")
                         vehicle.path = vehicle.find_best_path(board)
                     paths.append(vehicle.path)
-    
+                
                 board.test_display_path(paths)
+                path_UI(n, m, t, f, board.map_data, paths, cell_side)
+                map_UI(n, m, t, f, board.map_data, 4, "")
                 for vehicle in vehicles:
                     if (
                         vehicle.current_y == vehicle.goal_y
