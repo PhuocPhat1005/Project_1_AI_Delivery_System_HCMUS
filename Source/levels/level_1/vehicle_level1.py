@@ -7,9 +7,9 @@ from levels.level_1.algorithms.a_star import AStarAlgorithm
 
 
 class vehicle_level1(vehicle_base):
-    def __init__(self, name, start_y, start_x, delivery_time, fuel):
-        super().__init__(name, start_y, start_x, delivery_time, fuel)
-        algorithm = input("Choose algorithms: ")
+    def __init__(self, name, start_y, start_x, delivery_time, fuel, algorithm):
+        super().__init__(name, start_y, start_x, delivery_time, fuel, algorithm)
+        #algorithm = input("Choose algorithms: ")
         self.set_algorithm(algorithm)
 
     def set_algorithm(self, algorithm):

@@ -145,22 +145,19 @@ class Board_UI(Image_UI):
         #screen.blit(self.vehicle_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
 
 
-def map_UI(n, m, t, f, map_data, level):
-    level = 1
+def map_UI(n, m, t, f, map_data, level, algo):
     background = pygame.image.load('GUI/assets/menu_bg.png')
     screen.blit(background, (0, 0))
-    start_cell = None
     
     M1 = Board_UI(n, m, t, f, level)
-    #print(map_data)
     M1.readMapData(map_data)
     M1.showBoard()
     
-    ui_lv_1 = UI_Level_1(screen)
-    ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-    ui_lv_1.draw_ui(900, 200, 'BFS')
+    if level == 1:
+        ui_lv_1 = UI_Level_1(screen)
+        ui_lv_1.draw_ui(750, 100, 'search algorithm:')
+        ui_lv_1.draw_ui(900, 200, algo)
     while True:
-        #M1.showBoard()
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -191,12 +188,12 @@ def path_UI(n, m, map_data, paths, cell_side):
     is_go_path = True
     count = 0
     count_veh = 0
-    path = paths[0]
     len_of_n_veh = []
     for count_veh in range (0, len(paths)):
         len_of_n_veh.append( len(paths[count_veh]) )
     count_veh = 0
-    max_len_of_n_veh = max(len_of_n_veh)
+    if len(paths) != 0:
+        max_len_of_n_veh = max(len_of_n_veh)
     while True:
         if is_go_path:
             for count in range (0, max_len_of_n_veh):
@@ -216,12 +213,18 @@ def path_UI(n, m, map_data, paths, cell_side):
                                 I1.showVehicle(i, j)
                             else:
                                 I1.showVehicle(i, j)
+                        #P: past | PP: past past
                         if count>0:
                             iP, jP, kP = paths[count_veh][count-1]
-                            if map_data[jP][iP] == 'S':
+                            if 'S' in map_data[jP][iP]:
                                 I1.showStart(iP, jP)
                             else:
-                                I1.showEmpty(iP, jP)
+                                if 'F' in map_data[jP][iP]:
+                                    I1.showGasStation(iP, jP)
+                                elif map_data[jP][iP] == '0':
+                                    I1.showEmpty(iP, jP)
+                                elif map_data[jP][iP].isdigit() and int(map_data[jP][iP]) > 0:
+                                    I1.showTollBooths(iP, jP)
                                 if count>1:
                                     iPP, jPP, kPP = paths[count_veh][count-2]
                                     if (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
@@ -232,12 +235,12 @@ def path_UI(n, m, map_data, paths, cell_side):
                                         I1.drawRightDown(iP, jP)
                                     elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
                                         I1.drawRightUp(iP, jP)
-                                    elif i == iP and iP == iPP:
+                                    elif i == iP:# and iP == iPP:
                                         I1.drawLineHorizontal(iP, jP)
-                                    elif j == jP and jP == jPP:
+                                    elif j == jP:# and jP == jPP:
                                         I1.drawLineVertical(iP, jP)
                         
-                pygame.time.wait(100)
+                pygame.time.wait(500)
                 pygame.display.flip()
             is_go_path = False
         
@@ -282,37 +285,6 @@ def menu_UI():
                     is_left = True
                 elif event.key == pygame.K_RETURN and is_down == False and is_up == False and is_left == False and is_enter == False:
                     is_enter = True
-                    
-        '''# Menu
-        screen.fill((0,0,0))   
-        
-        if choose_option is None:
-            menu.display_menu(is_up, is_down, is_enter)
-            choose_option = menu.get_choose_option()
-        else:
-            if choose_option == 0:
-                # Them level list
-                if choose_level_result is None:
-                    level_list.show_level_list(is_up, is_down, is_left, is_enter)
-                    choose_level_result = level_list.get_option_result()
-                
-                elif choose_level_result == 0:
-                    ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
-                    choose_level_result = ui_lv_1.get_back_to()
-                    #level_option = choose_level_result
-                    #return level_option
-                
-                choose_option = level_list.get_back_to()
-                
-                # #run and show map
-            if choose_option == 1:
-                credit.display_credit(is_left)
-                choose_option = credit.get_back_to()
-            if choose_option == 2:
-                pygame.quit()
-                sys.exit()
-                
-        pygame.display.flip()'''
         # Menu
         screen.fill((0,0,0))   
         
@@ -367,7 +339,11 @@ def menu_UI():
                         option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=4, is_force_left=is_left)
                         
                     choose_level_result = ui_lv_1.get_back_to()
+                elif choose_level_result >= 1: # option level 2->4
+                    algo = "algo"
+                    return choose_level_result, algo
                 
+
                 choose_option = level_list.get_back_to()
                 
             if choose_option == 1:
