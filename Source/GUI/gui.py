@@ -182,7 +182,6 @@ def map_UI(n, m, t, f, map_data, level, algo):
         pygame.display.flip()
 
 def path_UI(n, m, t, f, map_data, paths, cell_side):
-    print('Time:', t)
     I1 = Image_UI(cell_side)
     i = 0
     j = 0
@@ -218,12 +217,15 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                     
                     #if len_of_n_veh[count_veh] >= count:
                     if count < len(paths[0]):
-                        i, j, k = paths[count_veh][count]
+                        i, j, k, h = paths[count_veh][count]
                         
                         if t and k != float('inf'):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 100, 50))
                             ui_lv_1.draw_ui(950, 100, str(int(t - prev_time)) + 's')
                             prev_time = k
+                        if f and h != float('inf'):
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200, 100, 50))
+                            ui_lv_1.draw_ui(950, 200, str(int(h)))
                         
                         if (i, j, k) in paths[count_veh]:
                             if count_veh == 0:
@@ -232,7 +234,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                                 I1.showVehicle(i, j)
                         #P: past | PP: past past
                         if count>0:
-                            iP, jP, kP = paths[count_veh][count-1]
+                            iP, jP, kP, _ = paths[count_veh][count-1]
                             if 'S' in map_data[jP][iP]:
                                 I1.showStart(iP, jP)
                             else:
@@ -243,7 +245,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                                 elif map_data[iP][jP].isdigit() and int(map_data[iP][jP]) > 0:
                                     I1.showTollBooths(iP, jP)
                                 if count>1:
-                                    iPP, jPP, kPP = paths[count_veh][count-2]
+                                    iPP, jPP, kPP, _ = paths[count_veh][count-2]
                                     if (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
                                         I1.drawLeftDown(iP, jP)
                                     elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
