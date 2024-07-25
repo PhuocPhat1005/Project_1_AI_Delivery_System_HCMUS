@@ -1,6 +1,6 @@
 import pygame
-from constants import *
-from text import *
+from GUI.constants import *
+from GUI.text import *
 
 class BackButton:
     def __init__(self, screen, btn_pos_x=50, btn_pos_y=700, content='back'):
@@ -44,7 +44,7 @@ class ChoiceList:
             text_pos = text_obj.center_text(height=letter_spacing + i * 300)
             x_text, y_text = text_pos[0], text_pos[1]
             
-            arrow_img = pygame.image.load('assets/arrow.png')
+            arrow_img = pygame.image.load('GUI/assets/arrow.png')
             img_width = arrow_img.get_width()
             arrow_pos_x = x_text - img_width - 50
             min_arrow_pox_x = min(arrow_pos_x, min_arrow_pox_x)

@@ -1,7 +1,7 @@
 import pygame
-from text import *
-from constants import *
-from common import *
+from GUI.text import *
+from GUI.constants import *
+from GUI.common import *
 
 class LeveList:
     def __init__(self, screen):
@@ -15,6 +15,12 @@ class LeveList:
         for i, element in enumerate(self.level_list):
             if element[0]:
                 return i
+        return 0
+    
+    def get_level(self):
+        for i, element in enumerate(self.level_list):
+            if element[0]:
+                return element
         return 0
     
     def get_back_to(self):
@@ -49,6 +55,7 @@ class LeveList:
         if is_enter:
             is_enter = False
             self.option_result = self.get_choice()
+            return self.get_choice()
                 
         choice_list = ChoiceList(self.screen)
         choice_list.choose_options(self.level_list, is_up, is_down, 500)

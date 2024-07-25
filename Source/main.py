@@ -1,6 +1,11 @@
 from utils.read_input import read_input_file
 from utils.write_output import write_paths_to_file
 from utils.board import Board
+from GUI.gui import *
+from GUI.constants import *
+from GUI.text import *
+from GUI.menu import *
+from GUI.credit import *
 import os
 
 
@@ -18,7 +23,11 @@ def play_level(level, map_order):
     vehicles = board.get_vehicle()
     paths = []
 
+    # vua hien UI map, vua tim canh cell
+    cell_side = map_UI(n, m, t, f, map_data, level)
     for vehicle in vehicles:
+        # if level == 1:
+        # vehicle.get_algorithm(algo)
         print(
             vehicle.name,
             f"\t\tStart: {vehicle.start_y}, {vehicle.start_x}",
