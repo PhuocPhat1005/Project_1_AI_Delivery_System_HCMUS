@@ -197,10 +197,10 @@ while True:
     else:
         if choose_option == 0:
             # Them level list
-            if choose_level_result is None:
+            if choose_level_result is None: # Chua chon level
                 level_list.show_level_list(is_up, is_down, is_left, is_enter)
                 choose_level_result = level_list.get_option_result()
-            elif choose_level_result == 0: # hien ra cac option cua level 1
+            elif choose_level_result == 0: # hien ra cac option cua level 1, Chon Level 1
                 
                 if option_result_in_lv_1 is None:
                     ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
