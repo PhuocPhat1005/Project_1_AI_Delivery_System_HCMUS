@@ -10,3 +10,9 @@ S1
 No valid path found
 S2
 No valid path found
+S
+No valid path found
+S1
+No valid path found
+S2
+No valid path found
