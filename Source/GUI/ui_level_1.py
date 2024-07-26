@@ -42,7 +42,6 @@ class UI_Level_1:
     
     def draw_ui(self, pos_x, pos_y, content=''):
         self.write_text_content(pos_x=pos_x, pos_y=pos_y, content=content)
-        BackButton(self.screen)
         
     def show_level_list(self, is_up, is_down, is_left, is_enter):
         self.screen.fill(BACKGROUND_COLOR)
