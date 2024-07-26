@@ -136,14 +136,19 @@ class vehicle_level4(vehicle_base):
                         + 1
                         + board.cells[new_y][new_x].value
                     )
-                    if "F" in board.cells[new_y][new_x].raw_value:
-                        new_t += float(
-                            board.cells[new_y][new_x].raw_value.replace("F", "")
-                        )
 
                     new_fuel = (
                         board.cells[current_cell.y][current_cell.x].fuel[self.name] - 1
                     )
+                    
+                    if "F" in board.cells[new_y][new_x].raw_value:
+                        new_t += float(
+                            board.cells[new_y][new_x].raw_value.replace("F", "")
+                        )
+                        new_fuel = self.fuel
+
+
+
                     # for cell in self.blocked_opposite:
                     #     if new_y == cell[0] and new_x == cell[1]:
                     #         in_block = True
@@ -279,7 +284,7 @@ class vehicle_level4(vehicle_base):
         return joined_path
 
 
-def process_lev4(board, map_data, cell_side):
+def process_lev4(board):
 
     vehicles = board.get_vehicle()
     S_vehicle = vehicles[0]
@@ -308,7 +313,7 @@ def process_lev4(board, map_data, cell_side):
                 if path == [] and vehicle.name == S_vehicle.name:
                     return []
                 vehicle.path = path
-            # paths.append(path)
+            paths.append(path)
 
         for cells in board.cells:
             for cell in cells:
@@ -377,33 +382,35 @@ def process_lev4(board, map_data, cell_side):
 
                 
                 board.test_display_path(paths)
-                map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "", len(vehicles))
-                path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
-                #map_UI(n, m, t, f, board.map_data, 4, "", len(vehicles))
-                #path_UI(n, m, t, f, board.map_data, paths, cell_side)
+                
+                # path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
+                # map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "")
+                if S_vehicle.current_y == S_vehicle.goal_y and S_vehicle.current_x == S_vehicle.goal_x:
+                    return paths
+                
                 for vehicle in vehicles:
-                    if (
+                    if vehicle.name != S_vehicle.name:
+                        if (
                         vehicle.current_y == vehicle.goal_y
-                        and vehicle.current_x == vehicle.goal_x
-                    ) or vehicle.path == []:
-                        print(
-                            "Time: ",
-                            time,
-                            " Vehicle: ",
-                            vehicle.name,
-                            "Start: ",
-                            vehicle.start_y,
-                            vehicle.start_x,
-                            "Goal: ",
-                            vehicle.goal_y,
-                            vehicle.goal_x,
-                            "Current: ",
-                            vehicle.current_y,
-                            vehicle.current_x,
-                        )
-                        if vehicle.name == S_vehicle.name:
-                            return paths
-                        vehicle.regenerate(board)
+                            and vehicle.current_x == vehicle.goal_x
+                        ) or vehicle.path == []:
+                            # print(
+                            #     "Time: ",
+                            #     time,
+                            #     " Vehicle: ",
+                            #     vehicle.name,
+                            #     "Start: ",
+                            #     vehicle.start_y,
+                            #     vehicle.start_x,
+                            #     "Goal: ",
+                            #     vehicle.goal_y,
+                            #     vehicle.goal_x,
+                            #     "Current: ",
+                            #     vehicle.current_y,
+                            #     vehicle.current_x,
+                            # )
+                            vehicle.regenerate(board)
+
                 paths = []
     
                 time += 1
