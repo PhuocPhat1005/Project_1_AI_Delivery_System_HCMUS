@@ -187,8 +187,6 @@ class Board_UI(Image_UI):
                 #show goal
                 elif 'G' in self.map_data[j][i]:
                     self.showGoal(j, i)
-                    #if len(self.map_data[j][i]) == 1:
-                        #self.showGoal(j, i)
                 #show toll booths
                 elif self.map_data[j][i].isdigit() and int(self.map_data[j][i]) > 0:
                     self.showTollBooths(j, i)
@@ -250,6 +248,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     I1 = Image_UI(cell_side)
     i = 0
     j = 0
+    map_change = map_data.copy()
     cell_size = (cell_side, cell_side)
     ui_lv_1 = UI_Level_1(screen)
     prev_time = 0
@@ -273,8 +272,26 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     line_list = [[(0,0,0) for _ in range(1)] for _ in range(len(paths))]
     for count_veh in range (len(paths)):
         for count in range (len(paths[count_veh])):
-            line_list[count_veh].append( [paths[count_veh][count][0] , paths[count_veh][count][1] , 0] )
-    print(line_list)
+            line_list[count_veh].append( [paths[count_veh][count][0] , paths[count_veh][count][1] , 0 , paths[count_veh][count][2] , paths[count_veh][count][3] , -1 , -1] )
+    count = 0
+    count_veh = 0
+    for count_veh in range (len(paths)):
+        line_list[count_veh].pop(0)
+    count = 1
+    count_veh = 0
+    for count_veh in range (len(line_list)):
+        for count in range (len(line_list[count_veh]) - 1):
+            if line_list[count_veh][count][0] == line_list[count_veh][count-1][0] and line_list[count_veh][count][1] == paths[count_veh][count-1][1]:
+                del line_list[count_veh][count]
+                _count = 0
+                for _count in range (len(line_list[count_veh]) - 1):
+                    if line_list[count_veh][_count][0] == line_list[count_veh][_count-1][0] and line_list[count_veh][_count][1] == paths[count_veh][_count-1][1]:
+                        line_list[count_veh][count-1][5] = line_list[count_veh][_count][0]
+                        line_list[count_veh][count-1][6] = line_list[count_veh][_count][1]
+                    else:
+                        line_list[count_veh][count-1][5] = line_list[count_veh][-1][0]
+                        line_list[count_veh][count-1][6] = line_list[count_veh][-1][1]
+                count = 0
     count = 0
     count_veh = 0
     
@@ -294,8 +311,11 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                                 return
                     
                     #if len_of_n_veh[count_veh] >= count:
-                    if count < len(paths[count_veh]) and count > 0:
-                        i, j, k, l = paths[count_veh][count]
+                    if count < len(line_list[count_veh]) and count > 0:
+                        i = line_list[count_veh][count][0]
+                        j = line_list[count_veh][count][1]
+                        k = line_list[count_veh][count][3]
+                        l = line_list[count_veh][count][4]
                         
                         if t and k != float('inf'):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 100, 50))
@@ -306,71 +326,84 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                             ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
                         #P: past | PP: past past
                         if count>0:
-                            iP, jP, kP, _ = paths[count_veh][count-1]
+                            iP = line_list[count_veh][count-1][0]
+                            jP = line_list[count_veh][count-1][1]
                         
-                            if (i, j, k, l) in paths[count_veh]:
-                                I1.showVehicle(i, j, iP, jP, count_veh)
+                            #if [i, j, k, l] in line_list[count_veh]:
                             
-                            if 'S' in map_data[iP][jP]:
+                            if 'S' in map_change[iP][jP]:
                                 I1.showStart(iP, jP)
-                            else:
-                                if 'F' in map_data[iP][jP]:
-                                    I1.showGasStation(iP, jP)
-                                elif map_data[iP][jP] == '0':
-                                    I1.showEmpty(iP, jP)
-                                elif map_data[iP][jP].isdigit() and int(map_data[iP][jP]) > 0:
-                                    I1.showTollBooths(iP, jP)
-                                if count>1:
-                                    iPP, jPP, kPP, _ = paths[count_veh][count-2]
-                                    if (jP == jPP and iP == iPP):
-                                        iPP, jPP, kPP, _ = paths[count_veh][count-3]
-                                    if (j == jP and i == iP):
-                                        I1.showVehicle(i, j, iPP, jPP, count_veh)
-                                    elif (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
-                                        line_list[count_veh][count][2] = 1
-                                        I1.drawLeftDown(iP, jP, count_veh)
-                                    elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
-                                        line_list[count_veh][count][2] = 2
-                                        I1.drawLeftUp(iP, jP, count_veh)
-                                    elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
-                                        line_list[count_veh][count][2] = 3
-                                        I1.drawRightDown(iP, jP, count_veh)
-                                    elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
-                                        line_list[count_veh][count][2] = 4
-                                        I1.drawRightUp(iP, jP, count_veh)
-                                    elif i == iP and iP == iPP:
-                                        line_list[count_veh][count][2] = 5
-                                        I1.drawLineHorizontal(iP, jP, count_veh)
-                                    elif j == jP and jP == jPP:
-                                        line_list[count_veh][count][2] = 6
-                                        I1.drawLineVertical(iP, jP, count_veh)
-                    _count_veh = 0
-                    _count = 0
-                    for _count in range (count):
-                        for _count_veh in range (len(line_list)):
-                            if _count >= len(paths[_count_veh]):
-                                pass
-                            else:
-                                _j = line_list[_count_veh][_count][0]
-                                _i = line_list[_count_veh][_count][1]
-                                _type = line_list[_count_veh][_count][2]
-                                #if _j == line_list[_count_veh][_count-1][0] and _i == line_list[_count_veh][_count-1][1]:
-                                    #pass
-                                if _type == 1:
-                                    I1.drawLeftDown(_j, _i, _count_veh)
-                                elif _type == 2:
-                                    I1.drawLeftUp(_j, _i, _count_veh)
-                                elif _type == 3:
-                                    I1.drawRightDown(_j, _i, _count_veh)
-                                elif _type == 4:
-                                    I1.drawRightUp(_j, _i, _count_veh)
-                                elif _type == 5:
-                                    I1.drawLineHorizontal(_j, _i, _count_veh)
-                                elif _type == 6:
-                                    I1.drawLineVertical(_j, _i, _count_veh)
-                    _count_veh = 0
-                    _count = 0
-                pygame.time.wait(200)
+                            elif 'F' in map_change[iP][jP]:
+                                I1.showGasStation(iP, jP)
+                            elif 'G' in map_change[iP][jP] and line_list[count_veh][count-1][5] != -1:
+                                map_change[iP][jP] = '0'
+                                I1.showEmpty(iP, jP)
+                                if count_veh == 0:
+                                    map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G"
+                                else:
+                                    map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G" + str(count_veh)
+                                I1.showGoal( line_list[count_veh][count-1][5] , line_list[count_veh][count-1][6] )
+                            elif map_change[iP][jP] == '0':
+                                I1.showEmpty(iP, jP)
+                            elif map_change[iP][jP].isdigit() and int(map_change[iP][jP]) > 0:
+                                I1.showTollBooths(iP, jP)
+                            if count>1:
+                                iPP = line_list[count_veh][count-2][0]
+                                jPP = line_list[count_veh][count-2][1]
+                                if (jP == jPP and iP == iPP):
+                                    iPP, jPP, kPP, _ = paths[count_veh][count-3]
+                                if (j == jP and i == iP):
+                                    I1.showVehicle(i, j, iPP, jPP, count_veh)
+                                elif (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
+                                    line_list[count_veh][count-1][2] = 1
+                                    I1.drawLeftDown(iP, jP, count_veh)
+                                elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
+                                    line_list[count_veh][count-1][2] = 2
+                                    I1.drawLeftUp(iP, jP, count_veh)
+                                elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
+                                    line_list[count_veh][count-1][2] = 3
+                                    I1.drawRightDown(iP, jP, count_veh)
+                                elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
+                                    line_list[count_veh][count-1][2] = 4
+                                    I1.drawRightUp(iP, jP, count_veh)
+                                elif i == iP and iP == iPP:
+                                    line_list[count_veh][count-1][2] = 5
+                                    I1.drawLineHorizontal(iP, jP, count_veh)
+                                elif j == jP and jP == jPP:
+                                    line_list[count_veh][count-1][2] = 6
+                                    I1.drawLineVertical(iP, jP, count_veh)
+                            
+                        #I1.showVehicle(i, j, iP, jP, count_veh)
+                        _count_veh = 0
+                        _count = 0
+                        for _count in range (count+1):
+                            for _count_veh in range (len(line_list)):
+                                if _count >= len(line_list[_count_veh]):
+                                    pass
+                                else:
+                                    _j = line_list[_count_veh][_count][0]
+                                    _i = line_list[_count_veh][_count][1]
+                                    _type = line_list[_count_veh][_count][2]
+                                    if _type == 1:
+                                        I1.drawLeftDown(_j, _i, _count_veh)
+                                    elif _type == 2:
+                                        I1.drawLeftUp(_j, _i, _count_veh)
+                                    elif _type == 3:
+                                        I1.drawRightDown(_j, _i, _count_veh)
+                                    elif _type == 4:
+                                        I1.drawRightUp(_j, _i, _count_veh)
+                                    elif _type == 5:
+                                        I1.drawLineHorizontal(_j, _i, _count_veh)
+                                    elif _type == 6:
+                                        I1.drawLineVertical(_j, _i, _count_veh)
+                        for _ in range (count_veh + 1):
+                            if _ < len(line_list[count_veh]):
+                                I1.showVehicle(i, j, iP, jP, count_veh)
+                        #pygame.display.flip()
+                if len(line_list) == 1:
+                    pygame.time.wait(200)
+                else:
+                    pygame.time.wait(200)
                 pygame.display.flip()
             is_go_path = False
         
