@@ -272,7 +272,7 @@ class vehicle_level4(vehicle_base):
         return joined_path
 
 
-def process_lev4(board, n, m, t, f, map_data, cell_side):
+def process_lev4(board, map_data, cell_side):
 
     vehicles = board.get_vehicle()
     S_vehicle = vehicles[0]
@@ -368,8 +368,8 @@ def process_lev4(board, n, m, t, f, map_data, cell_side):
                     paths.append(vehicle.path)
                 
                 board.test_display_path(paths)
-                path_UI(n, m, t, f, board.map_data, paths, cell_side)
-                map_UI(n, m, t, f, board.map_data, 4, "")
+                path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
+                map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "")
                 for vehicle in vehicles:
                     if (
                         vehicle.current_y == vehicle.goal_y

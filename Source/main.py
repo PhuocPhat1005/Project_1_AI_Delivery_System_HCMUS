@@ -48,7 +48,7 @@ def main():
         path_UI(n, m, t, f, map_data, paths, cell_side)
     else:
         paths = process_lev4(
-            board, n, m, t, f, map_data, cell_side
+            board, map_data, cell_side
         )
     board.test_display_path(paths)
 

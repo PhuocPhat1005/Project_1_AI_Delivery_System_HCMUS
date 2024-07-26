@@ -74,6 +74,6 @@ class GBFSAlgorithm:
                         ),
                     )  # Add the new cell to the frontier with its heuristic value
 
-        return board.path_and_time(
+        return board.path_time_fuel(
             self.vehicle.name, board.tracepath(self.vehicle.name)
         )  # Return the path found
