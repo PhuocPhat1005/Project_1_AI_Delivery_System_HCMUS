@@ -1,6 +1,6 @@
-from termcolor import colored
-from utils.cells import cell
+from utils.cells import cell  # import the cell class from the utils.cells module
 
+# Importing vehicle classes from different level modules.
 from levels.level_1.vehicle_level1 import vehicle_level1
 from levels.level_2.vehicle_level2 import vehicle_level2
 from levels.level_3.vehicle_level3 import vehicle_level3
@@ -8,75 +8,92 @@ from levels.level_4.vehicle_level4 import vehicle_level4
 
 
 def fought_cells(y, x, paths):
-    """_summary_
+    """
+    Check if a given cell (y, x) is part of any path.
 
     Args:
-        y (_type_): _description_
-        x (_type_): _description_
-        paths (_type_): _description_
+        y (int): the y-coordinate of the cell.
+        x (_type_): the x-coordinate of the cell.
+        paths (list): a list of paths, where each path is a list of tuples representing coordinates.
 
     Returns:
-        _type_: _description_
+        int: the index of the path that contains the cell (y, x), or -1 if no path contains the cell.
     """
-    for i, path in enumerate(paths):
-        # Tạo danh sách các tọa độ (x, y) từ mỗi đường dẫn
-        coordinates = [(py, px) for py, px, _, _ in path]
-        if (y, x) in coordinates:
-            return i
-    return -1
+    for i, path in enumerate(paths):  # Iterate over all paths
+        coordinates = [
+            (py, px) for py, px, _, _ in path
+        ]  # Extract the coordinates (y, x) from each path.
+        if (y, x) in coordinates:  # Check if the cell (y, x) is in current path
+            return i  # Return the index of the path
+    return -1  # Return -1 if the cell is not in the path
 
 
 class Board:
-    """_summary_"""
+    """
+    Class representing the game board.
+    """
 
     def __init__(self, n, m, f, t, map_data, level=1, algo="algo"):
-        """_summary_
+        """
+        Initialize the Board object.
 
         Args:
-            n (_type_): _description_
-            m (_type_): _description_
-            f (_type_): _description_
-            t (_type_): _description_
-            map_data (_type_): _description_
-            level (int, optional): _description_. Defaults to 1.
-            algo (str, optional): _description_. Defaults to "algo".
+            n (int): number of rows in the board
+            m (int): number of columns in the board
+            f (int): initial fuel amount
+            t (int): time limit (delivery time)
+            map_data (list): 2D list representing the map data.
+            level (int, optional): this is the game level. Defaults to 1.
+            algo (str, optional): The algorithm used for pathfinding. Defaults to "algo".
         """
-        self.n = n
-        self.m = m
-        self.f = f
-        self.t = t
-        self.map_data = map_data
-        self.cells = []
-        self.vehicle = []
-        goals = []
-        self.fuel_stations = []
-        self.algo = algo  # dung cho level1
+        self.n = n  # Set the number of rows
+        self.m = m  # Set the number of columns
+        self.f = f  # Set the initial fuel amount
+        self.t = t  # Set the time limit
+        self.map_data = map_data  # Set the map data
+        self.cells = []  # Initialize the cells list
+        self.vehicle = []  # Initialize the vehicle list
+        goals = []  # Initialize the goal list
+        self.fuel_stations = []  # Initialize the fuel station list.
+        self.algo = algo  # Set the algorithm used for Level 1.
 
-        for i in range(n):
-            self.cells.append(list())
-            for j in range(m):
-                self.cells[i].append(cell(y=i, x=j, raw_value=map_data[i][j]))
-                if "S" in map_data[i][j]:
-                    name = map_data[i][j]
-                    if level == 1:
+        # Initialize cells and vehicles based on map data.
+        for i in range(n):  # Iterate over the rows
+            self.cells.append(list())  # Append on an empty list to cells for each row.
+            for j in range(m):  # Iterate over the columns
+                self.cells[i].append(
+                    cell(y=i, x=j, raw_value=map_data[i][j])
+                )  # Create a cell object for each map cell.
+                if "S" in map_data[i][j]:  # Start position of a vehicle.
+                    name = map_data[i][j]  # Get the name of the vehicle.
+                    if level == 1:  # If the level is 1, create a vehicle_level1 object.
                         self.vehicle.append(vehicle_level1(name, i, j, t, f, algo))
-                    if level == 2:
+                    if level == 2:  # If the level is 2, create a vehicle_level2 object.
                         self.vehicle.append(vehicle_level2(name, i, j, t, f))
-                    if level == 3:
+                    if level == 3:  # If the level is 3, create a vehicle_level3 object.
                         self.vehicle.append(vehicle_level3(name, i, j, t, f))
-                    if level == 4:
+                    if level == 4:  # If the level is 4, create a vehicle_level4 object.
                         self.vehicle.append(vehicle_level4(name, i, j, t, f))
-                if "G" in map_data[i][j]:
-                    goal = map_data[i][j].replace("G", "S")
-                    goals.append((goal, i, j))
-                if "F" in map_data[i][j]:
-                    self.fuel_stations.append((i, j))
+                # Dung de truy vet goal cua tung start S.
+                if "G" in map_data[i][j]:  # Check if the cell is a goal position.
+                    goal = map_data[i][j].replace(
+                        "G", "S"
+                    )  # Replace "G" with "S" to get the goal name.
+                    goals.append((goal, i, j))  # Append the goal to the goals list.
+                if "F" in map_data[i][j]:  # Check if the cell is a fuel station.
+                    self.fuel_stations.append(
+                        (i, j)
+                    )  # Append the fuel station to the fuel_stations list.
 
-        for goal in goals:
+        for goal in goals:  # Iterate over the goals.
             for vehicle in self.vehicle:
-                if vehicle.name == goal[0]:
-                    vehicle.goal_y = goal[1]
-                    vehicle.goal_x = goal[2]
+                if vehicle.name == goal[0]:  # Check if the vehicle matches the goal.
+                    vehicle.goal_y = goal[
+                        1
+                    ]  # Set the goal y-coordinate for the vehicle.
+                    vehicle.goal_x = goal[
+                        2
+                    ]  # Set the goal x-coordinate for the vehicle.
                     vehicle.tmp_goal_y = goal[1]
                     vehicle.tmp_goal_x = goal[2]
                     break
