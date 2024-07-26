@@ -106,6 +106,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
     
     if all(ele == [] for ele in paths):
         ui_lv_1.draw_ui(750, 20, 'NO PATH FOUND')
+    #ui_lv_1.write_text_content(FONT_SMALL, False, BOARD_APPEEAR_WIDTH, WINDOW_HEIGHT, BOARD_APPEEAR_WIDTH, BOARD_APPEEAR_HEIGHT, '')
     
     while True:
         if is_go_path:
@@ -146,17 +147,21 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                             #if [i, j, k, l] in line_list[count_veh]:
                             
                             if 'S' in map_change[iP][jP]:
-                                I1.showStart(iP, jP, count_veh)
+                                if len(map_change[iP][jP]) == 1:
+                                    I1.showStart(iP, jP, 0)
+                                elif count_veh != int(map_change[iP][jP][1:]):
+                                    I1.showStart(iP, jP, int(map_change[iP][jP][1:]) )
                             elif 'F' in map_change[iP][jP]:
                                 I1.showGasStation(iP, jP)
-                            elif 'G' in map_change[iP][jP] and line_list[count_veh][count-1][5] != -1:
+                                line_list[count_veh][count-1][5] = map_change[iP][jP]
+                                #I1.writeNumber(BOARD_APPEEAR_WIDTH + jP*cell_side, BOARD_APPEEAR_HEIGHT + iP*cell_side, map_change[iP][jP][1:])
+                            elif 'G' in map_change[iP][jP] and type(line_list[count_veh][count-1][5]) == int and line_list[count_veh][count-1][5] != -1:
                                 map_change[iP][jP] = '0'
                                 I1.showEmpty(iP, jP)
                                 if count_veh == 0:
                                     map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G"
                                 else:
                                     map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G" + str(count_veh)
-                                I1.showGoal( line_list[count_veh][count-1][5] , line_list[count_veh][count-1][6] , count_veh )
                             elif 'G' in map_change[iP][jP]:
                                 if len(map_change[iP][jP]) == 1:
                                     I1.showGoal(iP, jP, 0)
@@ -166,6 +171,8 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                 I1.showEmpty(iP, jP)
                             elif map_change[iP][jP].isdigit() and int(map_change[iP][jP]) > 0:
                                 I1.showTollBooths(iP, jP)
+                                line_list[count_veh][count-1][5] = "T" + str(map_change[iP][jP])
+                                #I1.writeNumber(BOARD_APPEEAR_WIDTH + jP*cell_side, BOARD_APPEEAR_HEIGHT + iP*cell_side, map_change[iP][jP])
                             if count>1:
                                 iPP = line_list[count_veh][count-2][0]
                                 jPP = line_list[count_veh][count-2][1]
@@ -175,22 +182,22 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                     I1.showVehicle(i, j, iPP, jPP, count_veh)
                                 elif (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
                                     line_list[count_veh][count-1][2] = 1
-                                    I1.drawLeftDown(iP, jP, count_veh)
+                                    #I1.drawLeftDown(iP, jP, count_veh)
                                 elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
                                     line_list[count_veh][count-1][2] = 2
-                                    I1.drawLeftUp(iP, jP, count_veh)
+                                    #I1.drawLeftUp(iP, jP, count_veh)
                                 elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
                                     line_list[count_veh][count-1][2] = 3
-                                    I1.drawRightDown(iP, jP, count_veh)
+                                    #I1.drawRightDown(iP, jP, count_veh)
                                 elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
                                     line_list[count_veh][count-1][2] = 4
-                                    I1.drawRightUp(iP, jP, count_veh)
+                                    #I1.drawRightUp(iP, jP, count_veh)
                                 elif i == iP and iP == iPP:
                                     line_list[count_veh][count-1][2] = 5
-                                    I1.drawLineHorizontal(iP, jP, count_veh)
+                                    #I1.drawLineHorizontal(iP, jP, count_veh)
                                 elif j == jP and jP == jPP:
                                     line_list[count_veh][count-1][2] = 6
-                                    I1.drawLineVertical(iP, jP, count_veh)
+                                    #I1.drawLineVertical(iP, jP, count_veh)
                             
                         #I1.showVehicle(i, j, iP, jP, count_veh)
                         _count_veh = 0
@@ -203,6 +210,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                     _j = line_list[_count_veh][_count][0]
                                     _i = line_list[_count_veh][_count][1]
                                     _type = line_list[_count_veh][_count][2]
+                                    _is_show_num = str(line_list[_count_veh][_count][5])
                                     if _type == 1:
                                         I1.drawLeftDown(_j, _i, _count_veh)
                                     elif _type == 2:
@@ -215,6 +223,10 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                         I1.drawLineHorizontal(_j, _i, _count_veh)
                                     elif _type == 6:
                                         I1.drawLineVertical(_j, _i, _count_veh)
+                                    if 'T' in _is_show_num:
+                                        I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:])
+                                    if 'F' in _is_show_num:
+                                        I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:])
                 for _ in range (0, len(line_list)):
                     if count < len(line_list[_])-1 and count > 0:
                         _i = line_list[_][count][0]

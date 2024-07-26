@@ -69,6 +69,20 @@ class Image_UI:
 
             self.right_up_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\L_right_up.png') )
             self.right_up_img[count_img] = pygame.transform.scale(self.right_up_img[count_img], self.cell_size)
+    
+    def writeNumber(self, pos_x=0, pos_y=0, content=''):
+        font_size = FONT_MEDIUM
+        if self.cell_side > 60:
+            font_size = FONT_LARGE
+        elif self.cell_side == 60:
+            font_size = FONT_MEDIUM+5
+        else:
+            font_size = FONT_SMALL
+        text_obj = Text_Display(content, font_size=font_size, text_color=DARK_GREEN_COLOR)
+        text_content = text_obj.show_text()
+        text_pos = (pos_x, pos_y)
+        
+        self.screen.blit(text_content, text_pos)
             
     def showEmpty(self, j, i):
         self.screen.blit(self.empty_cell_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
@@ -159,6 +173,7 @@ class Board_UI(Image_UI):
                 #show gas station
                 elif 'F' in self.map_data[j][i]:
                     self.showGasStation(j, i)
+                    self.writeNumber(pos_x=BOARD_APPEEAR_WIDTH + i*self.cell_side, pos_y=BOARD_APPEEAR_HEIGHT + j*self.cell_side, content=self.map_data[j][i][1:])
                 #show goal
                 elif 'G' in self.map_data[j][i]:
                     if len(self.map_data[j][i]) == 1:
@@ -169,6 +184,7 @@ class Board_UI(Image_UI):
                 #show toll booths
                 elif self.map_data[j][i].isdigit() and int(self.map_data[j][i]) > 0:
                     self.showTollBooths(j, i)
+                    self.writeNumber(pos_x=BOARD_APPEEAR_WIDTH + i*self.cell_side, pos_y=BOARD_APPEEAR_HEIGHT + j*self.cell_side, content=self.map_data[j][i])
                 #show empty/street
                 else:
                     self.showEmpty(j, i)
@@ -176,9 +192,7 @@ class Board_UI(Image_UI):
                     if len(self.map_data[j][i]) == 1:
                         self.showStart(j, i, 0)
                         self.showVehicle(j, i, -2, -2, 0)
-                        #self.screen.blit(self.vehicle_right_img[0], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
                     else:
                         num = int(self.map_data[j][i][1:])
                         self.showStart(j, i, num)
                         self.showVehicle(j, i, -2, -2, num)
-                        #self.screen.blit(self.vehicle_right_img[num], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
