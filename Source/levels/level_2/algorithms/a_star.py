@@ -21,9 +21,9 @@ class AStarAlgorithm:
         Returns:
         list: The path from the start position to the goal position as a list of coordinates.
         """
-        # print("a_star")
-        # print("Start: ", self.vehicle.tmp_start_y, self.vehicle.tmp_start_x)
-        # print("Goal: ", self.vehicle.tmp_goal_y, self.vehicle.tmp_goal_x)
+        print("a_star")
+        print("Start: ", self.vehicle.tmp_start_y, self.vehicle.tmp_start_x)
+        print("Goal: ", self.vehicle.tmp_goal_y, self.vehicle.tmp_goal_x)
         board.generate_visited(self.vehicle.name)
         board.generate_parent(self.vehicle.name)
         board.generate_cost(self.vehicle.name)
@@ -52,11 +52,11 @@ class AStarAlgorithm:
 
         start_cell.current_vehicle[self.vehicle.name] = self.vehicle.name
         # Initialize the priority queue (frontier) with the start cell and its heuristic value
-        frontier = [(self.heuristic(start_cell), start_cell)]
+        frontier = [(start_cell)]
         heapq.heapify(frontier)
         while frontier:
             # Pop the cell with the lowest f-score from the frontier
-            _, current_cell = heapq.heappop(frontier)
+            current_cell = heapq.heappop(frontier)
 
             y = [0, 0, 1, -1]
             x = [1, -1, 0, 0]
@@ -92,8 +92,8 @@ class AStarAlgorithm:
                             current_cell.y,
                             current_cell.x,
                         )
-                        f_score = new_cost + self.heuristic(board.cells[new_y][new_x])
-                        heapq.heappush(frontier, (f_score, board.cells[new_y][new_x]))
+                        # f_score = new_cost + self.heuristic(board.cells[new_y][new_x])
+                        heapq.heappush(frontier, (board.cells[new_y][new_x]))
             if (
                 current_cell.y == self.vehicle.tmp_goal_y
                 and current_cell.x == self.vehicle.tmp_goal_x
