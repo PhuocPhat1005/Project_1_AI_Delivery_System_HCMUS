@@ -9,15 +9,15 @@ from GUI.credit import *
 import os
 from levels.level_4.vehicle_level4 import process_lev4
 
-#main chay frontend
+
+# main chay frontend
 def main():
-    #khi chay backend thi comment het nhung dong co _UI
-    #menu_UI: 0->3 | level: 1->4
+    # khi chay backend thi comment het nhung dong co _UI
+    # menu_UI: 0->3 | level: 1->4
     level = 1
-    algo = 'algo'
+    algo = "algo"
     level, algo = menu_UI()
     level += 1
-
 
     # Read input data
     map_order = 1
@@ -27,7 +27,7 @@ def main():
         return
     n, m, t, f, map_data = read_input_file(input_filename)
 
-    #vua hien UI map, vua tim canh cell
+    # vua hien UI map, vua tim canh cell
     cell_side = map_UI(n, m, t, f, map_data, level, algo)
 
     # Initialize the board and vehicles
@@ -86,14 +86,16 @@ def main():
     # Write paths to the output file
     write_paths_to_file(output_filename, vehicles, level)
     print(paths)
-    #hien path, hien line
+    # hien path, hien line
+
+
 if __name__ == "__main__":
     while True:
         main()
 
 
-#main chay backend
-'''
+# main chay backend
+"""
 def play_level(level, map_order):
     # Read input data
     input_filename = f"input/level{level}/input{map_order}_level{level}.txt"
@@ -128,7 +130,7 @@ def play_level(level, map_order):
     board.test_display_path(paths)
 
     # Determine output filename based on the input filename
-    output_filename = f"output/level{level}/output_{os.path.basename(input_filename).split('.')[0]}_level{level}.txt"
+    output_filename = f"output/level{level}/output{map_order}_level{level}.txt"
 
     # Create the output directory for the level if it does not exist
     if not os.path.exists(f"output/level{level}"):
@@ -175,4 +177,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()'''
+    main()"""

@@ -1,5 +1,17 @@
 class vehicle_base:
-    def __init__(self, name, start_y, start_x, delivery_time, fuel, algo = "algo"):
+    """_summary_"""
+
+    def __init__(self, name, start_y, start_x, delivery_time, fuel, algo="algo"):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+            start_y (_type_): _description_
+            start_x (_type_): _description_
+            delivery_time (_type_): _description_
+            fuel (_type_): _description_
+            algo (str, optional): _description_. Defaults to "algo".
+        """
         self.start_y = start_y
         self.start_x = start_x
         self.fuel = fuel
@@ -21,4 +33,9 @@ class vehicle_base:
         )  # blocked temporary, need to wait 1 min to verhicle in that cell move
 
     def get_algorithm_name(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
         return self.algorithm.__class__.__name__
