@@ -382,6 +382,10 @@ def process_lev4(board):
 
                 
                 board.test_display_path(paths)
+                #map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "", len(vehicles))
+                #path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
+                #map_UI(n, m, t, f, board.map_data, 4, "", len(vehicles))
+                #path_UI(n, m, t, f, board.map_data, paths, cell_side)
                 
                 # path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
                 # map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "")

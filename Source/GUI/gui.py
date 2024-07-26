@@ -14,13 +14,6 @@ title = pygame.display.set_caption('Graph run')
 BOARD_APPEEAR_WIDTH = WINDOW_WIDTH* 0.08
 BOARD_APPEEAR_HEIGHT = WINDOW_HEIGHT* 0.08
 
-def write_line(pos_x=0, pos_y=0, content='', font_size=FONT_MEDIUM, is_center=False, width=WINDOW_WIDTH, height=WINDOW_HEIGHT):
-    text_obj = Text_Display(content, font_size=font_size)
-    text_content = text_obj.show_text()
-    text_pos = (pos_x, pos_y)
-    if is_center:
-        text_pos = text_obj.center_text(width, height)
-
 class Image_UI:
     def __init__(self, _cell_side=60):
         self.background = pygame.image.load('GUI/assets/menu_bg.png')
@@ -39,7 +32,45 @@ class Image_UI:
         self.time_cell_img = pygame.image.load(f'GUI\\assets\\time_cell.png')
         self.time_cell_img = pygame.transform.scale(self.time_cell_img, self.cell_size)
 
-        self.line_h_img = pygame.image.load(f'GUI\\assets\\line_3.png')
+        self.vehicle_right_img = []
+        self.vehicle_up_img = []
+        self.vehicle_left_img = []
+        self.vehicle_down_img = []
+        self.line_h_img = []
+        self.line_h_img = []
+        self.line_v_img = []
+        self.left_down_img = []
+        self.left_down_img = []
+        self.left_up_img = []
+        self.left_up_img = []
+        self.right_down_img = []
+        self.right_down_img = []
+        self.right_up_img = []
+        self.right_up_img = []
+        count_img = 0
+        for count_img in range (10):
+            self.vehicle_right_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\vehicle.png') )
+            self.vehicle_right_img[count_img] = pygame.transform.scale(self.vehicle_right_img[count_img], self.cell_size)
+            self.vehicle_up_img.append( pygame.transform.rotate(self.vehicle_right_img[count_img], 90) )
+            self.vehicle_left_img.append( pygame.transform.rotate(self.vehicle_up_img[count_img], 90) )
+            self.vehicle_down_img.append( pygame.transform.rotate(self.vehicle_left_img[count_img], 90) )
+            self.line_h_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\line.png') )
+            self.line_h_img[count_img] = pygame.transform.scale(self.line_h_img[count_img], self.cell_size)
+            self.line_v_img.append( pygame.transform.rotate(self.line_h_img[count_img], 90) )
+
+            self.left_down_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\L_left_down.png') )
+            self.left_down_img[count_img] = pygame.transform.scale(self.left_down_img[count_img], self.cell_size)
+
+            self.left_up_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\L_left_up.png') )
+            self.left_up_img[count_img] = pygame.transform.scale(self.left_up_img[count_img], self.cell_size)
+
+            self.right_down_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\L_right_down.png') )
+            self.right_down_img[count_img] = pygame.transform.scale(self.right_down_img[count_img], self.cell_size)
+
+            self.right_up_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\L_right_up.png') )
+            self.right_up_img[count_img] = pygame.transform.scale(self.right_up_img[count_img], self.cell_size)
+
+        '''self.line_h_img = pygame.image.load(f'GUI\\assets\\line_3.png')
         self.line_h_img = pygame.transform.scale(self.line_h_img, self.cell_size)
         self.line_v_img = pygame.transform.rotate(self.line_h_img, 90)
         self.left_down_img = pygame.image.load(f'GUI\\assets\\L_3_left_down.png')
@@ -73,7 +104,7 @@ class Image_UI:
         self.vehicle_num_right_img = pygame.transform.scale(self.vehicle_num_right_img, self.cell_size)
         self.vehicle_num_up_img = pygame.transform.rotate(self.vehicle_num_right_img, 90)
         self.vehicle_num_left_img = pygame.transform.rotate(self.vehicle_num_up_img, 90)
-        self.vehicle_num_down_img = pygame.transform.rotate(self.vehicle_num_left_img, 90)
+        self.vehicle_num_down_img = pygame.transform.rotate(self.vehicle_num_left_img, 90)'''
     
     def showEmpty(self, j, i):
         screen.blit(self.empty_cell_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
@@ -90,56 +121,33 @@ class Image_UI:
     
     
     def showVehicle(self, j, i, jP, iP, count_veh):
-        if count_veh == 0:
-            vehicle_img = self.vehicle_right_img
-            if i == iP-1:
-                vehicle_img = self.vehicle_left_img
-            elif j == jP+1:
-                vehicle_img = self.vehicle_down_img
-            elif j == jP-1:
-                vehicle_img = self.vehicle_up_img
-            screen.blit(vehicle_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        else:
-            vehicle_img = self.vehicle_num_right_img
-            if i == iP-1:
-                vehicle_img = self.vehicle_num_left_img
-            elif j == jP+1:
-                vehicle_img = self.vehicle_num_down_img
-            elif j == jP-1:
-                vehicle_img = self.vehicle_num_up_img
-            screen.blit(vehicle_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        vehicle_img = self.vehicle_right_img[count_veh]
+        if i == iP-1:
+            vehicle_img = self.vehicle_left_img[count_veh]
+        elif j == jP+1:
+            vehicle_img = self.vehicle_down_img[count_veh]
+        elif j == jP-1:
+            vehicle_img = self.vehicle_up_img[count_veh]
+        screen.blit(vehicle_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
     
     def drawLeftDown(self, j, i, count_veh):
-        if count_veh == 0:
-            screen.blit(self.left_down_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        else:
-            screen.blit(self.left_down_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        screen.blit(self.left_down_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+
     def drawRightDown(self, j, i, count_veh):
-        if count_veh == 0:
-            screen.blit(self.right_down_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        else:
-            screen.blit(self.right_down_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        screen.blit(self.right_down_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        
     def drawRightUp(self, j, i, count_veh):
-        if count_veh == 0:
-            screen.blit(self.right_up_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        else:
-            screen.blit(self.right_up_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        screen.blit(self.right_up_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+            
     def drawLeftUp(self, j, i, count_veh):
-        if count_veh == 0:
-            screen.blit(self.left_up_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        else:
-            screen.blit(self.left_up_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        screen.blit(self.left_up_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        
 
     def drawLineHorizontal(self, j, i, count_veh):
-        if count_veh == 0:
-            screen.blit(self.line_h_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        else:
-            screen.blit(self.line_h_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        screen.blit(self.line_h_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+    
     def drawLineVertical(self, j, i, count_veh):
-        if count_veh == 0:
-            screen.blit(self.line_v_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        else:
-            screen.blit(self.line_v_num_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+        screen.blit(self.line_v_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
 
 class Board_UI(Image_UI):
     def __init__(self, _n, _m, _t, _f, _level):
@@ -179,8 +187,6 @@ class Board_UI(Image_UI):
                 #show goal
                 elif 'G' in self.map_data[j][i]:
                     self.showGoal(j, i)
-                    #if len(self.map_data[j][i]) == 1:
-                        #self.showGoal(j, i)
                 #show toll booths
                 elif self.map_data[j][i].isdigit() and int(self.map_data[j][i]) > 0:
                     self.showTollBooths(j, i)
@@ -190,9 +196,10 @@ class Board_UI(Image_UI):
                 if 'S' in self.map_data[j][i]:
                     self.showStart(j, i)
                     if len(self.map_data[j][i]) == 1:
-                        screen.blit(self.vehicle_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+                        screen.blit(self.vehicle_right_img[0], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
                     else:
-                        screen.blit(self.vehicle_num_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+                        num = int(self.map_data[j][i][1:])
+                        screen.blit(self.vehicle_right_img[num], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
         
 def map_UI(n, m, t, f, map_data, level, algo, number_of_agents=0):
     background = pygame.image.load('GUI/assets/menu_bg.png')
@@ -241,6 +248,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     I1 = Image_UI(cell_side)
     i = 0
     j = 0
+    map_change = map_data.copy()
     cell_size = (cell_side, cell_side)
     ui_lv_1 = UI_Level_1(screen)
     prev_time = 0
@@ -264,8 +272,26 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     line_list = [[(0,0,0) for _ in range(1)] for _ in range(len(paths))]
     for count_veh in range (len(paths)):
         for count in range (len(paths[count_veh])):
-            line_list[count_veh].append( [paths[count_veh][count][0] , paths[count_veh][count][1] , 0] )
-    print(line_list)
+            line_list[count_veh].append( [paths[count_veh][count][0] , paths[count_veh][count][1] , 0 , paths[count_veh][count][2] , paths[count_veh][count][3] , -1 , -1] )
+    count = 0
+    count_veh = 0
+    for count_veh in range (len(paths)):
+        line_list[count_veh].pop(0)
+    count = 1
+    count_veh = 0
+    for count_veh in range (len(line_list)):
+        for count in range (len(line_list[count_veh]) - 1):
+            if line_list[count_veh][count][0] == line_list[count_veh][count-1][0] and line_list[count_veh][count][1] == paths[count_veh][count-1][1]:
+                del line_list[count_veh][count]
+                _count = 0
+                for _count in range (len(line_list[count_veh]) - 1):
+                    if line_list[count_veh][_count][0] == line_list[count_veh][_count-1][0] and line_list[count_veh][_count][1] == paths[count_veh][_count-1][1]:
+                        line_list[count_veh][count-1][5] = line_list[count_veh][_count][0]
+                        line_list[count_veh][count-1][6] = line_list[count_veh][_count][1]
+                    else:
+                        line_list[count_veh][count-1][5] = line_list[count_veh][-1][0]
+                        line_list[count_veh][count-1][6] = line_list[count_veh][-1][1]
+                count = 0
     count = 0
     count_veh = 0
     
@@ -285,8 +311,11 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                                 return
                     
                     #if len_of_n_veh[count_veh] >= count:
-                    if count < len(paths[count_veh]) and count > 0:
-                        i, j, k, l = paths[count_veh][count]
+                    if count < len(line_list[count_veh]) and count > 0:
+                        i = line_list[count_veh][count][0]
+                        j = line_list[count_veh][count][1]
+                        k = line_list[count_veh][count][3]
+                        l = line_list[count_veh][count][4]
                         
                         if t and k != float('inf'):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 100, 50))
@@ -297,67 +326,84 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                             ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
                         #P: past | PP: past past
                         if count>0:
-                            iP, jP, kP, _ = paths[count_veh][count-1]
+                            iP = line_list[count_veh][count-1][0]
+                            jP = line_list[count_veh][count-1][1]
                         
-                            if (i, j, k, l) in paths[count_veh]:
-                                I1.showVehicle(i, j, iP, jP, count_veh)
+                            #if [i, j, k, l] in line_list[count_veh]:
                             
-                            if 'S' in map_data[jP][iP]:
+                            if 'S' in map_change[iP][jP]:
                                 I1.showStart(iP, jP)
-                            else:
-                                if 'F' in map_data[iP][jP]:
-                                    I1.showGasStation(iP, jP)
-                                elif map_data[iP][jP] == '0':
-                                    I1.showEmpty(iP, jP)
-                                elif map_data[iP][jP].isdigit() and int(map_data[iP][jP]) > 0:
-                                    I1.showTollBooths(iP, jP)
-                                if count>1:
-                                    iPP, jPP, kPP, _ = paths[count_veh][count-2]
-                                    if (j == jP and i == iP):# or (jP == jPP and iP == iPP):
-                                        I1.showVehicle(i, j, iP, jP, count_veh)
-                                    elif (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
-                                        line_list[count_veh][count][2] = 1
-                                        I1.drawLeftDown(iP, jP, count_veh)
-                                    elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
-                                        line_list[count_veh][count][2] = 2
-                                        I1.drawLeftUp(iP, jP, count_veh)
-                                    elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
-                                        line_list[count_veh][count][2] = 3
-                                        I1.drawRightDown(iP, jP, count_veh)
-                                    elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
-                                        line_list[count_veh][count][2] = 4
-                                        I1.drawRightUp(iP, jP, count_veh)
-                                    elif i == iP:
-                                        line_list[count_veh][count][2] = 5
-                                        I1.drawLineHorizontal(iP, jP, count_veh)
-                                    elif j == jP:
-                                        line_list[count_veh][count][2] = 6
-                                        I1.drawLineVertical(iP, jP, count_veh)
-                    _count_veh = 0
-                    _count = 0
-                    for _count in range (count):
-                        for _count_veh in range (len(line_list)):
-                            if _count >= len(paths[_count_veh]):
-                                pass
-                            else:
-                                _j = line_list[_count_veh][_count][0]
-                                _i = line_list[_count_veh][_count][1]
-                                _type = line_list[_count_veh][_count][2]
-                                if _type == 1:
-                                    I1.drawLeftDown(_j, _i, _count_veh)
-                                if _type == 2:
-                                    I1.drawLeftUp(_j, _i, _count_veh)
-                                if _type == 3:
-                                    I1.drawRightDown(_j, _i, _count_veh)
-                                if _type == 4:
-                                    I1.drawRightUp(_j, _i, _count_veh)
-                                if _type == 5:
-                                    I1.drawLineHorizontal(_j, _i, _count_veh)
-                                if _type == 6:
-                                    I1.drawLineVertical(_j, _i, _count_veh)
-                    _count_veh = 0
-                    _count = 0
-                pygame.time.wait(200)
+                            elif 'F' in map_change[iP][jP]:
+                                I1.showGasStation(iP, jP)
+                            elif 'G' in map_change[iP][jP] and line_list[count_veh][count-1][5] != -1:
+                                map_change[iP][jP] = '0'
+                                I1.showEmpty(iP, jP)
+                                if count_veh == 0:
+                                    map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G"
+                                else:
+                                    map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G" + str(count_veh)
+                                I1.showGoal( line_list[count_veh][count-1][5] , line_list[count_veh][count-1][6] )
+                            elif map_change[iP][jP] == '0':
+                                I1.showEmpty(iP, jP)
+                            elif map_change[iP][jP].isdigit() and int(map_change[iP][jP]) > 0:
+                                I1.showTollBooths(iP, jP)
+                            if count>1:
+                                iPP = line_list[count_veh][count-2][0]
+                                jPP = line_list[count_veh][count-2][1]
+                                if (jP == jPP and iP == iPP):
+                                    iPP, jPP, kPP, _ = paths[count_veh][count-3]
+                                if (j == jP and i == iP):
+                                    I1.showVehicle(i, j, iPP, jPP, count_veh)
+                                elif (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
+                                    line_list[count_veh][count-1][2] = 1
+                                    I1.drawLeftDown(iP, jP, count_veh)
+                                elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
+                                    line_list[count_veh][count-1][2] = 2
+                                    I1.drawLeftUp(iP, jP, count_veh)
+                                elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
+                                    line_list[count_veh][count-1][2] = 3
+                                    I1.drawRightDown(iP, jP, count_veh)
+                                elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
+                                    line_list[count_veh][count-1][2] = 4
+                                    I1.drawRightUp(iP, jP, count_veh)
+                                elif i == iP and iP == iPP:
+                                    line_list[count_veh][count-1][2] = 5
+                                    I1.drawLineHorizontal(iP, jP, count_veh)
+                                elif j == jP and jP == jPP:
+                                    line_list[count_veh][count-1][2] = 6
+                                    I1.drawLineVertical(iP, jP, count_veh)
+                            
+                        #I1.showVehicle(i, j, iP, jP, count_veh)
+                        _count_veh = 0
+                        _count = 0
+                        for _count in range (count+1):
+                            for _count_veh in range (len(line_list)):
+                                if _count >= len(line_list[_count_veh]):
+                                    pass
+                                else:
+                                    _j = line_list[_count_veh][_count][0]
+                                    _i = line_list[_count_veh][_count][1]
+                                    _type = line_list[_count_veh][_count][2]
+                                    if _type == 1:
+                                        I1.drawLeftDown(_j, _i, _count_veh)
+                                    elif _type == 2:
+                                        I1.drawLeftUp(_j, _i, _count_veh)
+                                    elif _type == 3:
+                                        I1.drawRightDown(_j, _i, _count_veh)
+                                    elif _type == 4:
+                                        I1.drawRightUp(_j, _i, _count_veh)
+                                    elif _type == 5:
+                                        I1.drawLineHorizontal(_j, _i, _count_veh)
+                                    elif _type == 6:
+                                        I1.drawLineVertical(_j, _i, _count_veh)
+                        for _ in range (count_veh + 1):
+                            if _ < len(line_list[count_veh]):
+                                I1.showVehicle(i, j, iP, jP, count_veh)
+                        #pygame.display.flip()
+                if len(line_list) == 1:
+                    pygame.time.wait(200)
+                else:
+                    pygame.time.wait(200)
                 pygame.display.flip()
             is_go_path = False
         

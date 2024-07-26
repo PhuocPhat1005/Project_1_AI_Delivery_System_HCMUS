@@ -309,21 +309,27 @@ class Board:
             path (list): List of tuples representing the path.
 
         Returns:
-            list: List of tuples representing the path with time and fuel information.
+            list: List of tuples (y, x, time_leave, fuel) representing the path with time and fuel information.
         """
+        # Call the unique_path method to remove duplicate coordinates from the path
         unique_list = []
         for item in path:
             if item not in unique_list:
                 unique_list.append(item)
+        # Initialize a new list to store the path with time and fuel information
         new_path = []
         for i in range(len(unique_list)):
             y, x = unique_list[i]
-            time_leave = self.cells[y][x].time[name]  # + 1
+            # Get the time the vehicle leaves the current cell
+            time_leave = self.cells[y][x].time[name]
+            # Get the remaining fuel of the vehicle when it leaves the current cell
             fuel = self.cells[y][x].fuel[name]
+            # Append the current cell's coordinates along with the time and fuel information to the new path list
             new_path.append((y, x, time_leave, fuel))
-        # print("New path: ", new_path)
+        # Return the new path with time and fuel information
         return new_path
 
+    # The following methods are for testing and debugging purposes.
     def test_input(self):
         print("Number of rows: ", self.n)
         print("Number of columns: ", self.m)
