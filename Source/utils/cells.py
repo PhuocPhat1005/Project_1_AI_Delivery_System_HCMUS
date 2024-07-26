@@ -16,8 +16,8 @@ class cell:
         self.current_vehicle = {}
 
     def __lt__(self, other):
-        if self.cost[self.current_vehicle] == other.cost[other.current_vehicle]:
-            if self.time[self.current_vehicle] == other.time[other.current_vehicle]:
+        if self.time[self.current_vehicle] == other.time[other.current_vehicle]:
+            if self.cost[self.current_vehicle] == other.cost[other.current_vehicle]:
                 try:
                     if (
                         self.fuel[self.current_vehicle]
@@ -33,8 +33,8 @@ class cell:
                     )
                 except:
                     pass
-            return self.time[self.current_vehicle] < other.time[other.current_vehicle]
-        return self.cost[self.current_vehicle] < other.cost[other.current_vehicle]
+            return self.cost[self.current_vehicle] < other.cost[other.current_vehicle]
+        return self.time[self.current_vehicle] < other.time[other.current_vehicle]
 
         # if self.time[self.current_vehicle] < other.time[self.current_vehicle]:
         #     return True
