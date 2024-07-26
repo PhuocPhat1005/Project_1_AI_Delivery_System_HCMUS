@@ -201,11 +201,9 @@ class Board_UI(Image_UI):
                         num = int(self.map_data[j][i][1:])
                         screen.blit(self.vehicle_right_img[num], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
         
-def map_UI(n, m, t, f, map_data, level, algo, number_of_agents=0):
+def map_UI(n, m, t, f, map_data, level, algo):
     background = pygame.image.load('GUI/assets/menu_bg.png')
     screen.blit(background, (0, 0))
-    
-    print(number_of_agents)
     
     M1 = Board_UI(n, m, t, f, level)
     M1.readMapData(map_data)
@@ -229,10 +227,7 @@ def map_UI(n, m, t, f, map_data, level, algo, number_of_agents=0):
         ui_lv_1 = UI_Level_1(screen)
         ui_lv_1.draw_ui(750, 100, 'Time:')
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
-        print(level, number_of_agents)
-        for idx in range(number_of_agents):
-            ui_lv_1.draw_ui(750, 200 + idx * 50, 'Fuel:')
-            ui_lv_1.draw_ui(950, 200 + idx * 50, str(f))
+            
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -243,7 +238,7 @@ def map_UI(n, m, t, f, map_data, level, algo, number_of_agents=0):
                     return M1.returnCellSide()
         pygame.display.flip()
 
-def path_UI(n, m, t, f, map_data, paths, cell_side):
+def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
     print('Time:', t)
     I1 = Image_UI(cell_side)
     i = 0
@@ -295,9 +290,9 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     count = 0
     count_veh = 0
     
-    if paths == [[]]:
-        ui_lv_1.draw_ui(750, 300, 'NO PATH FOUND')
-        pygame.display.flip()
+    if all(ele == [] for ele in paths):
+        ui_lv_1.draw_ui(750, 20, 'NO PATH FOUND')
+    
     while True:
         if is_go_path:
             for count in range (0, max_len_of_n_veh):
@@ -318,12 +313,17 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                         l = line_list[count_veh][count][4]
                         
                         if t and k != float('inf'):
-                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 100, 50))
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 500, 50))
                             ui_lv_1.draw_ui(950, 100, str(int(t - prev_time)) + 's')
                             prev_time = k
                         if f and l != float('inf'):
-                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 100, 50))
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
                             ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
+                            
+                            for idx in range(number_of_agents):
+                                pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + idx * 50, 500, 50))
+                                ui_lv_1.draw_ui(750, 200 + idx * 50, 'Fuel:')
+                                ui_lv_1.draw_ui(950, 200 + idx * 50, str(l))
                         #P: past | PP: past past
                         if count>0:
                             iP = line_list[count_veh][count-1][0]
@@ -428,6 +428,9 @@ def menu_UI():
     choose_level_result = None
     ui_lv_1 = UI_Level_1(screen)
     option_result_in_lv_1 = None
+    
+    map_order_return = None
+    choose_level_input = None
 
     while True:
         is_up = False
@@ -456,56 +459,50 @@ def menu_UI():
             choose_option = menu.get_choose_option()
         else:
             if choose_option == 0:
-                # Them level list
+                
+                # Them level list, choose level
                 if choose_level_result is None:
                     level_list.show_level_list(is_up, is_down, is_left, is_enter)
                     choose_level_result = level_list.get_option_result()
                 elif choose_level_result == 0: # hien ra cac option cua level 1
                     
-                    if option_result_in_lv_1 is None:
-                        ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
-                        option_result_in_lv_1 = ui_lv_1.get_option_result()
-                    elif option_result_in_lv_1 == 0: # option BFS cua level 1
-                        algo = 'BFS'
-                        return choose_level_result, algo
-                        #run and show map
-                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        # ui_lv_1.draw_ui(900, 200, 'BFS')
-                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=0, is_force_left=is_left)
-                    elif option_result_in_lv_1 == 1: # option DFS cua level 1
-                        algo = 'DFS'
-                        return choose_level_result, algo
-                        #run and show map
-                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        # ui_lv_1.draw_ui(900, 200, 'DFS')
-                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=1, is_force_left=is_left)
-                    elif option_result_in_lv_1 == 2: # option UCS cua level 1
-                        algo = 'UCS'
-                        return choose_level_result, algo
-                        #run and show map
-                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        # ui_lv_1.draw_ui(900, 200, 'UCS')
-                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=2, is_force_left=is_left)
-                    elif option_result_in_lv_1 == 3: # option GBFS cua level 1
-                        algo = 'GBFS'
-                        return choose_level_result, algo
-                        #run and show map
-                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        # ui_lv_1.draw_ui(900, 200, 'GBFS')
-                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=3, is_force_left=is_left)
-                    elif option_result_in_lv_1 == 4: # option A* cua level 1
-                        algo = 'A*'
-                        return choose_level_result, algo
-                        #run and show map
-                        # ui_lv_1.draw_ui(750, 100, 'search algorithm:')
-                        # ui_lv_1.draw_ui(900, 200, 'A*')
-                        # option_result_in_lv_1 = ui_lv_1.get_back_to(current_state=4, is_force_left=is_left)
+                    if choose_level_input is None: # hien ra level cua file input 1 -> 5, choose input level
+                        ui_lv_1.show_level_inputs(choose_level_result, is_up, is_down, is_left, is_enter)
+                        choose_level_input = ui_lv_1.get_option_result()
+                    else: # neu chon bat ky input 1 -> 5
+                        map_order_return = choose_level_input + 1
                         
+                        if option_result_in_lv_1 is None: #  hien ra cac thuat toan BFS, DFS,... cua level input duoc chon
+                            ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
+                            option_result_in_lv_1 = ui_lv_1.get_option_result()
+                        else:
+                            if option_result_in_lv_1 == 0: # option BFS cua level 1
+                                algo = 'BFS'
+                                return map_order_return, choose_level_result, algo
+                            elif option_result_in_lv_1 == 1: # option DFS cua level 1
+                                algo = 'DFS'
+                                return map_order_return, choose_level_result, algo
+                            elif option_result_in_lv_1 == 2: # option UCS cua level 1
+                                algo = 'UCS'
+                                return map_order_return, choose_level_result, algo
+                            elif option_result_in_lv_1 == 3: # option GBFS cua level 1
+                                algo = 'GBFS'
+                                return map_order_return, choose_level_result, algo
+                            elif option_result_in_lv_1 == 4: # option A* cua level 1
+                                algo = 'A*'
+                                return map_order_return, choose_level_result, algo
+                            option_result_in_lv_1 = ui_lv_1.get_back_to()
+                        choose_level_input = ui_lv_1.get_back_to()
                     choose_level_result = ui_lv_1.get_back_to()
                 elif choose_level_result >= 1: # option level 2->4
-                    algo = "algo"
-                    return choose_level_result, algo
-                
+                    if choose_level_input is None: # hien ra level cua file input 1 -> 5, choose input level
+                        ui_lv_1.show_level_inputs(choose_level_result, is_up, is_down, is_left, is_enter)
+                        choose_level_input = ui_lv_1.get_option_result()
+                    else:
+                        map_order_return = choose_level_input + 1
+                        algo = "algo"
+                        return map_order_return, choose_level_result, algo
+                    choose_level_result = ui_lv_1.get_back_to(current_state=choose_level_result)
 
                 choose_option = level_list.get_back_to()
                 
