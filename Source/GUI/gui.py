@@ -471,6 +471,7 @@ def menu_UI():
                         choose_level_input = ui_lv_1.get_option_result()
                     else: # neu chon bat ky input 1 -> 5
                         map_order_return = choose_level_input + 1
+                        # print(map_order_return)
                         
                         if option_result_in_lv_1 is None: #  hien ra cac thuat toan BFS, DFS,... cua level input duoc chon
                             ui_lv_1.show_level_list(is_up, is_down, is_left, is_enter)
@@ -492,7 +493,7 @@ def menu_UI():
                                 algo = 'A*'
                                 return map_order_return, choose_level_result, algo
                             option_result_in_lv_1 = ui_lv_1.get_back_to()
-                        choose_level_input = ui_lv_1.get_back_to()
+                        choose_level_input = ui_lv_1.get_back_to(current_state=choose_level_input)
                     choose_level_result = ui_lv_1.get_back_to()
                 elif choose_level_result >= 1: # option level 2->4
                     if choose_level_input is None: # hien ra level cua file input 1 -> 5, choose input level
