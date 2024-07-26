@@ -1,4 +1,11 @@
 def write_paths_to_file(file_path, vehicles, level):
+    """_summary_
+
+    Args:
+        file_path (_type_): _description_
+        vehicles (_type_): _description_
+        level (_type_): _description_
+    """
     with open(file_path, "a") as file:
         if level == 1:
             for vehicle in vehicles:

@@ -8,6 +8,16 @@ from levels.level_4.vehicle_level4 import vehicle_level4
 
 
 def fought_cells(y, x, paths):
+    """_summary_
+
+    Args:
+        y (_type_): _description_
+        x (_type_): _description_
+        paths (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     for i, path in enumerate(paths):
         # Tạo danh sách các tọa độ (x, y) từ mỗi đường dẫn
         coordinates = [(py, px) for py, px, _, _ in path]
@@ -17,7 +27,20 @@ def fought_cells(y, x, paths):
 
 
 class Board:
+    """_summary_"""
+
     def __init__(self, n, m, f, t, map_data, level=1, algo="algo"):
+        """_summary_
+
+        Args:
+            n (_type_): _description_
+            m (_type_): _description_
+            f (_type_): _description_
+            t (_type_): _description_
+            map_data (_type_): _description_
+            level (int, optional): _description_. Defaults to 1.
+            algo (str, optional): _description_. Defaults to "algo".
+        """
         self.n = n
         self.m = m
         self.f = f
@@ -66,16 +89,31 @@ class Board:
             self.generate_fuel(vehicle.name)
 
     def generate_visited(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+        """
         for i in range(self.n):
             for j in range(self.m):
                 self.cells[i][j].visited[name] = False
 
     def generate_parent(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+        """
         for i in range(self.n):
             for j in range(self.m):
                 self.cells[i][j].parent[name] = (-1, -1)
 
     def generate_heuristic(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+        """
         for i in range(self.n):
             for j in range(self.m):
                 for vehicle in self.vehicle:
@@ -91,27 +129,68 @@ class Board:
                             )
 
     def generate_cost(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+        """
         for i in range(self.n):
             for j in range(self.m):
                 self.cells[i][j].cost[name] = float("inf")
 
     def generate_fuel(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+        """
         for i in range(self.n):
             for j in range(self.m):
                 self.cells[i][j].fuel[name] = float("inf")
 
     def generate_time(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+        """
         for i in range(self.n):
             for j in range(self.m):
                 self.cells[i][j].time[name] = float("inf")
 
     def get_vehicle(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
         return sorted(self.vehicle, key=lambda vehicle: vehicle.name)
 
     def get_distance(self, x1, y1, x2, y2):
+        """_summary_
+
+        Args:
+            x1 (_type_): _description_
+            y1 (_type_): _description_
+            x2 (_type_): _description_
+            y2 (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         return abs(x1 - x2) + abs(y1 - y2)
 
     def can_visit(self, name, y, x):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+            y (_type_): _description_
+            x (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         if x < 0 or y < 0 or x >= self.n or y >= self.m:
             return False
         come_cell = self.cells[y][x]
@@ -122,6 +201,14 @@ class Board:
         return True
 
     def tracepath(self, name):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         vehicle = None
         for v in self.vehicle:
             if v.name == name:
@@ -137,9 +224,17 @@ class Board:
 
         # path.append((vehicle.current_y, vehicle.current_x, 1))
         path.append((vehicle.tmp_start_y, vehicle.tmp_start_x))
-        return path[::-1]
+        return path[::-1]  # return reverse path
 
     def unique_path(self, path):
+        """_summary_
+
+        Args:
+            path (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         unique_list = []
         for item in path:
             if item not in unique_list:
@@ -147,6 +242,15 @@ class Board:
         return unique_list
 
     def path_time_fuel(self, name, path):
+        """_summary_
+
+        Args:
+            name (_type_): _description_
+            path (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         unique_list = []
         for item in path:
             if item not in unique_list:
@@ -160,37 +264,37 @@ class Board:
         # print("New path: ", new_path)
         return new_path
 
-    def test_input(self):
-        print("Number of rows: ", self.n)
-        print("Number of columns: ", self.m)
-        print("Initial fuel: ", self.f)
-        print("Time limit: ", self.t)
-        print("Map data: ")
-        for i in range(self.n):
-            for j in range(self.m):
-                print(f"{self.cells[i][j].raw_value:5}", end=" ")
-            print("\n")
+    # def test_input(self):
+    #     print("Number of rows: ", self.n)
+    #     print("Number of columns: ", self.m)
+    #     print("Initial fuel: ", self.f)
+    #     print("Time limit: ", self.t)
+    #     print("Map data: ")
+    #     for i in range(self.n):
+    #         for j in range(self.m):
+    #             print(f"{self.cells[i][j].raw_value:5}", end=" ")
+    #         print("\n")
 
-    def test_input_2(self, name):
-        print("Number of rows: ", self.n)
-        print("Number of columns: ", self.m)
-        print("Initial fuel: ", self.f)
-        print("Time limit: ", self.t)
-        print("Map data: ")
-        for i in range(self.n):
-            for j in range(self.m):
-                print(f"{self.cells[i][j].heuristic[name]:5}", end=" ")
-            print("\n")
+    # def test_input_2(self, name):
+    #     print("Number of rows: ", self.n)
+    #     print("Number of columns: ", self.m)
+    #     print("Initial fuel: ", self.f)
+    #     print("Time limit: ", self.t)
+    #     print("Map data: ")
+    #     for i in range(self.n):
+    #         for j in range(self.m):
+    #             print(f"{self.cells[i][j].heuristic[name]:5}", end=" ")
+    #         print("\n")
 
-    def test_display_path(self, paths):
-        colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white"]
-        for i in range(self.n):
-            for j in range(self.m):
-                k = fought_cells(i, j, paths)
-                if k != -1:
-                    print(
-                        colored(f"{self.cells[i][j].raw_value:5}", colors[k]), end=" "
-                    )
-                else:
-                    print(f"{self.cells[i][j].raw_value:5}", end=" ")
-            print("\n")
+    # def test_display_path(self, paths):
+    #     colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white"]
+    #     for i in range(self.n):
+    #         for j in range(self.m):
+    #             k = fought_cells(i, j, paths)
+    #             if k != -1:
+    #                 print(
+    #                     colored(f"{self.cells[i][j].raw_value:5}", colors[k]), end=" "
+    #                 )
+    #             else:
+    #                 print(f"{self.cells[i][j].raw_value:5}", end=" ")
+    #         print("\n")

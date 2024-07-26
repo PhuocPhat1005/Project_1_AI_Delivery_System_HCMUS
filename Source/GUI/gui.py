@@ -242,6 +242,8 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     i = 0
     j = 0
     cell_size = (cell_side, cell_side)
+    ui_lv_1 = UI_Level_1(screen)
+    prev_time = 0
 
     is_go_path = True
     count = 0
@@ -249,17 +251,27 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
     len_of_n_veh = []
     for count_veh in range (0, len(paths)):
         len_of_n_veh.append( len(paths[count_veh]) )
+    count = 0
     count_veh = 0
+
     max_len_of_n_veh = 0
     min_len_of_n_veh = 0
     if len(paths) != 0:
         max_len_of_n_veh = max(len_of_n_veh)
         min_len_of_n_veh = min(len_of_n_veh)
-        
-    ui_lv_1 = UI_Level_1(screen)
-    prev_time = 0
-
-    line_pass = [[[-2,-2] for _ in range(1)] for _ in range(len(paths))]
+    
+    print(paths)
+    line_list = [[(0,0,0) for _ in range(1)] for _ in range(len(paths))]
+    for count_veh in range (len(paths)):
+        for count in range (len(paths[count_veh])):
+            line_list[count_veh].append( [paths[count_veh][count][0] , paths[count_veh][count][1] , 0] )
+    print(line_list)
+    count = 0
+    count_veh = 0
+    
+    if paths == [[]]:
+        ui_lv_1.draw_ui(750, 300, 'NO PATH FOUND')
+        pygame.display.flip()
     while True:
         if is_go_path:
             for count in range (0, max_len_of_n_veh):
@@ -301,19 +313,50 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                                     I1.showTollBooths(iP, jP)
                                 if count>1:
                                     iPP, jPP, kPP, _ = paths[count_veh][count-2]
-                                    if (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
+                                    if (j == jP and i == iP):# or (jP == jPP and iP == iPP):
+                                        I1.showVehicle(i, j, iP, jP, count_veh)
+                                    elif (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
+                                        line_list[count_veh][count][2] = 1
                                         I1.drawLeftDown(iP, jP, count_veh)
                                     elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
+                                        line_list[count_veh][count][2] = 2
                                         I1.drawLeftUp(iP, jP, count_veh)
                                     elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
+                                        line_list[count_veh][count][2] = 3
                                         I1.drawRightDown(iP, jP, count_veh)
                                     elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
+                                        line_list[count_veh][count][2] = 4
                                         I1.drawRightUp(iP, jP, count_veh)
-                                    elif i == iP:# and iP == iPP:
+                                    elif i == iP:
+                                        line_list[count_veh][count][2] = 5
                                         I1.drawLineHorizontal(iP, jP, count_veh)
-                                    elif j == jP:# and jP == jPP:
+                                    elif j == jP:
+                                        line_list[count_veh][count][2] = 6
                                         I1.drawLineVertical(iP, jP, count_veh)
-                        
+                    _count_veh = 0
+                    _count = 0
+                    for _count in range (count):
+                        for _count_veh in range (len(line_list)):
+                            if _count >= len(paths[_count_veh]):
+                                pass
+                            else:
+                                _j = line_list[_count_veh][_count][0]
+                                _i = line_list[_count_veh][_count][1]
+                                _type = line_list[_count_veh][_count][2]
+                                if _type == 1:
+                                    I1.drawLeftDown(_j, _i, _count_veh)
+                                if _type == 2:
+                                    I1.drawLeftUp(_j, _i, _count_veh)
+                                if _type == 3:
+                                    I1.drawRightDown(_j, _i, _count_veh)
+                                if _type == 4:
+                                    I1.drawRightUp(_j, _i, _count_veh)
+                                if _type == 5:
+                                    I1.drawLineHorizontal(_j, _i, _count_veh)
+                                if _type == 6:
+                                    I1.drawLineVertical(_j, _i, _count_veh)
+                    _count_veh = 0
+                    _count = 0
                 pygame.time.wait(200)
                 pygame.display.flip()
             is_go_path = False
