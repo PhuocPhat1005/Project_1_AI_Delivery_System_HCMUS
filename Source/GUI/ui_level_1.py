@@ -10,9 +10,10 @@ class UI_Level_1:
         self.option_back_to = None
         self.option_result = None
         self.level_list = [[True, 'BFS'], [False, 'DFS'], [False, 'UCS'], [False, 'GBFS'], [False, 'A*']]
+        self.level_input = [[True, 'Input 01'], [False, 'Input 02'], [False, 'Input 03'], [False, 'Input 04'], [False, 'Input 05']]
     
-    def get_choice(self):
-        for i, element in enumerate(self.level_list):
+    def get_choice(self, list):
+        for i, element in enumerate(list):
             if element[0]:
                 return i
         return 0
@@ -43,6 +44,29 @@ class UI_Level_1:
     def draw_ui(self, pos_x, pos_y, content=''):
         self.write_text_content(pos_x=pos_x, pos_y=pos_y, content=content)
         
+    def show_level_inputs(self, level, is_up, is_down, is_left, is_enter):
+        self.screen.fill(BACKGROUND_COLOR)
+        
+        current_state = level
+        back_button = BackButton(self.screen)
+        
+        text_obj = Text_Display('Choose the levels in the level ' + str(level + 1), font_size=FONT_LARGE)
+        text_content = text_obj.show_text()
+        text_pos = text_obj.center_text(height=100)
+        
+        self.screen.blit(text_content, text_pos)
+            
+        if is_left:
+            is_left = False
+            self.is_click_back = True
+            self.option_back_to = back_button.back_to(self.is_click_back, None, current_state)
+        if is_enter:
+            is_enter = False
+            self.option_result = self.get_choice(self.level_input)
+            
+        choice_list = ChoiceList(self.screen)
+        choice_list.choose_options(self.level_input, is_up, is_down, 300)
+        
     def show_level_list(self, is_up, is_down, is_left, is_enter):
         self.screen.fill(BACKGROUND_COLOR)
         
@@ -61,7 +85,7 @@ class UI_Level_1:
             self.option_back_to = back_button.back_to(self.is_click_back, None, 0)
         if is_enter:
             is_enter = False
-            self.option_result = self.get_choice()
+            self.option_result = self.get_choice(self.level_list)
             
         choice_list = ChoiceList(self.screen)
         choice_list.choose_options(self.level_list, is_up, is_down, 300)

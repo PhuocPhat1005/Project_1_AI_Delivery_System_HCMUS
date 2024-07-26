@@ -16,11 +16,11 @@ def main():
     # menu_UI: 0->3 | level: 1->4
     level = 1
     algo = "algo"
-    level, algo = menu_UI()
+    map_order, level, algo = menu_UI()
     level += 1
 
     # Read input data
-    map_order = 1
+    # map_order = 1
     input_filename = f"input/level{level}/input{map_order}_level{level}.txt"
     if not os.path.exists(input_filename):
         print(f"File {input_filename} does not exist. Please enter the details again.")
@@ -57,33 +57,38 @@ def main():
             vehicle.final_path = board.unique_path(vehicle.final_path)
             for path in vehicle.final_path:
                 if path != [] and path[-1][2] <= board.t + 1 - prev_value:
-                    for i in range (0, len(path)):
-                        path[i] = (path[i][0], path[i][1], path[i][2] + prev_value, path[i][3])
+                    for i in range(0, len(path)):
+                        path[i] = (
+                            path[i][0],
+                            path[i][1],
+                            path[i][2] + prev_value,
+                            path[i][3],
+                        )
                     prev_value = path[-1][2] - 1
                     vehicle.path.extend(path)
                 else:
-                    #vehicle.path = board.unique_path(vehicle.path)
+                    # vehicle.path = board.unique_path(vehicle.path)
                     paths.append(path)
                     break
-        
-        print('FINAL STATE: ')
+
+        print("FINAL STATE: ")
         print(paths)
         p_vehicle = []
         for vehicle in vehicles:
             p_vehicle.append(vehicle.path)
             vehicle.path = board.unique_path(vehicle.path)
-        path_UI(n, m, t, f, map_data, p_vehicle, cell_side)
+        
+        path_UI(n, m, t, f, map_data, p_vehicle, cell_side, len(p_vehicle))
     board.test_display_path(paths)
     if level == 4:
         print(paths)
-    
+
     for vehicle in vehicles:
         print(vehicle.name)
         print(vehicle.path)
 
-
     # Determine output filename based on the input filename
-    output_filename = f"output/level{level}/output_{os.path.basename(input_filename).split('.')[0]}_level{level}.txt"
+    output_filename = f"output/level{level}/output{map_order}_level{level}.txt"
 
     # Create the output directory for the level if it does not exist
     if not os.path.exists(f"output/level{level}"):
