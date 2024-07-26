@@ -59,10 +59,6 @@ class AStarAlgorithm:
                         + 1
                         + board.cells[new_y][new_x].value
                     )
-                    if "F" in board.cells[new_y][new_x].raw_value:
-                        new_t += float(
-                            board.cells[new_y][new_x].raw_value.replace("F", "")
-                        )
 
                     new_fuel = (
                         board.cells[current_cell.y][current_cell.x].fuel[
@@ -70,6 +66,14 @@ class AStarAlgorithm:
                         ]
                         - 1
                     )
+                    
+                    if "F" in board.cells[new_y][new_x].raw_value:
+                        new_t += float(
+                            board.cells[new_y][new_x].raw_value.replace("F", "")
+                        )
+                        new_fuel = self.fuel
+
+
 
                     if (
                         new_cost < board.cells[new_y][new_x].cost[self.vehicle.name]

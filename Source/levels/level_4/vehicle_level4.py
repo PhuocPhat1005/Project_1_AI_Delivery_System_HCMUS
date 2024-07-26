@@ -136,14 +136,19 @@ class vehicle_level4(vehicle_base):
                         + 1
                         + board.cells[new_y][new_x].value
                     )
-                    if "F" in board.cells[new_y][new_x].raw_value:
-                        new_t += float(
-                            board.cells[new_y][new_x].raw_value.replace("F", "")
-                        )
 
                     new_fuel = (
                         board.cells[current_cell.y][current_cell.x].fuel[self.name] - 1
                     )
+                    
+                    if "F" in board.cells[new_y][new_x].raw_value:
+                        new_t += float(
+                            board.cells[new_y][new_x].raw_value.replace("F", "")
+                        )
+                        new_fuel = self.fuel
+
+
+
                     # for cell in self.blocked_opposite:
                     #     if new_y == cell[0] and new_x == cell[1]:
                     #         in_block = True
