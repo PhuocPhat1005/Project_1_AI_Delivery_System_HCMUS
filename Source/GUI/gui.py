@@ -226,7 +226,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                     if 'T' in _is_show_num:
                                         I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:])
                                     if 'F' in _is_show_num:
-                                        I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:])
+                                        I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:], text_color=DARK_RED_COLOR)
                 for _ in range (0, len(line_list)):
                     if count < len(line_list[_])-1 and count > 0:
                         _i = line_list[_][count][0]
