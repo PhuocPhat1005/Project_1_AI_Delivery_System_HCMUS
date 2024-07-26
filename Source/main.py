@@ -16,11 +16,11 @@ def main():
     # menu_UI: 0->3 | level: 1->4
     level = 1
     algo = "algo"
-    level, algo = menu_UI()
+    map_order, level, algo = menu_UI()
     level += 1
 
     # Read input data
-    map_order = 1
+    # map_order = 1
     input_filename = f"input/level{level}/input{map_order}_level{level}.txt"
     if not os.path.exists(input_filename):
         print(f"File {input_filename} does not exist. Please enter the details again.")
@@ -62,14 +62,21 @@ def main():
                     prev_value = path[-1][2] - 1
                     vehicle.path.extend(path)
                 else:
-                    vehicle.path = board.unique_path(vehicle.path)
+                    #vehicle.path = board.unique_path(vehicle.path)
                     paths.append(path)
                     break
-        path_UI(n, m, t, f, map_data, paths, cell_side)
         
         print('FINAL STATE: ')
         print(paths)
+        p_vehicle = []
+        for vehicle in vehicles:
+            p_vehicle.append(vehicle.path)
+            vehicle.path = board.unique_path(vehicle.path)
+        
+        path_UI(n, m, t, f, map_data, p_vehicle, cell_side, len(p_vehicle))
     board.test_display_path(paths)
+    if level == 4:
+        print(paths)
     
     for vehicle in vehicles:
         print(vehicle.name)
@@ -87,6 +94,8 @@ def main():
     write_paths_to_file(output_filename, vehicles, level)
     print(paths)
     # hien path, hien line
+    if level == 4:
+        print(paths)
 
 
 if __name__ == "__main__":

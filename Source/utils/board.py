@@ -264,27 +264,27 @@ class Board:
         # print("New path: ", new_path)
         return new_path
 
-    # def test_input(self):
-    #     print("Number of rows: ", self.n)
-    #     print("Number of columns: ", self.m)
-    #     print("Initial fuel: ", self.f)
-    #     print("Time limit: ", self.t)
-    #     print("Map data: ")
-    #     for i in range(self.n):
-    #         for j in range(self.m):
-    #             print(f"{self.cells[i][j].raw_value:5}", end=" ")
-    #         print("\n")
+    def test_input(self):
+        print("Number of rows: ", self.n)
+        print("Number of columns: ", self.m)
+        print("Initial fuel: ", self.f)
+        print("Time limit: ", self.t)
+        print("Map data: ")
+        for i in range(self.n):
+            for j in range(self.m):
+                print(f"{self.cells[i][j].raw_value:5}", end=" ")
+            print("\n")
 
-    # def test_input_2(self, name):
-    #     print("Number of rows: ", self.n)
-    #     print("Number of columns: ", self.m)
-    #     print("Initial fuel: ", self.f)
-    #     print("Time limit: ", self.t)
-    #     print("Map data: ")
-    #     for i in range(self.n):
-    #         for j in range(self.m):
-    #             print(f"{self.cells[i][j].heuristic[name]:5}", end=" ")
-    #         print("\n")
+    def test_input_2(self, name):
+        print("Number of rows: ", self.n)
+        print("Number of columns: ", self.m)
+        print("Initial fuel: ", self.f)
+        print("Time limit: ", self.t)
+        print("Map data: ")
+        for i in range(self.n):
+            for j in range(self.m):
+                print(f"{self.cells[i][j].heuristic[name]:5}", end=" ")
+            print("\n")
 
     def test_display_path(self, paths):
         colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white"]
