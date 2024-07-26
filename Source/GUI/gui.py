@@ -194,9 +194,11 @@ class Board_UI(Image_UI):
                     else:
                         screen.blit(self.vehicle_num_right_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
         
-def map_UI(n, m, t, f, map_data, level, algo):
+def map_UI(n, m, t, f, map_data, level, algo, number_of_agents=0):
     background = pygame.image.load('GUI/assets/menu_bg.png')
     screen.blit(background, (0, 0))
+    
+    print(number_of_agents)
     
     M1 = Board_UI(n, m, t, f, level)
     M1.readMapData(map_data)
@@ -216,6 +218,14 @@ def map_UI(n, m, t, f, map_data, level, algo):
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
         ui_lv_1.draw_ui(750, 200, 'Fuel:')
         ui_lv_1.draw_ui(950, 200, str(f))
+    elif level==4:
+        ui_lv_1 = UI_Level_1(screen)
+        ui_lv_1.draw_ui(750, 100, 'Time:')
+        ui_lv_1.draw_ui(950, 100, str(t) + 's')
+        print(level, number_of_agents)
+        for idx in range(number_of_agents):
+            ui_lv_1.draw_ui(750, 200 + idx * 50, 'Fuel:')
+            ui_lv_1.draw_ui(950, 200 + idx * 50, str(f))
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -276,20 +286,20 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                     
                     #if len_of_n_veh[count_veh] >= count:
                     if count < len(paths[count_veh]) and count > 0:
-                        i, j, k, h = paths[count_veh][count]
+                        i, j, k, l = paths[count_veh][count]
                         
                         if t and k != float('inf'):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 100, 50))
                             ui_lv_1.draw_ui(950, 100, str(int(t - prev_time)) + 's')
                             prev_time = k
-                        if f and h != float('inf'):
-                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200, 100, 50))
-                            ui_lv_1.draw_ui(950, 200, str(int(h)))
+                        if f and l != float('inf'):
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 100, 50))
+                            ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
                         #P: past | PP: past past
                         if count>0:
                             iP, jP, kP, _ = paths[count_veh][count-1]
                         
-                            if (i, j, k, h) in paths[count_veh]:
+                            if (i, j, k, l) in paths[count_veh]:
                                 I1.showVehicle(i, j, iP, jP, count_veh)
                             
                             if 'S' in map_data[jP][iP]:
