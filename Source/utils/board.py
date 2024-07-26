@@ -286,15 +286,15 @@ class Board:
     #             print(f"{self.cells[i][j].heuristic[name]:5}", end=" ")
     #         print("\n")
 
-    # def test_display_path(self, paths):
-    #     colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white"]
-    #     for i in range(self.n):
-    #         for j in range(self.m):
-    #             k = fought_cells(i, j, paths)
-    #             if k != -1:
-    #                 print(
-    #                     colored(f"{self.cells[i][j].raw_value:5}", colors[k]), end=" "
-    #                 )
-    #             else:
-    #                 print(f"{self.cells[i][j].raw_value:5}", end=" ")
-    #         print("\n")
+    def test_display_path(self, paths):
+        colors = ["red", "green", "blue", "yellow", "magenta", "cyan", "white"]
+        for i in range(self.n):
+            for j in range(self.m):
+                k = fought_cells(i, j, paths)
+                if k != -1:
+                    print(
+                        colored(f"{self.cells[i][j].raw_value:5}", colors[k]), end=" "
+                    )
+                else:
+                    print(f"{self.cells[i][j].raw_value:5}", end=" ")
+            print("\n")

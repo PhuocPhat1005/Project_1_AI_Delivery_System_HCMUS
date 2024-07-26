@@ -71,7 +71,7 @@ class AStarAlgorithm:
                         new_t += float(
                             board.cells[new_y][new_x].raw_value.replace("F", "")
                         )
-                        new_fuel = self.fuel
+                        new_fuel = self.vehicle.fuel
 
 
 

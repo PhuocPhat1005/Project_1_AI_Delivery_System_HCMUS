@@ -222,7 +222,7 @@ def map_UI(n, m, t, f, map_data, level, algo, number_of_agents=0):
         ui_lv_1 = UI_Level_1(screen)
         ui_lv_1.draw_ui(750, 100, 'Time:')
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
-        print(level, number_of_agents)
+        
         for idx in range(number_of_agents):
             ui_lv_1.draw_ui(750, 200 + idx * 50, 'Fuel:')
             ui_lv_1.draw_ui(950, 200 + idx * 50, str(f))
@@ -289,11 +289,11 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                         i, j, k, l = paths[count_veh][count]
                         
                         if t and k != float('inf'):
-                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 100, 50))
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 100, 500, 50))
                             ui_lv_1.draw_ui(950, 100, str(int(t - prev_time)) + 's')
                             prev_time = k
                         if f and l != float('inf'):
-                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 100, 50))
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
                             ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
                         #P: past | PP: past past
                         if count>0:
@@ -303,7 +303,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side):
                                 I1.showVehicle(i, j, iP, jP, count_veh)
                             
                             if 'S' in map_data[jP][iP]:
-                                I1.showStart(iP, jP)
+                                I1.showStar
                             else:
                                 if 'F' in map_data[iP][jP]:
                                     I1.showGasStation(iP, jP)
@@ -410,6 +410,9 @@ def menu_UI():
             choose_option = menu.get_choose_option()
         else:
             if choose_option == 0:
+                map_orrder_return = None
+                level_input_return = None
+                
                 # Them level list
                 if choose_level_result is None:
                     level_list.show_level_list(is_up, is_down, is_left, is_enter)
