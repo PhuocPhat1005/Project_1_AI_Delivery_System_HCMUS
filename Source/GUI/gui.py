@@ -18,7 +18,11 @@ def map_UI(n, m, t, f, map_data, level, algo):
     screen.blit(background, (0, 0))
     
     #print(number_of_agents)
-    
+    number_of_agents = 0
+    for _ in range (n):
+        for __ in range (m):
+            if 'S' in map_data[_][__]:
+                number_of_agents += 1
     M1 = Board_UI(screen, n, m, t, f, level)
     M1.readMapData(map_data)
     M1.showBoard()
@@ -41,6 +45,10 @@ def map_UI(n, m, t, f, map_data, level, algo):
         ui_lv_1 = UI_Level_1(screen)
         ui_lv_1.draw_ui(750, 100, 'Time:')
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
+        count_veh = 0
+        for count_veh in range(number_of_agents):
+            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel:')
+            ui_lv_1.draw_ui(950, 200 + count_veh * 50, str(f))
             
     while True:
         for event in pygame.event.get():
