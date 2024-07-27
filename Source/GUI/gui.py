@@ -47,7 +47,7 @@ def map_UI(n, m, t, f, map_data, level, algo):
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
         count_veh = 0
         for count_veh in range(number_of_agents):
-            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel:')
+            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel ' + str(count_veh + 1) + ':')
             ui_lv_1.draw_ui(950, 200 + count_veh * 50, str(f))
             
     while True:
@@ -147,9 +147,9 @@ def path_UI(board, paths, cell_side, number_of_agents=0):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
                             ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
                             
-                            #for idx in range(number_of_agents):
+                            # Show fuel of vehicle(s):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
-                            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel:')
+                            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel ' + str(count_veh + 1) + ':')
                             ui_lv_1.draw_ui(950, 200 + count_veh * 50, str(l))
                         #P: past | PP: past past
                         if count>0:
