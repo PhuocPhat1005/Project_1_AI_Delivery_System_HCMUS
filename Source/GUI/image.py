@@ -87,8 +87,10 @@ class Image_UI:
             font_size = 48*2-10
         elif self.cell_side == 60:
             font_size = 48+3
-        else:
+        elif self.cell_side == 45:
             font_size = 48-10
+        else:
+            font_size = 26
         text_obj = Text_Display(content, font_size=font_size, text_color=text_color)
         text_content = text_obj.show_text()
         text_pos = (pos_x, pos_y)
