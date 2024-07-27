@@ -129,6 +129,7 @@ AStarAlgorithm:
 S
 No valid path found
 
+<<<<<<< HEAD
 BFSAlgorithm:
 S
 No valid path found
@@ -136,5 +137,28 @@ BFSAlgorithm:
 S
 No valid path found
 UCSAlgorithm:
+S
+No valid path found
+=======
+BFSAlgorithm:
+S
+No valid path found
+BFSAlgorithm:
+S
+No valid path found
+UCSAlgorithm:
+S
+No valid path found
+>>>>>>> 8eeecccb4d968a8a6cca50fb086f093d7a9b724c
+BFSAlgorithm:
+S
+No valid path found
+BFSAlgorithm:
+S
+No valid path found
+BFSAlgorithm:
+S
+No valid path found
+BFSAlgorithm:
 S
 No valid path found

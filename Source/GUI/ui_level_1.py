@@ -31,8 +31,8 @@ class UI_Level_1:
         self.option_result = None
         return res
     
-    def write_text_content(self, font_size=FONT_MEDIUM, is_center=False, width=WINDOW_WIDTH, height=WINDOW_HEIGHT, pos_x=0, pos_y=0, content=''):
-        text_obj = Text_Display(content, font_size=font_size)
+    def write_text_content(self, font_size=FONT_MEDIUM, is_center=False, width=WINDOW_WIDTH, height=WINDOW_HEIGHT, pos_x=0, pos_y=0, content='', text_color=WHITE_COLOR):
+        text_obj = Text_Display(content, font_size=font_size, text_color=text_color)
         text_content = text_obj.show_text()
         text_pos = (pos_x, pos_y)
         
@@ -41,8 +41,8 @@ class UI_Level_1:
         
         self.screen.blit(text_content, text_pos)
     
-    def draw_ui(self, pos_x, pos_y, content=''):
-        self.write_text_content(pos_x=pos_x, pos_y=pos_y, content=content)
+    def draw_ui(self, pos_x, pos_y, content='', text_color=WHITE_COLOR):
+        self.write_text_content(pos_x=pos_x, pos_y=pos_y, content=content, text_color=text_color)
         
     def show_level_inputs(self, level, is_up, is_down, is_left, is_enter):
         self.screen.fill(BACKGROUND_COLOR)
