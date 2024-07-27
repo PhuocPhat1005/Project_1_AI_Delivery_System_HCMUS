@@ -139,10 +139,10 @@ def path_UI(board, paths, cell_side, number_of_agents=0):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
                             ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
                             
-                            for idx in range(number_of_agents):
-                                pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + idx * 50, 500, 50))
-                                ui_lv_1.draw_ui(750, 200 + idx * 50, 'Fuel:')
-                                ui_lv_1.draw_ui(950, 200 + idx * 50, str(l))
+                            #for idx in range(number_of_agents):
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
+                            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel:')
+                            ui_lv_1.draw_ui(950, 200 + count_veh * 50, str(l))
                         #P: past | PP: past past
                         if count>0:
                             iP = line_list[count_veh][count-1][0]

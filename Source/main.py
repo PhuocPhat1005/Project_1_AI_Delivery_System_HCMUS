@@ -20,7 +20,6 @@ def main():
     level += 1
 
     # Read input data
-    # map_order = 1
     input_filename = f"input/level{level}/input{map_order}_level{level}.txt"
     if not os.path.exists(input_filename):
         print(f"File {input_filename} does not exist. Please enter the details again.")
@@ -95,9 +94,6 @@ def main():
     # Write paths to the output file
     write_paths_to_file(output_filename, vehicles, level)
     print(paths)
-    # hien path, hien line
-    if level == 4:
-        print(paths)
 
 
 if __name__ == "__main__":
