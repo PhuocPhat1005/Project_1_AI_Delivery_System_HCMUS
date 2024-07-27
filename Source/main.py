@@ -28,7 +28,7 @@ def main():
     n, m, t, f, map_data = read_input_file(input_filename)
 
     # vua hien UI map, vua tim canh cell
-    cell_side = map_UI(n, m, t, f, map_data, level, algo)
+    cell_side = map_UI(n, m, f, t, map_data, level, algo)
 
     # Initialize the board and vehicles
     board = Board(n, m, f, t, map_data, level, algo)
@@ -45,7 +45,7 @@ def main():
             path = vehicle.process(board)
             vehicle.path = path
             paths.append(path)
-        path_UI(n, m, t, f, map_data, paths, cell_side)
+        path_UI(board, paths, cell_side)
     else:
         process_lev4(board)
         paths = []
@@ -78,10 +78,8 @@ def main():
             p_vehicle.append(vehicle.path)
             vehicle.path = board.unique_path(vehicle.path)
         
-        path_UI(n, m, t, f, map_data, p_vehicle, cell_side, len(p_vehicle))
+        path_UI(board, p_vehicle, cell_side, len(p_vehicle))
     board.test_display_path(paths)
-    if level == 4:
-        print(paths)
 
     for vehicle in vehicles:
         print(vehicle.name)
@@ -124,7 +122,7 @@ def play_level(level, map_order):
     paths = []
 
     # # vua hien UI map, vua tim canh cell
-    # cell_side = map_UI(n, m, t, f, map_data, level)
+    # cell_side = map_UI(board, level)
     if level != 4:
         for vehicle in vehicles:
 

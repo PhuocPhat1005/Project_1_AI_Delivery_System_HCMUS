@@ -59,7 +59,7 @@ class Board:
         goals = []  # Initialize the goal list
         self.fuel_stations = []  # Initialize the fuel station list.
         self.algo = algo  # Set the algorithm used for Level 1.
-
+        self.S_vehicle_time = float('inf')  # Set the time for the 'S' vehicle to reach the goal.
         # Initialize cells and vehicles based on map data.
         for i in range(n):  # Iterate over the rows
             self.cells.append(list())  # Append on an empty list to cells for each row.

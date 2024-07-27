@@ -176,27 +176,27 @@ class Board_UI(Image_UI):
         j = 0
         for i in range (0, self.n):
             for j in range (0, self.m):
-                if self.map_data[j][i] == '-1': # Show wall cell
-                    self.showWall(j, i)
-                elif 'F' in self.map_data[j][i]: # Show gas station cell
-                    self.showGasStation(j, i)
-                    self.writeNumber(BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side, self.map_data[j][i][1:], text_color=DARK_RED_COLOR)
-                elif 'G' in self.map_data[j][i]: # Show goal cell
-                    if len(self.map_data[j][i]) == 1:
-                        self.showGoal(j, i, 0)
+                if self.map_data[i][j] == '-1': # Show wall cell
+                    self.showWall(i, j)
+                elif 'F' in self.map_data[i][j]: # Show gas station cell
+                    self.showGasStation(i, j)
+                    self.writeNumber(BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side, self.map_data[i][j][1:], text_color=DARK_RED_COLOR)
+                elif 'G' in self.map_data[i][j]: # Show goal cell
+                    if len(self.map_data[i][j]) == 1:
+                        self.showGoal(i, j, 0)
                     else:
-                        num = int(self.map_data[j][i][1:])
-                        self.showGoal(j, i, num)
-                elif self.map_data[j][i].isdigit() and int(self.map_data[j][i]) > 0: # Show toll booth cell
-                    self.showTollBooths(j, i)
-                    self.writeNumber(BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side, self.map_data[j][i])
+                        num = int(self.map_data[i][j][1:])
+                        self.showGoal(i, j, num)
+                elif self.map_data[i][j].isdigit() and int(self.map_data[i][j]) > 0: # Show toll booth cell
+                    self.showTollBooths(i, j)
+                    self.writeNumber(BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side, self.map_data[i][j])
                 else: # Show empty cell/street
-                    self.showEmpty(j, i)
-                if 'S' in self.map_data[j][i]:
-                    if len(self.map_data[j][i]) == 1:
-                        self.showStart(j, i, 0)
-                        self.showVehicle(j, i, -2, -2, 0)
+                    self.showEmpty(i, j)
+                if 'S' in self.map_data[i][j]:
+                    if len(self.map_data[i][j]) == 1:
+                        self.showStart(i, j, 0)
+                        self.showVehicle(i, j, -2, -2, 0)
                     else:
-                        num = int(self.map_data[j][i][1:])
-                        self.showStart(j, i, num)
-                        self.showVehicle(j, i, -2, -2, num)
+                        num = int(self.map_data[i][j][1:])
+                        self.showStart(i, j, num)
+                        self.showVehicle(i, j, -2, -2, num)

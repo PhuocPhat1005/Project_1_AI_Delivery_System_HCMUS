@@ -52,7 +52,12 @@ def map_UI(n, m, t, f, map_data, level, algo):
                     return M1.returnCellSide()
         pygame.display.flip()
 
-def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
+def path_UI(board, paths, cell_side, number_of_agents=0):
+    # n = board.n
+    # m = board.m
+    t = board.t
+    f = board.f
+    map_data = board.map_data
     print('Time:', t)
     I1 = Image_UI(screen, cell_side)
     i = 0
