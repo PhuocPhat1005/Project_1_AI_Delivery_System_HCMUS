@@ -82,13 +82,13 @@ class Image_UI:
             text_color (RGB tuple): Color of the number
 
         """
-        font_size = FONT_MEDIUM
+        font_size = 48+3#FONT_MEDIUM
         if self.cell_side > 60:
-            font_size = FONT_MEDIUM*2-10
+            font_size = 48*2-10
         elif self.cell_side == 60:
-            font_size = FONT_MEDIUM+3
+            font_size = 48+3
         else:
-            font_size = FONT_SMALL
+            font_size = 48-10
         text_obj = Text_Display(content, font_size=font_size, text_color=text_color)
         text_content = text_obj.show_text()
         text_pos = (pos_x, pos_y)
