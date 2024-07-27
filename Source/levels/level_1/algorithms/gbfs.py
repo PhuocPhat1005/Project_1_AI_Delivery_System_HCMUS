@@ -18,7 +18,7 @@ class GBFSAlgorithm:
         """
         self.vehicle = vehicle
 
-    def execute(self, board):
+    def gbfs(self, board):
         """
         Executes the GBFS algorithm on the given board.
 
@@ -31,25 +31,31 @@ class GBFSAlgorithm:
         # Initialize board properties for the vehicle
         board.generate_visited(self.vehicle.name)
         board.generate_parent(self.vehicle.name)
+        board.generate_cost(self.vehicle.name)
         board.generate_heuristic(self.vehicle.name)
-
+        board.generate_fuel(self.vehicle.name)
+        board.generate_time(self.vehicle.name)
         # Get the starting cell for the vehicle
-        start_cell = board.cells[self.vehicle.start_y][self.vehicle.start_x]
+        start_cell = board.cells[self.vehicle.tmp_start_y][self.vehicle.tmp_start_x]
         start_cell.visited[self.vehicle.name] = (
             True  # Mark the starting cell as visited
         )
+        start_cell.current_vehicle[self.vehicle.name] = self.vehicle.name
         frontier = [
             (start_cell.heuristic[self.vehicle.name], start_cell)
         ]  # Initialize the frontier with the starting cell and its heuristic value
 
         while frontier:
-            current_heuristic, current_cell = heapq.heappop(
+            _, current_cell = heapq.heappop(
                 frontier
             )  # Get the cell with the lowest heuristic value from the frontier
             if (
-                current_cell.y == self.vehicle.goal_y
-                and current_cell.x == self.vehicle.goal_x
+                current_cell.y == self.vehicle.tmp_goal_y
+                and current_cell.x == self.vehicle.tmp_goal_x
             ):
+                board.cells[self.vehicle.tmp_goal_y][self.vehicle.tmp_goal_x].visited[
+                    self.vehicle.name
+                ] = True
                 break  # Exit if the goal cell is reached
 
             # Define possible movement directions (right, left, down, up)
@@ -74,6 +80,30 @@ class GBFSAlgorithm:
                         ),
                     )  # Add the new cell to the frontier with its heuristic value
 
-        return board.path_time_fuel(
-            self.vehicle.name, board.tracepath(self.vehicle.name)
-        )  # Return the path found
+        path = []
+        if (
+            board.cells[self.vehicle.tmp_goal_y][self.vehicle.tmp_goal_x].visited[
+                self.vehicle.name
+            ]
+            == True
+        ):
+            path = board.tracepath(self.vehicle.name)
+
+        if (
+            path == []
+            or self.vehicle.tmp_goal_x != self.vehicle.goal_x
+            and self.vehicle.tmp_goal_y != self.vehicle.goal_y
+        ):
+            board.cells[self.vehicle.goal_y][self.vehicle.goal_x].visited[
+                self.vehicle.name
+            ] = False
+
+        return path
+
+    def execute(self, board):
+        self.vehicle.tmp_start_y = self.vehicle.current_y
+        self.vehicle.tmp_start_x = self.vehicle.current_x
+        self.vehicle.tmp_goal_y = self.vehicle.goal_y
+        self.vehicle.tmp_goal_x = self.vehicle.goal_x
+        path = self.gbfs(board)
+        return board.path_time_fuel(self.vehicle.name, path)
