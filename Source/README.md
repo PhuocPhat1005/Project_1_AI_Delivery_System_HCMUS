@@ -1,6 +1,6 @@
 # 1. Requirements
 * Python version: 3.10+ with Pygame graphical module.
-* •	Operating System: The command may vary across platforms, so you need run this program on Windows.
+* Operating System: The command may vary across platforms, so you need run this program on Windows.
 # 2. Installation
 * Firstly, you need to install Python 3.10+ on your computer. You can download Python from this link: https://www.python.org/downloads/
 * Secondly, you need to git clone my repo by using this command line below:
@@ -21,7 +21,7 @@ python -m venv venv.
 pip install -r requirements.txt
 ```  
 # 3. Running Code
-• You need to run the application by executing the command below in the console or terminal.
+* You need to run the application by executing the command below in the console or terminal.
 ```python
 python main.py
 ```
