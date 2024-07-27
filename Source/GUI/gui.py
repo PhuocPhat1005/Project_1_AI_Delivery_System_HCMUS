@@ -197,7 +197,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                 elif j == jP and jP == jPP:
                                     line_list[count_veh][count-1][2] = 6
                                     #I1.drawLineVertical(iP, jP, count_veh)
-                            
+                            I1.showVehicle(i, j, iP, jP, count_veh)
                         # Draw line and write number
                         _count_veh = 0
                         _count = 0
@@ -226,20 +226,26 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                         I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:])
                                     if 'F' in _is_show_num:
                                         I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:], text_color=DARK_RED_COLOR)
+                                    #I1.showVehicle(_i, _j, _iP, _jP, _)
                 for _ in range (0, len(line_list)):
-                    if count < len(line_list[_])-1 and count > 0:
+                    if count < len(line_list[_]) and count > 0:
                         _i = line_list[_][count][0]
                         _j = line_list[_][count][1]
                         _iP = line_list[_][count-1][0]
                         _jP = line_list[_][count-1][1]
-                        if _ < len(line_list[count_veh]):
-                            I1.showVehicle(_i, _j, _iP, _jP, _)
-                    elif count >= len(line_list[_])-1:
+                        I1.showVehicle(_i, _j, _iP, _jP, _)
+                    elif count >= len(line_list[_]) and len(line_list[_]) > 0:
                         _i = line_list[_][-1][0]
                         _j = line_list[_][-1][1]
                         _iP = line_list[_][-2][0]
                         _jP = line_list[_][-2][1]
                         I1.showVehicle(_i, _j, _iP, _jP, _)
+                    '''elif count >= len(line_list[_])-1:
+                        _i = line_list[_][-1][0]
+                        _j = line_list[_][-1][1]
+                        _iP = line_list[_][-2][0]
+                        _jP = line_list[_][-2][1]
+                        I1.showVehicle(_i, _j, _iP, _jP, _)'''
                 if len(line_list) == 1:
                     pygame.time.wait(200)
                 else:
