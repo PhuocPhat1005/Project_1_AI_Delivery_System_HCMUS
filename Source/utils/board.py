@@ -36,7 +36,7 @@ class Board:
     Class representing the game board.
     """
 
-    def __init__(self, n, m, f, t, map_data, level=1, algo="algo"):
+    def __init__(self, n, m, t, f, map_data, level=1, algo="algo"):
         """
         Initialize the Board object.
 
@@ -59,7 +59,7 @@ class Board:
         goals = []  # Initialize the goal list
         self.fuel_stations = []  # Initialize the fuel station list.
         self.algo = algo  # Set the algorithm used for Level 1.
-
+        self.S_vehicle_time = float('inf')  # Set the time for the 'S' vehicle to reach the goal.
         # Initialize cells and vehicles based on map data.
         for i in range(n):  # Iterate over the rows
             self.cells.append(list())  # Append on an empty list to cells for each row.
@@ -245,7 +245,7 @@ class Board:
             bool : True if the cell can be visited, False otherwise.
         """
         if (
-            x < 0 or y < 0 or x >= self.n or y >= self.m
+            x < 0 or y < 0 or y >= self.n or x >= self.m
         ):  # Check if the cell is out of bounds.
             return False
         come_cell = self.cells[y][x]  # Get the cell object.

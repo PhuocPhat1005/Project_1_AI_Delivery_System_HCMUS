@@ -18,7 +18,7 @@ class BFSAlgorithm:
         """
         self.vehicle = vehicle
 
-    def execute(self, board):
+    def bfs(self, board):
         """
         Executes the BFS algorithm on the given board.
 
@@ -28,19 +28,29 @@ class BFSAlgorithm:
         Returns:
             A list of tuples representing the path found by the BFS algorithm.
         """
+        board.generate_visited(self.vehicle.name)
+        board.generate_parent(self.vehicle.name)
+        board.generate_cost(self.vehicle.name)
+        board.generate_heuristic(self.vehicle.name)
+        board.generate_fuel(self.vehicle.name)
+        board.generate_time(self.vehicle.name)
         # Get the starting cell for the vehicle
-        start_cell = board.cells[self.vehicle.start_y][self.vehicle.start_x]
+        start_cell = board.cells[self.vehicle.tmp_start_y][self.vehicle.tmp_start_x]
         start_cell.visited[self.vehicle.name] = (
             True  # Mark the starting cell as visited
         )
+        start_cell.current_vehicle[self.vehicle.name] = self.vehicle.name
         frontier = deque([start_cell])  # Initialize the frontier with the starting cell
 
         while frontier:
             current_cell = frontier.popleft()  # Get the next cell from the frontier
             if (
-                current_cell.y == self.vehicle.goal_y
-                and current_cell.x == self.vehicle.goal_x
+                current_cell.y == self.vehicle.tmp_goal_y
+                and current_cell.x == self.vehicle.tmp_goal_x
             ):
+                board.cells[self.vehicle.tmp_goal_y][self.vehicle.tmp_goal_x].visited[
+                    self.vehicle.name
+                ] = True
                 break  # Exit if the goal cell is reached
 
             # Define possible movement directions (right, left, down, up)
@@ -60,6 +70,30 @@ class BFSAlgorithm:
                         board.cells[new_y][new_x]
                     )  # Add the new cell to the frontier
 
-        return board.path_time_fuel(
-            self.vehicle.name, board.tracepath(self.vehicle.name)
-        )  # Return the path found
+        path = []
+        if (
+            board.cells[self.vehicle.tmp_goal_y][self.vehicle.tmp_goal_x].visited[
+                self.vehicle.name
+            ]
+            == True
+        ):
+            path = board.tracepath(self.vehicle.name)
+
+        if (
+            path == []
+            or self.vehicle.tmp_goal_x != self.vehicle.goal_x
+            and self.vehicle.tmp_goal_y != self.vehicle.goal_y
+        ):
+            board.cells[self.vehicle.goal_y][self.vehicle.goal_x].visited[
+                self.vehicle.name
+            ] = False
+
+        return path
+
+    def execute(self, board):
+        self.vehicle.tmp_start_y = self.vehicle.current_y
+        self.vehicle.tmp_start_x = self.vehicle.current_x
+        self.vehicle.tmp_goal_y = self.vehicle.goal_y
+        self.vehicle.tmp_goal_x = self.vehicle.goal_x
+        path = self.bfs(board)
+        return board.path_time_fuel(self.vehicle.name, path)

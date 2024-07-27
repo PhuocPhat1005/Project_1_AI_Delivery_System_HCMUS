@@ -9,6 +9,9 @@ from GUI.level_list import *
 from GUI.ui_level_1 import *
 
 class Image_UI:
+    """
+    Class storing all image of the game board/map.
+    """
     def __init__(self, _screen, _cell_side=60):
         self.screen = _screen
         self.background = pygame.image.load('GUI/assets/menu_bg.png')
@@ -16,8 +19,6 @@ class Image_UI:
         self.cell_size = (self.cell_side, self.cell_side)
         self.empty_cell_img = pygame.image.load(f'GUI\\assets\\empty_cell.png')
         self.empty_cell_img = pygame.transform.scale(self.empty_cell_img, self.cell_size)
-        #self.start_cell_img = pygame.image.load(f'GUI\\assets\\start_cell.png')
-        #self.start_cell_img = pygame.transform.scale(self.start_cell_img, self.cell_size)
         self.wall_cell_img = pygame.image.load(f'GUI\\assets\\wall_cell_1.png')
         self.wall_cell_img = pygame.transform.scale(self.wall_cell_img, self.cell_size)
         self.fuel_cell_img = pygame.image.load(f'GUI\\assets\\fuel_cell.png')
@@ -69,7 +70,32 @@ class Image_UI:
 
             self.right_up_img.append( pygame.image.load(f'GUI\\assets\\agent_{count_img}\\L_right_up.png') )
             self.right_up_img[count_img] = pygame.transform.scale(self.right_up_img[count_img], self.cell_size)
-            
+    
+    def writeNumber(self, pos_x=0, pos_y=0, content='', text_color=DARK_GREEN_COLOR):
+        """
+        Write number for gas/fuel station and toll booth.
+
+        Args:
+            pos_x (float): Position for showing number (in width).
+            pos_y (float): Position for showing number (in height).
+            content (str): Number for showing
+            text_color (RGB tuple): Color of the number
+
+        """
+        font_size = 48+3#FONT_MEDIUM
+        if self.cell_side > 60:
+            font_size = 48*2-10
+        elif self.cell_side == 60:
+            font_size = 48+3
+        else:
+            font_size = 48-10
+        text_obj = Text_Display(content, font_size=font_size, text_color=text_color)
+        text_content = text_obj.show_text()
+        text_pos = (pos_x, pos_y)
+        
+        self.screen.blit(text_content, text_pos)
+    
+    # Show images
     def showEmpty(self, j, i):
         self.screen.blit(self.empty_cell_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
     def showWall(self, j, i):
@@ -83,7 +109,6 @@ class Image_UI:
     def showGasStation(self, j, i):
         self.screen.blit(self.fuel_cell_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
     
-    
     def showVehicle(self, j, i, jP, iP, count_veh):
         vehicle_img = self.vehicle_right_img[count_veh]
         if i == iP-1:
@@ -94,26 +119,24 @@ class Image_UI:
             vehicle_img = self.vehicle_up_img[count_veh]
         self.screen.blit(vehicle_img, (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
     
+    # Draw lines
     def drawLeftDown(self, j, i, count_veh):
         self.screen.blit(self.left_down_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-
     def drawRightDown(self, j, i, count_veh):
         self.screen.blit(self.right_down_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        
     def drawRightUp(self, j, i, count_veh):
         self.screen.blit(self.right_up_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-            
     def drawLeftUp(self, j, i, count_veh):
         self.screen.blit(self.left_up_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-        
-
     def drawLineHorizontal(self, j, i, count_veh):
         self.screen.blit(self.line_h_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
-    
     def drawLineVertical(self, j, i, count_veh):
         self.screen.blit(self.line_v_img[count_veh], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
 
 class Board_UI(Image_UI):
+    """
+    Class showing the game board.
+    """
     def __init__(self, _screen, _n, _m, _t, _f, _level):
         cell_side = 60
         if max(_n, _m) <= 5:
@@ -139,46 +162,41 @@ class Board_UI(Image_UI):
         self.fuel_stations = []
         self.level = _level
         
-    def readMapData(self, _map_data):
+    def readMapData(self, _map_data): # Read and store data from the 2d array in input
         self.map_data = _map_data
     
-    def showCell(self):
+    def showCell(self): # Show the cell's image
         self.screen.blit(self.empty_cell_img, (BOARD_APPEEAR_WIDTH, BOARD_APPEEAR_HEIGHT))
     
     def returnCellSide(self):
         return self.cell_side
     
-    def showBoard(self):
+    def showBoard(self): # Show game board
         i = 0
         j = 0
         for i in range (0, self.n):
             for j in range (0, self.m):
-                #show wall
-                if self.map_data[j][i] == '-1':
-                    self.showWall(j, i)
-                #show gas station
-                elif 'F' in self.map_data[j][i]:
-                    self.showGasStation(j, i)
-                #show goal
-                elif 'G' in self.map_data[j][i]:
-                    if len(self.map_data[j][i]) == 1:
-                        self.showGoal(j, i, 0)
+                if self.map_data[i][j] == '-1': # Show wall cell
+                    self.showWall(i, j)
+                elif 'F' in self.map_data[i][j]: # Show gas station cell
+                    self.showGasStation(i, j)
+                    self.writeNumber(BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side, self.map_data[i][j][1:], text_color=DARK_RED_COLOR)
+                elif 'G' in self.map_data[i][j]: # Show goal cell
+                    if len(self.map_data[i][j]) == 1:
+                        self.showGoal(i, j, 0)
                     else:
-                        num = int(self.map_data[j][i][1:])
-                        self.showGoal(j, i, num)
-                #show toll booths
-                elif self.map_data[j][i].isdigit() and int(self.map_data[j][i]) > 0:
-                    self.showTollBooths(j, i)
-                #show empty/street
-                else:
-                    self.showEmpty(j, i)
-                if 'S' in self.map_data[j][i]:
-                    if len(self.map_data[j][i]) == 1:
-                        self.showStart(j, i, 0)
-                        self.showVehicle(j, i, -2, -2, 0)
-                        #self.screen.blit(self.vehicle_right_img[0], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+                        num = int(self.map_data[i][j][1:])
+                        self.showGoal(i, j, num)
+                elif self.map_data[i][j].isdigit() and int(self.map_data[i][j]) > 0: # Show toll booth cell
+                    self.showTollBooths(i, j)
+                    self.writeNumber(BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side, self.map_data[i][j])
+                else: # Show empty cell/street
+                    self.showEmpty(i, j)
+                if 'S' in self.map_data[i][j]:
+                    if len(self.map_data[i][j]) == 1:
+                        self.showStart(i, j, 0)
+                        self.showVehicle(i, j, -2, -2, 0)
                     else:
-                        num = int(self.map_data[j][i][1:])
-                        self.showStart(j, i, num)
-                        self.showVehicle(j, i, -2, -2, num)
-                        #self.screen.blit(self.vehicle_right_img[num], (BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side))
+                        num = int(self.map_data[i][j][1:])
+                        self.showStart(i, j, num)
+                        self.showVehicle(i, j, -2, -2, num)

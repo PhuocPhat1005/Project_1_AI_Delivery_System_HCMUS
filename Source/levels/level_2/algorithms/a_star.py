@@ -21,9 +21,6 @@ class AStarAlgorithm:
         Returns:
         list: The path from the start position to the goal position as a list of coordinates.
         """
-        print("a_star")
-        print("Start: ", self.vehicle.tmp_start_y, self.vehicle.tmp_start_x)
-        print("Goal: ", self.vehicle.tmp_goal_y, self.vehicle.tmp_goal_x)
         board.generate_visited(self.vehicle.name)
         board.generate_parent(self.vehicle.name)
         board.generate_cost(self.vehicle.name)
@@ -122,18 +119,6 @@ class AStarAlgorithm:
             ] = False
 
         return path
-
-    def heuristic(self, cell):
-        """
-        Calculate the heuristic value for the given cell.
-
-        Parameters:
-        cell (Cell): The cell for which the heuristic is to be calculated.
-
-        Returns:
-        int: The heuristic value (Manhattan distance) for the cell.
-        """
-        return abs(cell.y - self.vehicle.goal_y) + abs(cell.x - self.vehicle.goal_x)
 
     def processs_lev2(self, board):
         self.vehicle.tmp_start_y = self.vehicle.current_y

@@ -20,7 +20,6 @@ def main():
     level += 1
 
     # Read input data
-    # map_order = 1
     input_filename = f"input/level{level}/input{map_order}_level{level}.txt"
     if not os.path.exists(input_filename):
         print(f"File {input_filename} does not exist. Please enter the details again.")
@@ -31,7 +30,7 @@ def main():
     cell_side = map_UI(n, m, t, f, map_data, level, algo)
 
     # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level, algo)
+    board = Board(n, m, t, f, map_data, level, algo)
     vehicles = board.get_vehicle()
     paths = []
 
@@ -45,7 +44,7 @@ def main():
             path = vehicle.process(board)
             vehicle.path = path
             paths.append(path)
-        path_UI(n, m, t, f, map_data, paths, cell_side)
+        path_UI(board, paths, cell_side)
     else:
         process_lev4(board)
         paths = []
@@ -78,10 +77,8 @@ def main():
             p_vehicle.append(vehicle.path)
             vehicle.path = board.unique_path(vehicle.path)
         
-        path_UI(n, m, t, f, map_data, p_vehicle, cell_side, len(p_vehicle))
+        path_UI(board, p_vehicle, cell_side, len(p_vehicle))
     board.test_display_path(paths)
-    if level == 4:
-        print(paths)
 
     for vehicle in vehicles:
         print(vehicle.name)
@@ -97,9 +94,6 @@ def main():
     # Write paths to the output file
     write_paths_to_file(output_filename, vehicles, level)
     print(paths)
-    # hien path, hien line
-    if level == 4:
-        print(paths)
 
 
 if __name__ == "__main__":
@@ -124,7 +118,7 @@ def play_level(level, map_order):
     paths = []
 
     # # vua hien UI map, vua tim canh cell
-    # cell_side = map_UI(n, m, t, f, map_data, level)
+    # cell_side = map_UI(board, level)
     if level != 4:
         for vehicle in vehicles:
 

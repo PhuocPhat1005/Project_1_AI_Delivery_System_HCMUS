@@ -13,12 +13,17 @@ pygame.init()
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 title = pygame.display.set_caption('Graph run')
         
-def map_UI(n, m, t, f, map_data, level, algo):
+def map_UI(n, m, t, f, map_data, level, algo):\
+    
     background = pygame.image.load('GUI/assets/menu_bg.png')
     screen.blit(background, (0, 0))
     
     #print(number_of_agents)
-    
+    number_of_agents = 0
+    for _ in range (n):
+        for __ in range (m):
+            if 'S' in map_data[_][__]:
+                number_of_agents += 1
     M1 = Board_UI(screen, n, m, t, f, level)
     M1.readMapData(map_data)
     M1.showBoard()
@@ -35,12 +40,37 @@ def map_UI(n, m, t, f, map_data, level, algo):
         ui_lv_1 = UI_Level_1(screen)
         ui_lv_1.draw_ui(750, 100, 'Time:')
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
-        ui_lv_1.draw_ui(750, 200, 'Fuel:')
+        ui_lv_1.draw_ui(750, 200, 'Fuel 0:', ORANGE_COLOR)
         ui_lv_1.draw_ui(950, 200, str(f))
     elif level==4:
         ui_lv_1 = UI_Level_1(screen)
         ui_lv_1.draw_ui(750, 100, 'Time:')
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
+        count_veh = 0
+        for count_veh in range(number_of_agents):
+            COLOR = WHITE_COLOR
+            if count_veh == 0:
+                COLOR = ORANGE_COLOR
+            elif count_veh == 1:
+                COLOR = YELLOW_COLOR
+            elif count_veh == 2:
+                COLOR = BLUE_COLOR
+            elif count_veh == 3:
+                COLOR = DARK_GREEN_COLOR
+            elif count_veh == 4:
+                COLOR = RED_COLOR
+            elif count_veh == 5:
+                COLOR = WHITE_COLOR
+            elif count_veh == 6:
+                COLOR = VIOLET_COLOR
+            elif count_veh == 7:
+                COLOR = PINK_COLOR
+            elif count_veh == 8:
+                COLOR = BROWN_COLOR
+            elif count_veh == 9:
+                COLOR = GREEN_COLOR
+            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel ' + str(count_veh) + ':', COLOR)
+            ui_lv_1.draw_ui(950, 200 + count_veh * 50, str(f))
             
     while True:
         for event in pygame.event.get():
@@ -52,7 +82,13 @@ def map_UI(n, m, t, f, map_data, level, algo):
                     return M1.returnCellSide()
         pygame.display.flip()
 
-def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
+def path_UI(board, paths, cell_side, number_of_agents=0):
+    # n = board.n
+    # m = board.m
+    t = board.t
+    f = board.f
+    
+    map_data = board.map_data
     print('Time:', t)
     I1 = Image_UI(screen, cell_side)
     i = 0
@@ -78,6 +114,14 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
         min_len_of_n_veh = min(len_of_n_veh)
     
     print(paths)
+    # line_list is a 3D list storing vehicles' path
+    # line_list: vehicles
+    # line_list[_]: a vehicle's path
+    # line_list[_][__]: path's data
+    # line_list[_][__][0] and line_list[_][__][1]: vehicle's position in path
+    # line_list[_][__][2]: line's shape from 1 to 6 (Left Down, Left Up, Right Down, Right Up, Horizontal, Vertical), 0 is no line
+    # line_list[_][__][3] and line_list[_][__][4]: vehicle's time and fuel data
+    # line_list[_][__][5] and line_list[_][__][6]: goal's position for goal changing in level 4
     line_list = [[(0,0,0) for _ in range(1)] for _ in range(len(paths))]
     for count_veh in range (len(paths)):
         for count in range (len(paths[count_veh])):
@@ -88,6 +132,8 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
         line_list[count_veh].pop(0)
     count = 1
     count_veh = 0
+
+    # Change goal in level 4
     for count_veh in range (len(line_list)):
         for count in range (len(line_list[count_veh]) - 1):
             if line_list[count_veh][count][0] == line_list[count_veh][count-1][0] and line_list[count_veh][count][1] == paths[count_veh][count-1][1]:
@@ -104,7 +150,8 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
     count = 0
     count_veh = 0
     
-    if all(ele == [] for ele in paths):
+    #if all(ele == [] for ele in paths): # Return no path
+    if paths[0] == []:
         ui_lv_1.draw_ui(750, 20, 'NO PATH FOUND')
     
     while True:
@@ -134,38 +181,63 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                             pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
                             ui_lv_1.draw_ui(950,  200 + count_veh * 50, str(int(l)))
                             
-                            for idx in range(number_of_agents):
-                                pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + idx * 50, 500, 50))
-                                ui_lv_1.draw_ui(750, 200 + idx * 50, 'Fuel:')
-                                ui_lv_1.draw_ui(950, 200 + idx * 50, str(l))
-                        #P: past | PP: past past
+                            # Show fuel of vehicle(s):
+                            pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(950, 200 + count_veh * 50, 500, 50))
+                            COLOR = WHITE_COLOR
+                            if count_veh == 0:
+                                COLOR = ORANGE_COLOR
+                            elif count_veh == 1:
+                                COLOR = YELLOW_COLOR
+                            elif count_veh == 2:
+                                COLOR = BLUE_COLOR
+                            elif count_veh == 3:
+                                COLOR = DARK_GREEN_COLOR
+                            elif count_veh == 4:
+                                COLOR = RED_COLOR
+                            elif count_veh == 5:
+                                COLOR = WHITE_COLOR
+                            elif count_veh == 6:
+                                COLOR = VIOLET_COLOR
+                            elif count_veh == 7:
+                                COLOR = PINK_COLOR
+                            elif count_veh == 8:
+                                COLOR = BROWN_COLOR
+                            elif count_veh == 9:
+                                COLOR = GREEN_COLOR
+                            ui_lv_1.draw_ui(750, 200 + count_veh * 50, 'Fuel ' + str(count_veh) + ':', COLOR)
+                            ui_lv_1.draw_ui(950, 200 + count_veh * 50, str(l))
+                        # P: past position | PP: past past position
                         if count>0:
                             iP = line_list[count_veh][count-1][0]
                             jP = line_list[count_veh][count-1][1]
-                        
-                            #if [i, j, k, l] in line_list[count_veh]:
                             
                             if 'S' in map_change[iP][jP]:
-                                I1.showStart(iP, jP, count_veh)
+                                if len(map_change[iP][jP]) == 1:
+                                    I1.showStart(iP, jP, 0)
+                                else:
+                                    I1.showStart(iP, jP, int(map_change[iP][jP][1:]) )
                             elif 'F' in map_change[iP][jP]:
                                 I1.showGasStation(iP, jP)
-                            elif 'G' in map_change[iP][jP] and line_list[count_veh][count-1][5] != -1:
+                                line_list[count_veh][count-1][5] = map_change[iP][jP]
+                            #elif 'G' in map_change[iP][jP] and type(line_list[count_veh][count-1][5]) != str and line_list[count_veh][count-1][6] != -1:
+                            elif 'G' in map_change[iP][jP] and line_list[count_veh][count-1][6] != -1:
                                 map_change[iP][jP] = '0'
                                 I1.showEmpty(iP, jP)
                                 if count_veh == 0:
                                     map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G"
                                 else:
                                     map_change[ line_list[count_veh][count-1][5] ][ line_list[count_veh][count-1][6] ] = "G" + str(count_veh)
-                                I1.showGoal( line_list[count_veh][count-1][5] , line_list[count_veh][count-1][6] , count_veh )
+                                I1.showGoal( line_list[count_veh][count-1][5] , line_list[count_veh][count-1][6] , count_veh)
                             elif 'G' in map_change[iP][jP]:
                                 if len(map_change[iP][jP]) == 1:
                                     I1.showGoal(iP, jP, 0)
-                                elif count_veh != int(map_change[iP][jP][1:]):
+                                else:
                                     I1.showGoal(iP, jP, int(map_change[iP][jP][1:]) )
                             elif map_change[iP][jP] == '0':
                                 I1.showEmpty(iP, jP)
                             elif map_change[iP][jP].isdigit() and int(map_change[iP][jP]) > 0:
                                 I1.showTollBooths(iP, jP)
+                                line_list[count_veh][count-1][5] = "T" + str(map_change[iP][jP])
                             if count>1:
                                 iPP = line_list[count_veh][count-2][0]
                                 jPP = line_list[count_veh][count-2][1]
@@ -175,24 +247,24 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                     I1.showVehicle(i, j, iPP, jPP, count_veh)
                                 elif (jP == jPP+1 and i == iP+1) or (iP == iPP-1 and j == jP-1):
                                     line_list[count_veh][count-1][2] = 1
-                                    I1.drawLeftDown(iP, jP, count_veh)
+                                    #I1.drawLeftDown(iP, jP, count_veh)
                                 elif (jP == jPP+1 and i == iP-1) or (iP == iPP+1 and j == jP-1):
                                     line_list[count_veh][count-1][2] = 2
-                                    I1.drawLeftUp(iP, jP, count_veh)
+                                    #I1.drawLeftUp(iP, jP, count_veh)
                                 elif (jP == jPP-1 and i == iP+1) or (iP == iPP-1 and j == jP+1):
                                     line_list[count_veh][count-1][2] = 3
-                                    I1.drawRightDown(iP, jP, count_veh)
+                                    #I1.drawRightDown(iP, jP, count_veh)
                                 elif (jP == jPP-1 and i == iP-1) or (iP == iPP+1 and j == jP+1):
                                     line_list[count_veh][count-1][2] = 4
-                                    I1.drawRightUp(iP, jP, count_veh)
+                                    #I1.drawRightUp(iP, jP, count_veh)
                                 elif i == iP and iP == iPP:
                                     line_list[count_veh][count-1][2] = 5
-                                    I1.drawLineHorizontal(iP, jP, count_veh)
+                                    #I1.drawLineHorizontal(iP, jP, count_veh)
                                 elif j == jP and jP == jPP:
                                     line_list[count_veh][count-1][2] = 6
-                                    I1.drawLineVertical(iP, jP, count_veh)
-                            
-                        #I1.showVehicle(i, j, iP, jP, count_veh)
+                                    #I1.drawLineVertical(iP, jP, count_veh)
+                            I1.showVehicle(i, j, iP, jP, count_veh)
+                        # Draw line and write number
                         _count_veh = 0
                         _count = 0
                         for _count in range (count+1):
@@ -203,6 +275,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                     _j = line_list[_count_veh][_count][0]
                                     _i = line_list[_count_veh][_count][1]
                                     _type = line_list[_count_veh][_count][2]
+                                    _is_show_num = str(line_list[_count_veh][_count][5])
                                     if _type == 1:
                                         I1.drawLeftDown(_j, _i, _count_veh)
                                     elif _type == 2:
@@ -215,20 +288,30 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                                         I1.drawLineHorizontal(_j, _i, _count_veh)
                                     elif _type == 6:
                                         I1.drawLineVertical(_j, _i, _count_veh)
+                                    if 'T' in _is_show_num:
+                                        I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:])
+                                    if 'F' in _is_show_num:
+                                        I1.writeNumber(BOARD_APPEEAR_WIDTH + _i*cell_side, BOARD_APPEEAR_HEIGHT + _j*cell_side, _is_show_num[1:], text_color=DARK_RED_COLOR)
+                                    #I1.showVehicle(_i, _j, _iP, _jP, _)
                 for _ in range (0, len(line_list)):
-                    if count < len(line_list[_])-1 and count > 0:
+                    if count < len(line_list[_]) and count > 0:
                         _i = line_list[_][count][0]
                         _j = line_list[_][count][1]
                         _iP = line_list[_][count-1][0]
                         _jP = line_list[_][count-1][1]
-                        if _ < len(line_list[count_veh]):
-                            I1.showVehicle(_i, _j, _iP, _jP, _)
-                    elif count >= len(line_list[_])-1:
+                        I1.showVehicle(_i, _j, _iP, _jP, _)
+                    elif count >= len(line_list[_]) and len(line_list[_]) > 0:
                         _i = line_list[_][-1][0]
                         _j = line_list[_][-1][1]
                         _iP = line_list[_][-2][0]
                         _jP = line_list[_][-2][1]
                         I1.showVehicle(_i, _j, _iP, _jP, _)
+                    '''elif count >= len(line_list[_])-1:
+                        _i = line_list[_][-1][0]
+                        _j = line_list[_][-1][1]
+                        _iP = line_list[_][-2][0]
+                        _jP = line_list[_][-2][1]
+                        I1.showVehicle(_i, _j, _iP, _jP, _)'''
                 if len(line_list) == 1:
                     pygame.time.wait(200)
                 else:
