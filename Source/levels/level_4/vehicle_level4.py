@@ -9,7 +9,8 @@ class vehicle_level4(vehicle_base):
         super().__init__(name, start_y, start_x, time, fuel)
         self.is_regenerated = False
         self.final_path = []
-
+        self.reason_not_found = "No path found"
+        
     def regenerate(self, board):
         self.is_regenerated = True
         board.cells[self.start_y][self.start_x].raw_value = "0"
@@ -155,7 +156,7 @@ class vehicle_level4(vehicle_base):
                     if (
                         new_cost < board.cells[new_y][new_x].cost[self.name]
                         and new_fuel >= 0
-                        and new_t <= board.t + 1
+                        and new_t <= min(board.t + 1, board.S_vehicle_time)
                     ):
                         # if (new_y, new_x) in self.blocked_temp:
                         #     board.cells[current_cell.y][current_cell.x].time[self.name] += 1
@@ -172,7 +173,12 @@ class vehicle_level4(vehicle_base):
                         # board.cells[new_y][new_x].compare_value = f
                         # heapq.heappush(frontier, (f, board.cells[new_y][new_x]))
                         heapq.heappush(frontier, (board.cells[new_y][new_x]))
-
+                    else:
+                        if new_fuel < 0:
+                            self.reason_not_found = "Not enough fuel"
+                        if new_t > min(board.t + 1, board.S_vehicle_time):
+                            self.reason_not_found = "Not enough time"
+                            
             if current_cell.y == self.tmp_goal_y and current_cell.x == self.tmp_goal_x:
                 # board.cells[self.tmp_goal_y][self.tmp_goal_x].visited[self.name] = True
                 break
@@ -311,6 +317,8 @@ def process_lev4(board):
                 path = vehicle.find_best_path(board)
                 if path == [] and vehicle.name == S_vehicle.name:
                     return []
+                if S_vehicle.name == vehicle.name:
+                    board.S_vehicle_time = path[-1][2]
                 vehicle.path = path
             paths.append(path)
 
