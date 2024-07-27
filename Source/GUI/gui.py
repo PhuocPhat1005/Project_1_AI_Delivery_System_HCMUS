@@ -39,7 +39,7 @@ def map_UI(n, m, t, f, map_data, level, algo):
         ui_lv_1 = UI_Level_1(screen)
         ui_lv_1.draw_ui(750, 100, 'Time:')
         ui_lv_1.draw_ui(950, 100, str(t) + 's')
-        ui_lv_1.draw_ui(750, 200, 'Fuel:')
+        ui_lv_1.draw_ui(750, 200, 'Fuel 0:', ORANGE_COLOR)
         ui_lv_1.draw_ui(950, 200, str(f))
     elif level==4:
         ui_lv_1 = UI_Level_1(screen)
