@@ -5,7 +5,7 @@ class cell:
 
     def __init__(self, y, x, raw_value):
         """
-        Initialize a cell.
+        Ini tialize a cell.
 
         Args:
             y (int): y-coordinate of the cell.
