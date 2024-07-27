@@ -423,28 +423,29 @@ def process_lev4(board):
                 ):
                     print("Need find best path")
                     vehicle.path = vehicle.find_best_path(board)
-                    if vehicle.path not in vehicle.final_path:
-                        if (
-                            vehicle.current_x == vehicle.start_x
-                            and vehicle.current_y == vehicle.start_y
-                        ):
-                            vehicle.final_path.append(vehicle.path)
-                            print("aaaaaaaaa")
-                        else:
-                            print("bbbbbbbbb")
-                            tmp_path = []
-                            tmp_cell = vehicle.path[0]
-                            for cell in vehicle.final_path[-1]:
-                                if cell != tmp_cell:
+                    if vehicle.path != []:
+                        if vehicle.path not in vehicle.final_path:
+                            if (
+                                vehicle.current_x == vehicle.start_x
+                                and vehicle.current_y == vehicle.start_y
+                            ):
+                                vehicle.final_path.append(vehicle.path)
+                                print("aaaaaaaaa")
+                            else:
+                                print("bbbbbbbbb")
+                                tmp_path = []
+                                tmp_cell = vehicle.path[0]
+                                for cell in vehicle.final_path[-1]:
+                                    if cell != tmp_cell:
+                                        tmp_path.append(cell)
+                                    else:
+                                        break
+                                for cell in vehicle.path:
                                     tmp_path.append(cell)
-                                else:
-                                    break
-                            for cell in vehicle.path:
-                                tmp_path.append(cell)
 
-                            print(len(vehicle.final_path))
+                                print(len(vehicle.final_path))
 
-                            vehicle.final_path[-1] = tmp_path
+                                vehicle.final_path[-1] = tmp_path
                 paths.append(vehicle.path)
 
                 print("Vehicle final path: ", vehicle.final_path)
