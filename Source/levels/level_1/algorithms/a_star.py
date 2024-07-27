@@ -15,7 +15,7 @@ class AStarAlgorithm:
         """
         self.vehicle = vehicle
 
-    def execute(self, board):
+    def a_star(self, board):
         """
         Execute the A* search algorithm on the provided board.
 
@@ -35,7 +35,7 @@ class AStarAlgorithm:
 
         # Get the starting cell
 
-        start_cell = board.cells[self.vehicle.start_y][self.vehicle.start_x]
+        start_cell = board.cells[self.vehicle.tmp_start_y][self.vehicle.tmp_start_x]
         start_cell.visited[self.vehicle.name] = True  # Mark the start cell as visited
         start_cell.cost[self.vehicle.name] = (
             0  # Set the cost to reach the start cell to 0
@@ -51,7 +51,14 @@ class AStarAlgorithm:
             _, current_cell = heapq.heappop(
                 frontier
             )  # Pop the cell with the lowest total cost
-
+            if (
+                current_cell.y == self.vehicle.tmp_goal_y
+                and current_cell.x == self.vehicle.tmp_goal_x
+            ):  # Check if the goal is reached
+                board.cells[self.vehicle.tmp_goal_y][self.vehicle.tmp_goal_x].visited[
+                    self.vehicle.name
+                ] = True
+                break
             # Directions for moving in the grid (right, left, down, up)
             y = [0, 0, 1, -1]
             x = [1, -1, 0, 0]
@@ -83,13 +90,31 @@ class AStarAlgorithm:
                         heapq.heappush(
                             frontier, (total_cost, board.cells[new_y][new_x])
                         )  # Push the new cell into the priority queue
-            if (
-                current_cell.y == self.vehicle.goal_y
-                and current_cell.x == self.vehicle.goal_x
-            ):  # Check if the goal is reached
-                break
 
-        # Return the path with time and fuel information
-        return board.path_time_fuel(
-            self.vehicle.name, board.tracepath(self.vehicle.name)
-        )
+        path = []
+        if (
+            board.cells[self.vehicle.tmp_goal_y][self.vehicle.tmp_goal_x].visited[
+                self.vehicle.name
+            ]
+            == True
+        ):
+            path = board.tracepath(self.vehicle.name)
+
+        if (
+            path == []
+            or self.vehicle.tmp_goal_x != self.vehicle.goal_x
+            and self.vehicle.tmp_goal_y != self.vehicle.goal_y
+        ):
+            board.cells[self.vehicle.goal_y][self.vehicle.goal_x].visited[
+                self.vehicle.name
+            ] = False
+
+        return path
+
+    def execute(self, board):
+        self.vehicle.tmp_start_y = self.vehicle.current_y
+        self.vehicle.tmp_start_x = self.vehicle.current_x
+        self.vehicle.tmp_goal_y = self.vehicle.goal_y
+        self.vehicle.tmp_goal_x = self.vehicle.goal_x
+        path = self.a_star(board)
+        return board.path_time_fuel(self.vehicle.name, path)
