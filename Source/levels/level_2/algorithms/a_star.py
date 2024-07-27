@@ -25,6 +25,7 @@ class AStarAlgorithm:
         board.generate_parent(self.vehicle.name)
         board.generate_cost(self.vehicle.name)
         board.generate_heuristic(self.vehicle.name)
+        board.generate_fuel(self.vehicle.name)
 
         if (
             self.vehicle.tmp_start_x == self.vehicle.start_x
