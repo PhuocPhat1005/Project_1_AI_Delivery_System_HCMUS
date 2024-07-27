@@ -52,7 +52,12 @@ def map_UI(n, m, t, f, map_data, level, algo):
                     return M1.returnCellSide()
         pygame.display.flip()
 
-def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
+def path_UI(board, paths, cell_side, number_of_agents=0):
+    # n = board.n
+    # m = board.m
+    t = board.t
+    f = board.f
+    map_data = board.map_data
     print('Time:', t)
     I1 = Image_UI(screen, cell_side)
     i = 0
@@ -235,7 +240,7 @@ def path_UI(n, m, t, f, map_data, paths, cell_side, number_of_agents=0):
                         _jP = line_list[_][count-1][1]
                         if _ < len(line_list[count_veh]):
                             I1.showVehicle(_i, _j, _iP, _jP, _)
-                    elif count >= len(line_list[_])-1:
+                    elif count >= len(line_list[_])-1 and line_list[_] != []:
                         _i = line_list[_][-1][0]
                         _j = line_list[_][-1][1]
                         _iP = line_list[_][-2][0]

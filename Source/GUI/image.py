@@ -161,36 +161,34 @@ class Board_UI(Image_UI):
         return self.cell_side
     
     def showBoard(self):
-        i = 0
-        j = 0
-        for i in range (0, self.n):
-            for j in range (0, self.m):
+        for y in range (0, self.n):
+            for x in range (0, self.m):
                 #show wall
-                if self.map_data[j][i] == '-1':
-                    self.showWall(j, i)
+                if self.map_data[y][x] == '-1':
+                    self.showWall(y, x)
                 #show gas station
-                elif 'F' in self.map_data[j][i]:
-                    self.showGasStation(j, i)
-                    self.writeNumber(BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side, self.map_data[j][i][1:], text_color=DARK_RED_COLOR)
+                elif 'F' in self.map_data[y][x]:
+                    self.showGasStation(y, x)
+                    self.writeNumber(BOARD_APPEEAR_WIDTH + y*self.cell_side, BOARD_APPEEAR_HEIGHT + x*self.cell_side, self.map_data[y][x][1:], text_color=DARK_RED_COLOR)
                 #show goal
-                elif 'G' in self.map_data[j][i]:
-                    if len(self.map_data[j][i]) == 1:
-                        self.showGoal(j, i, 0)
+                elif 'G' in self.map_data[y][x]:
+                    if len(self.map_data[y][x]) == 1:
+                        self.showGoal(y, x, 0)
                     else:
-                        num = int(self.map_data[j][i][1:])
-                        self.showGoal(j, i, num)
+                        num = int(self.map_data[y][x][1:])
+                        self.showGoal(y, x, num)
                 #show toll booths
-                elif self.map_data[j][i].isdigit() and int(self.map_data[j][i]) > 0:
-                    self.showTollBooths(j, i)
-                    self.writeNumber(BOARD_APPEEAR_WIDTH + i*self.cell_side, BOARD_APPEEAR_HEIGHT + j*self.cell_side, self.map_data[j][i])
+                elif self.map_data[y][x].isdigit() and int(self.map_data[y][x]) > 0:
+                    self.showTollBooths(y, x)
+                    self.writeNumber(BOARD_APPEEAR_WIDTH + y*self.cell_side, BOARD_APPEEAR_HEIGHT + x*self.cell_side, self.map_data[y][x])
                 #show empty/street
                 else:
-                    self.showEmpty(j, i)
-                if 'S' in self.map_data[j][i]:
-                    if len(self.map_data[j][i]) == 1:
-                        self.showStart(j, i, 0)
-                        self.showVehicle(j, i, -2, -2, 0)
+                    self.showEmpty(y, x)
+                if 'S' in self.map_data[y][x]:
+                    if len(self.map_data[y][x]) == 1:
+                        self.showStart(y, x, 0)
+                        self.showVehicle(y, x, -2, -2, 0)
                     else:
-                        num = int(self.map_data[j][i][1:])
-                        self.showStart(j, i, num)
-                        self.showVehicle(j, i, -2, -2, num)
+                        num = int(self.map_data[y][x][1:])
+                        self.showStart(y, x, num)
+                        self.showVehicle(y, x, -2, -2, num)
