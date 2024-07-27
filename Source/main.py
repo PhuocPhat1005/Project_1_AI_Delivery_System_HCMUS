@@ -27,10 +27,10 @@ def main():
     n, m, t, f, map_data = read_input_file(input_filename)
 
     # vua hien UI map, vua tim canh cell
-    cell_side = map_UI(n, m, f, t, map_data, level, algo)
+    cell_side = map_UI(n, m, t, f, map_data, level, algo)
 
     # Initialize the board and vehicles
-    board = Board(n, m, f, t, map_data, level, algo)
+    board = Board(n, m, t, f, map_data, level, algo)
     vehicles = board.get_vehicle()
     paths = []
 

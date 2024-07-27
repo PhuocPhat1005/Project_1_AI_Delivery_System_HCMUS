@@ -36,7 +36,7 @@ class Board:
     Class representing the game board.
     """
 
-    def __init__(self, n, m, f, t, map_data, level=1, algo="algo"):
+    def __init__(self, n, m, t, f, map_data, level=1, algo="algo"):
         """
         Initialize the Board object.
 

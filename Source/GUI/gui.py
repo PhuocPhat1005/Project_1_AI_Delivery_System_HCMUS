@@ -13,7 +13,8 @@ pygame.init()
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 title = pygame.display.set_caption('Graph run')
         
-def map_UI(n, m, t, f, map_data, level, algo):
+def map_UI(n, m, t, f, map_data, level, algo):\
+    
     background = pygame.image.load('GUI/assets/menu_bg.png')
     screen.blit(background, (0, 0))
     
@@ -86,6 +87,7 @@ def path_UI(board, paths, cell_side, number_of_agents=0):
     # m = board.m
     t = board.t
     f = board.f
+    
     map_data = board.map_data
     print('Time:', t)
     I1 = Image_UI(screen, cell_side)
