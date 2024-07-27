@@ -9,7 +9,7 @@ class vehicle_level4(vehicle_base):
         super().__init__(name, start_y, start_x, time, fuel)
         self.is_regenerated = False
         self.final_path = []
-        
+
     def regenerate(self, board):
         self.is_regenerated = True
         board.cells[self.start_y][self.start_x].raw_value = "0"
@@ -41,7 +41,7 @@ class vehicle_level4(vehicle_base):
         board.generate_heuristic(self.name)
         board.generate_time(self.name)
         board.generate_cost(self.name)
-        board.generate_fuel(self.name)
+        # board.generate_fuel(self.name)
         board.generate_visited(self.name)
         board.generate_parent(self.name)
         self.tmp_start_x = self.start_x
@@ -65,9 +65,9 @@ class vehicle_level4(vehicle_base):
         board.generate_parent(self.name)
         board.generate_cost(self.name)
         board.generate_heuristic(self.name)
-        board.generate_fuel(self.name)
         if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:
             board.generate_time(self.name)
+            # board.generate_fuel(self.name)
 
         for cell in self.blocked_opposite:
             board.cells[cell[0]][cell[1]].visited[self.name] = True
@@ -80,9 +80,7 @@ class vehicle_level4(vehicle_base):
         #         print(board.cells[i][j].raw_value, end = ' ')
         #     print()
 
-        if self.tmp_start_x == self.start_x and self.tmp_start_y == self.start_y:   
-            pass
-        else: 
+        if "F" in board.cells[self.current_y][self.current_x].raw_value:
             self.current_fuel = self.fuel
 
         start_cell = board.cells[self.tmp_start_y][self.tmp_start_x]
@@ -110,7 +108,9 @@ class vehicle_level4(vehicle_base):
             # print()
             # current_f, current_cell = heapq.heappop(frontier)
             current_cell = heapq.heappop(frontier)
-            self.current_fuel = board.cells[current_cell.y][current_cell.x].fuel[self.name]
+            self.current_fuel = board.cells[current_cell.y][current_cell.x].fuel[
+                self.name
+            ]
             # board.cells[current_cell.y][current_cell.x].current_vehicle = None
             y = [0, 0, 1, -1]
             x = [1, -1, 0, 0]
@@ -140,14 +140,12 @@ class vehicle_level4(vehicle_base):
                     new_fuel = (
                         board.cells[current_cell.y][current_cell.x].fuel[self.name] - 1
                     )
-                    
+
                     if "F" in board.cells[new_y][new_x].raw_value:
                         new_t += float(
                             board.cells[new_y][new_x].raw_value.replace("F", "")
                         )
                         new_fuel = self.fuel
-
-
 
                     # for cell in self.blocked_opposite:
                     #     if new_y == cell[0] and new_x == cell[1]:
@@ -301,6 +299,7 @@ def process_lev4(board):
     # while S_vehicle.current_y != S_vehicle.goal_y or S_vehicle.current_x != S_vehicle.goal_x:
     # cnt = 0
     time = 0
+
     while flag:
         flag = False
         paths = []
@@ -318,48 +317,77 @@ def process_lev4(board):
         for cells in board.cells:
             for cell in cells:
                 cell.current_vehicle = None
-            
+
+        for vehicle in vehicles:
+            board.cells[vehicle.current_y][
+                vehicle.current_x
+            ].current_vehicle = vehicle.name
+            if vehicle.final_path == []:
+                vehicle.final_path.append(vehicle.path)
+
         while time <= board.t:
             if flag == True:
                 break
-            for vehicle_ in vehicles:
-                board.cells[vehicle_.current_y][vehicle_.current_x].current_vehicle = vehicle_.name
-                
-                for vehicle in vehicles:
-                    # print("Vehicle name: ", vehicle.name, "current_y: ", vehicle.current_y, "current_x: ", vehicle.current_x)
-    
-                    for i in range(len(vehicle.path) - 1):
-                        if vehicle.path[i][2] == time:
-                            # print("Time here: ", vehicle.path[i][2])
-                            next_y, next_x = vehicle.path[i + 1][0], vehicle.path[i + 1][1]
-                            # print("next_y: ", next_y, "next_x: ", next_x, "vehicle: ", board.cells[next_y][next_x].current_vehicle)
+
+            for vehicle in vehicles:
+                # print("Vehicle name: ", vehicle.name, "current_y: ", vehicle.current_y, "current_x: ", vehicle.current_x)
+
+                for i in range(len(vehicle.path) - 1):
+                    if (
+                        vehicle.path[i][2] == time
+                        and vehicle.blocked_opposite == []
+                        and vehicle.blocked_temp == []
+                    ):
+                        # print("Time here: ", vehicle.path[i][2])
+                        next_y, next_x = vehicle.path[i + 1][0], vehicle.path[i + 1][1]
+                        # print("next_y: ", next_y, "next_x: ", next_x, "vehicle: ", board.cells[next_y][next_x].current_vehicle)
+                        if (
+                            board.cells[next_y][next_x].current_vehicle != None
+                            and vehicle.name != S_vehicle.name
+                        ):
+                            flag = True
+                            name = board.cells[next_y][next_x].current_vehicle
+                            for v in vehicles:
+                                if v.name == name:
+                                    try:
+                                        next_next_y = v.path[i + 2][0]
+                                        next_next_x = v.path[i + 2][1]
+                                    except:
+                                        next_next_y = v.goal_y
+                                        next_next_x = v.goal_x
+                                        # next_next_x = v.current_x
+                                        # next_next_y = v.current_y
+
                             if (
-                                board.cells[next_y][next_x].current_vehicle != None
-                                and vehicle.name != S_vehicle.name
+                                vehicle.current_x == next_next_x
+                                or vehicle.current_y == next_next_y
                             ):
-                                flag = True
-                                name = board.cells[next_y][next_x].current_vehicle
-                                for v in vehicles:
-                                    if v.name == name:
-                                        try:
-                                            next_next_y = v.path[i + 2][0]
-                                            next_next_x = v.path[i + 2][1]
-                                        except:
-                                            next_next_y = v.goal_y
-                                            next_next_x = v.goal_x
-                                            # next_next_x = v.current_x
-                                            # next_next_y = v.current_y
-                                        break
-                                if (
-                                    vehicle.current_x == next_next_x
-                                    or vehicle.current_y == next_next_y
-                                ):
-                                    vehicle.blocked_opposite.append(vehicle.path[i + 1])
-                                    # print ("Blocked cell OP: ", vehicle.path[i+1], "by ", name, "current: ", vehicle.name)
-                                else:
-                                    vehicle.blocked_temp.append(vehicle.path[i + 1])
-                                    # print ("Blocked cell Temp: ", vehicle.path[i+1], "by ", name, "current: ", vehicle.name)
+                                vehicle.blocked_opposite.append(vehicle.path[i + 1])
+                                print(
+                                    "Blocked cell OP: ",
+                                    vehicle.path[i + 1],
+                                    "by ",
+                                    name,
+                                    "current: ",
+                                    vehicle.name,
+                                )
                             else:
+                                vehicle.blocked_temp.append(vehicle.path[i + 1])
+                                print(
+                                    "Blocked cell Temp: ",
+                                    vehicle.path[i + 1],
+                                    "by ",
+                                    name,
+                                    "current: ",
+                                    vehicle.name,
+                                )
+                        else:
+                            if (
+                                board.get_distance(
+                                    vehicle.current_x, vehicle.current_y, next_x, next_y
+                                )
+                                == 1
+                            ):
                                 board.cells[vehicle.current_y][
                                     vehicle.current_x
                                 ].current_vehicle = None
@@ -367,57 +395,92 @@ def process_lev4(board):
                                 board.cells[vehicle.current_y][
                                     vehicle.current_x
                                 ].current_vehicle = vehicle.name
-                print("Time: ", time)
-                for vehicle in vehicles:
-                    print("--------------------------------")
-                    print("Name: ", vehicle.name)
-                    print("Start: ", vehicle.start_y, vehicle.start_x)
-                    print("Goal: ", vehicle.goal_y, vehicle.goal_x)
-                    print("Current: ", vehicle.current_y, vehicle.current_x)
-                    if vehicle.path == []:
-                        print("Need find best path")
-                        vehicle.path = vehicle.find_best_path(board)
-                    paths.append(vehicle.path)
-                    vehicle.final_path.append(vehicle.path)
 
-                
-                board.test_display_path(paths)
-                #map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "", len(vehicles))
-                #path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
-                #map_UI(n, m, t, f, board.map_data, 4, "", len(vehicles))
-                #path_UI(n, m, t, f, board.map_data, paths, cell_side)
-                
-                # path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
-                # map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "")
-                if S_vehicle.current_y == S_vehicle.goal_y and S_vehicle.current_x == S_vehicle.goal_x:
-                    return paths
-                
-                for vehicle in vehicles:
-                    if vehicle.name != S_vehicle.name:
+            print("Time: ", time)
+            for vehicle in vehicles:
+                print("--------------------------------")
+                print("Name: ", vehicle.name)
+                print("Start: ", vehicle.start_y, vehicle.start_x)
+                print("Goal: ", vehicle.goal_y, vehicle.goal_x)
+                print("Current: ", vehicle.current_y, vehicle.current_x)
+                vehicle.current_fuel = board.cells[vehicle.current_y][
+                    vehicle.current_x
+                ].fuel[vehicle.name]
+                print("Fuel: ", vehicle.current_fuel)
+                print("Path: ", vehicle.path)
+                if (
+                    vehicle.path == []
+                    or vehicle.blocked_opposite != []
+                    or vehicle.blocked_temp != []
+                ):
+                    print("Need find best path")
+                    vehicle.path = vehicle.find_best_path(board)
+                    if vehicle.path not in vehicle.final_path:
                         if (
-                        vehicle.current_y == vehicle.goal_y
-                            and vehicle.current_x == vehicle.goal_x
-                        ) or vehicle.path == []:
-                            # print(
-                            #     "Time: ",
-                            #     time,
-                            #     " Vehicle: ",
-                            #     vehicle.name,
-                            #     "Start: ",
-                            #     vehicle.start_y,
-                            #     vehicle.start_x,
-                            #     "Goal: ",
-                            #     vehicle.goal_y,
-                            #     vehicle.goal_x,
-                            #     "Current: ",
-                            #     vehicle.current_y,
-                            #     vehicle.current_x,
-                            # )
-                            vehicle.regenerate(board)
+                            vehicle.current_x == vehicle.start_x
+                            and vehicle.current_y == vehicle.start_y
+                        ):
+                            vehicle.final_path.append(vehicle.path)
+                            print("aaaaaaaaa")
+                        else:
+                            print("bbbbbbbbb")
+                            tmp_path = []
+                            tmp_cell = vehicle.path[0]
+                            for cell in vehicle.final_path[-1]:
+                                if cell != tmp_cell:
+                                    tmp_path.append(cell)
+                                else:
+                                    break
+                            for cell in vehicle.path:
+                                tmp_path.append(cell)
 
-                paths = []
-    
-                time += 1
+                            print(len(vehicle.final_path))
+
+                            vehicle.final_path[-1] = tmp_path
+                paths.append(vehicle.path)
+
+                print("Vehicle final path: ", vehicle.final_path)
+
+            board.test_display_path(paths)
+            # map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "", len(vehicles))
+            # path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
+            # map_UI(n, m, t, f, board.map_data, 4, "", len(vehicles))
+            # path_UI(n, m, t, f, board.map_data, paths, cell_side)
+
+            # path_UI(board.n, board.m, board.t, board.f, board.map_data, paths, cell_side)
+            # map_UI(board.n, board.m, board.t, board.f, board.map_data, 4, "")
+            if (
+                S_vehicle.current_y == S_vehicle.goal_y
+                and S_vehicle.current_x == S_vehicle.goal_x
+            ):
+                return paths
+
+            for vehicle in vehicles:
+                if vehicle.name != S_vehicle.name:
+                    if (
+                        vehicle.current_y == vehicle.goal_y
+                        and vehicle.current_x == vehicle.goal_x
+                    ) or vehicle.path == []:
+                        # print(
+                        #     "Time: ",
+                        #     time,
+                        #     " Vehicle: ",
+                        #     vehicle.name,
+                        #     "Start: ",
+                        #     vehicle.start_y,
+                        #     vehicle.start_x,
+                        #     "Goal: ",
+                        #     vehicle.goal_y,
+                        #     vehicle.goal_x,
+                        #     "Current: ",
+                        #     vehicle.current_y,
+                        #     vehicle.current_x,
+                        # )
+                        vehicle.regenerate(board)
+
+            paths = []
+
+            time += 1
             # cnt += 1
             # if cnt == 10:
             #     break

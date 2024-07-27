@@ -245,7 +245,7 @@ class Board:
             bool : True if the cell can be visited, False otherwise.
         """
         if (
-            x < 0 or y < 0 or x >= self.n or y >= self.m
+            x < 0 or y < 0 or y >= self.n or x >= self.m
         ):  # Check if the cell is out of bounds.
             return False
         come_cell = self.cells[y][x]  # Get the cell object.
