@@ -1,27 +1,3 @@
-DFSAlgorithm:
-S
-(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (0, 0)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-DFSAlgorithm:
-S
-(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (0, 0)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-AStarAlgorithm:
-S
-(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-AStarAlgorithm:
-S
-(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-AStarAlgorithm:
-S
-(4, 1)  (4, 2)  (4, 3)  (5, 3)  (6, 3)  (7, 3)  (8, 3)  (9, 3)  (9, 4)  (9, 5)  (8, 5)  (7, 5)  (7, 6)
-
-BFSAlgorithm:
-S
-(4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
 BFSAlgorithm:
 S
 (4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
@@ -29,18 +5,17 @@ S
 DFSAlgorithm:
 S
 (4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (0, 0)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
+UCSAlgorithm:
+S
+(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
 
 GBFSAlgorithm:
 S
 (4, 1)  (4, 2)  (4, 3)  (5, 3)  (6, 3)  (7, 3)  (8, 3)  (9, 3)  (9, 4)  (9, 5)  (9, 6)  (9, 7)  (9, 8)  (8, 8)  (7, 8)  (6, 8)  (5, 8)  (5, 7)  (5, 6)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
 
-BFSAlgorithm:
+AStarAlgorithm:
 S
-(4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-DFSAlgorithm:
-S
-(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (0, 0)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
+(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
 
 BFSAlgorithm:
 S
@@ -54,159 +29,10 @@ DFSAlgorithm:
 S
 (4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (0, 0)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
 
-GBFSAlgorithm:
-S
-(4, 1)  (4, 2)  (4, 3)  (5, 3)  (6, 3)  (7, 3)  (8, 3)  (9, 3)  (9, 4)  (9, 5)  (9, 6)  (9, 7)  (9, 8)  (8, 8)  (7, 8)  (6, 8)  (5, 8)  (5, 7)  (5, 6)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-BFSAlgorithm:
-S
-(4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-BFSAlgorithm:
-S
-(0, 0)  (0, 1)  (1, 1)  (2, 1)  (3, 1)  (4, 1)  (4, 2)  (4, 3)  (4, 4)
-
-BFSAlgorithm:
-S
-(0, 0)  (0, 1)  (1, 1)  (2, 1)  (3, 1)  (4, 1)  (4, 2)  (4, 3)  (4, 4)
-
-BFSAlgorithm:
-S
-(4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-BFSAlgorithm:
-S
-(4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-BFSAlgorithm:
-S
-(4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
-
-BFSAlgorithm:
-S
-(0, 0)  (0, 1)  (1, 1)  (2, 1)  (3, 1)  (4, 1)  (4, 2)  (4, 3)  (4, 4)
-
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-DFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-GBFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
 UCSAlgorithm:
 S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-GBFSAlgorithm:
-S
-No valid path found
-AStarAlgorithm:
-S
-No valid path found
+(4, 1)  (3, 1)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-UCSAlgorithm:
-S
-No valid path found
-=======
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-UCSAlgorithm:
-S
-No valid path found
->>>>>>> 8eeecccb4d968a8a6cca50fb086f093d7a9b724c
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-=======
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-UCSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-DFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-DFSAlgorithm:
-S
-No valid path found
-UCSAlgorithm:
-S
-No valid path found
-GBFSAlgorithm:
-S
-No valid path found
-AStarAlgorithm:
-S
-No valid path found
->>>>>>> bff9b5b453aa99f58654ed840d62747168060919
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
-BFSAlgorithm:
-S
-No valid path found
 BFSAlgorithm:
 S
 (4, 1)  (4, 0)  (3, 0)  (2, 0)  (1, 0)  (1, 1)  (0, 1)  (0, 2)  (0, 3)  (0, 4)  (0, 5)  (1, 5)  (2, 5)  (3, 5)  (4, 5)  (5, 5)  (6, 5)  (7, 5)  (7, 6)
