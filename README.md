@@ -1,6 +1,6 @@
 ***University of Science (HCMUS) - Introduction to Artificial Intelligence - CSC14003***
 # Project 1. Searching (2024 / K22 CLC)
-## Delivery System
+## A. Delivery System
 ### 1. Description
 Thanks to the development of e-commerce, consumers can easily shop for products with just a smartphone from their  homes. In this context, the logistics industry plays an important role in ensuring efficient transportation of goods from sellers to buyers.
 The most crucial strategy for logistics providers to compete effectively is to develop a system that finds the shortest paths. This system optimizes delivery routes, minimizes travel time, and saves fuel. Your team will be responsible for developing this system for HCMUS Logistic Co. LTD, utilizing search algorithms learned in the course CSC14003 - Introduction to Artificial Intelligence, **to find the path from the delivery vehicle to the customer**.
@@ -166,7 +166,7 @@ Please pay attention to the following notices:
 * This is a **GROUP** assignment. Each group has about 3 to 4 members.
 * <font style='color:red'>Any plagiarism, any tricks, or any lie will have a 0 point for the course grade.</font>
 ---
-## Members of Team
+## B. Information about Team
 | No. | Student ID | Full name       | Tasks | Completion |
 |:---:|:----------:| --------------- | ----- |:----------:|
 |  1  |  22127174  | Ngô Văn Khải    |       |   100 %    |
