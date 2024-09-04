@@ -214,4 +214,10 @@ python -m venv venv.
 pip install -r requirements.txt
 ```
 * Finally, you need to run the application by executing the command “python main.py” in the console or terminal.
-
+---
+## D. Demo Videos
+<!-- BEGIN YOUTUBE-CARDS -->
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px;">
+  <a href="https://www.youtube.com/watch?v=8O4jLFzmkPg"><img src="https://ytcards.demolab.com/?id=8O4jLFzmkPg&title=Delivery+System+AI+Searching&lang=en&timestamp=8O4jLFzmkPg&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=337" alt="Delivery System AI Searching"/></a>
+</div>
+<!-- END YOUTUBE-CARDS -->
