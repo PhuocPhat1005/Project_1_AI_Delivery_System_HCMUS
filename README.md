@@ -1,6 +1,6 @@
 ***University of Science (HCMUS) - Introduction to Artificial Intelligence - CSC14003***
 # Project 1. Searching (2024 / K22 CLC)
-## A. Delivery System
+## A. About The Delivery System Project
 ### 1. Description
 Thanks to the development of e-commerce, consumers can easily shop for products with just a smartphone from their  homes. In this context, the logistics industry plays an important role in ensuring efficient transportation of goods from sellers to buyers.
 The most crucial strategy for logistics providers to compete effectively is to develop a system that finds the shortest paths. This system optimizes delivery routes, minimizes travel time, and saves fuel. Your team will be responsible for developing this system for HCMUS Logistic Co. LTD, utilizing search algorithms learned in the course CSC14003 - Introduction to Artificial Intelligence, **to find the path from the delivery vehicle to the customer**.
@@ -167,9 +167,51 @@ Please pay attention to the following notices:
 * <font style='color:red'>Any plagiarism, any tricks, or any lie will have a 0 point for the course grade.</font>
 ---
 ## B. Information about Team
-| No. | Student ID | Full name       | Tasks | Completion |
-|:---:|:----------:| --------------- | ----- |:----------:|
-|  1  |  22127174  | Ngô Văn Khải    |       |   100 %    |
-|  2  |  22127322  | Lê Phước Phát   |       |   100 %    |
-|  3  |  22127388  | Tô Quốc Thanh   |       |   100 %    |
-|  4  |  22127441  | Thái Huyễn Tùng |       |   100 %    |
+### 1. Work assignment table
+|  Student ID  |      Full name      | General Tasks | Detailed Tasks                                                                         | Completion |
+|:------------:|:-------------------:|:-------------:| -------------------------------------------------------------------------------------- |:----------:|
+| **22127174** |  **Ngô Văn Khải**   |      GUI      | Designing Gameplay Graphic User Interface                                              |   100 %    |
+|              |                     |               | Coding Gameplay Graphical User Interface                                               |   100 %    |
+|              |                     |               | Describing Gameplay Graphical User Interface Functions (Report)                        |   100 %    |
+| **22127322** |  **Lê Phước Phát**  |    Level 1    | Describe detailed Level 1 algorithms and implementation (Report)                       |   100 %    |
+|              |                     |               | Implement Level 1 (Coding)                                                             |   100 %    |
+|              |                     |    Level 2    | Describe detailed Level 2 algorithms and implementation (Report)                       |   100 %    |
+|              |                     |               | Implement Level 2 (Coding)                                                             |   100 %    |
+|              |                     |  Test cases   | Generate for 5 test cases (Coding)                                                     |   100 %    |
+|              |                     |               | Describe the test cases and the results when run on each of those test cases. (Report) |   100 %    |
+| **22127388** |  **Tô Quốc Thanh**  |    Level 3    | Describe detailed Level 3 algorithms and implementation (Report)                       |   100 %    |
+|              |                     |               | Implement Level 3 (Coding)                                                             |    100%    |
+|              |                     |    Level 4    | Describe detailed Level 4 algorithms and implementation (Report)                       |   100 %    |
+|              |                     |               | Implement Level 4 (Coding)                                                             |   100 %    |
+|              |                     |  Test cases   | Describe the test cases and the results when run on each of those test cases. (Report) |   100 %    |
+| **22127441** | **Thái Huyễn Tùng** |      GUI      | Menu Graphic User Interface (Design)                                                   |   100 %    |
+|              |                     |               | Menu Graphic User Interface (Coding)                                                   |   100 %    |
+|              |                     |     Video     | Video demos                                                                            |   100 %    |
+### 2. Self-evaluation of the completion rate at each level of the project and other requirements
+| No. | Details                                                                                      | Completion Rate |
+|:---:| -------------------------------------------------------------------------------------------- |:---------------:|
+|  1  | Finish Level 1 successfully                                                                  |      100 %      |
+|  2  | Finish Level 2 successfully                                                                  |      100 %      |
+|  3  | Finish Level 3 successfully                                                                  |      100 %      |
+|  4  | Finish Level 4 successfully                                                                  |      100 %      |
+|  5  | Graphical User Interface (GUI)                                                               |      100 %      |
+|  6  | Generate 5 test cases for each level with different attributes. Describe them in the report. |      100 %      |
+|  7  | Demo videos for demonstrating each test case.                                                |      100 %      |
+|  8  | Report all algorithms, and experiment with some reflections or comments.                     |      100 %      |
+---
+## C. SETTINGS
+* Firstly, you need to set up the virtual environment in Python by using this command line below:
+```python!=
+pip install virtualenv
+python -m venv venv.
+```
+* Secondly, you need to activate the virtual environment in Python by using this command line below:
+```python!=
+.venv\Scripts\activate
+```
+* Thirdly, we will install all libraries in the file requirements.txt by using this command line below. Note that we need “cd” into the folder “Source”.
+```python!=
+pip install -r requirements.txt
+```
+* Finally, you need to run the application by executing the command “python main.py” in the console or terminal.
+
